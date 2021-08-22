@@ -1,0 +1,55 @@
+version: '3.8'
+services:
+    nrf.oai-5gcn.eur:
+        container_name: "oai-nrf"
+        image: oai-nrf:latest
+        environment:
+            - NRF_INTERFACE_NAME_FOR_SBI=eth0
+            - NRF_INTERFACE_PORT_FOR_SBI=80
+            - NRF_INTERFACE_HTTP2_PORT_FOR_SBI=9090
+            - NRF_API_VERSION=v1
+            - INSTANCE=0
+            - PID_DIRECTORY=/var/run
+        networks:
+            public_net:
+                ipv4_address: 192.168.70.130
+        volumes:
+            - ./nrf-healthcheck.sh:/openair-nrf/bin/nrf-healthcheck.sh
+
+    nssf.oai-5gcn.eur:
+        container_name: "oai-nssf"
+        image: oai-nssf:latest
+        volumes:
+            - /home/rohan/gitrepo/oai-cn5g-nssf:/oai-cn5g-nssf
+        environment:
+            - INSTANCE=0
+            - TZ=Europe/Paris
+            - PID_DIRECTORY=/var/run
+            - NSSF_NAME=oai-nssf
+            - NSSF_FQDN=nssf.oai-5gcn.eur
+            - SBI_IF_NAME=eth0
+            - SBI_PORT=80
+            - REGISTER_NRF=yes
+            - HTTP_VERSION=1
+            - USE_FQDN=yes
+            - NRF_PORT=80
+            - NRF_API_VERSION=v1
+            - NRF_FQDN=nrf.oai-5gcn.eur
+        cap_add:
+            - NET_ADMIN
+            - SYS_ADMIN
+        cap_drop:
+            - ALL
+        privileged: true
+        networks:
+            public_net:
+                ipv4_address: 192.168.70.134
+networks:
+    public_net:
+        driver: bridge
+        name: demo-oai-public-net
+        ipam:
+            config:
+                - subnet: 192.168.70.128/26
+        driver_opts:
+            com.docker.network.bridge.name: "demo-oai"

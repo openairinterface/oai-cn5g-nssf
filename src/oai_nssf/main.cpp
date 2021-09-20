@@ -69,12 +69,12 @@ void my_app_signal_handler(int s) {
     nssf_api_server_1 = nullptr;
   }
   std::cout << "NSSF API Server memory done." << std::endl;
-  if (itti_inst) delete itti_inst;
-  itti_inst = nullptr;
-  std::cout << "ITTI memory done." << std::endl;
   if (nssf_app_inst) delete nssf_app_inst;
   nssf_app_inst = nullptr;
   std::cout << "NSSF APP memory done." << std::endl;
+  // if (itti_inst) delete itti_inst;
+  // itti_inst = nullptr;
+  // std::cout << "ITTI memory done." << std::endl;
   std::cout << "Freeing Allocated memory done" << std::endl;
   exit(0);
 }
@@ -115,13 +115,13 @@ int my_check_redundant_process(char* exec_name) {
 //------------------------------------------------------------------------------
 int main(int argc, char** argv) {
   // Checking if another instance of nssf is running
-  // int nb_processes = my_check_redundant_process(argv[0]);
-  // if (nb_processes > 1) {
-  //   std::cout << "An instance of " << argv[0] << " is maybe already called!"
-  //             << std::endl;
-  //   std::cout << "  " << nb_processes << " were detected" << std::endl;
-  //   return -1;
-  // }
+  int nb_processes = my_check_redundant_process(argv[0]);
+  if (nb_processes > 1) {
+    std::cout << "An instance of " << argv[0] << " is maybe already called!"
+              << std::endl;
+    std::cout << "  " << nb_processes << " were detected" << std::endl;
+    return -1;
+  }
 
   // Command line options
   if (!Options::parse(argc, argv)) {
@@ -143,16 +143,21 @@ int main(int argc, char** argv) {
   nssf_cfg.load(Options::getlibconfigConfig());
   nssf_cfg.display();
 
+  if (!nssf_cfg.ParseJson()) {
+    std::cout << "nssf_cfg::ParseJson() failed" << std::endl;
+    return 1;
+  }
+  
   // Inter task Interface
-  itti_inst = new itti_mw();
-  itti_inst->start(nssf_cfg.itti.itti_timer_sched_params);
+  // itti_inst = new itti_mw();
+  // itti_inst->start(nssf_cfg.itti.itti_timer_sched_params);
 
   // system command
   // async_shell_cmd_inst =
   //     new async_shell_cmd(nssf_cfg.itti.async_cmd_sched_params);
 
   // nssf application layer
-  nssf_app_inst = new nssf_app(Options::getlibconfigConfig());
+  // nssf_app_inst = new nssf_app(Options::getlibconfigConfig());
 
   // PID file
   // Currently hard-coded value. TODO: add as config option.

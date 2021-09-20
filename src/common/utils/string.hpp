@@ -4,8 +4,8 @@
  * this work for additional information regarding copyright ownership.
  * The OpenAirInterface Software Alliance licenses this file to You under
  * the OAI Public License, Version 1.1  (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ *file except in compliance with the License. You may obtain a copy of the
+ *License at
  *
  *      http://www.openairinterface.org/?page_id=698
  *
@@ -20,11 +20,11 @@
  */
 
 /*! \file string.hpp
-   \brief
-   \author  Lionel GAUTHIER
-   \date 2018
-   \email: lionel.gauthier@eurecom.fr
-*/
+ \brief
+ \author  Lionel GAUTHIER
+ \date 2018
+ \email: lionel.gauthier@eurecom.fr
+ */
 #ifndef FILE_STRING_HPP_FILE_SEEN
 #define FILE_STRING_HPP_FILE_SEEN
 
@@ -39,5 +39,7 @@ std::string& ltrim(std::string& s);
 std::string& rtrim(std::string& s);
 // trim from both ends
 std::string& trim(std::string& s);
+// extract query param from given querystring
+std::string get_query_param(std::string querystring, std::string param);
 }  // namespace util
 #endif

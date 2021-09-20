@@ -30,24 +30,32 @@
 #define FILE_nssf_config_HPP_SEEN
 
 #include "3gpp_29.510.h"
+#include "NetworkSliceInformationDocumentApiImpl.h"
+#include "rapidjson/document.h"
+#include "rapidjson/filereadstream.h"
 #include "thread_sched.hpp"
 #include <libconfig.h++>
 #include <mutex>
 #include <netinet/in.h>
+#include <nlohmann/json.hpp>
 #include <stdbool.h>
 #include <stdint.h>
 #include <string>
+#include <unistd.h>
 
 namespace nssf {
 
 #define NSSF_CONFIG_STRING_NSSF_CONFIG "NSSF"
 #define NSSF_CONFIG_STRING_FQDN "FQDN"
+#define NSSF_CONFIG_STRING_NSSF_SLICE_CONFIG "NSSF_SLICE_CONFIG"
 #define NSSF_CONFIG_STRING_INTERFACES "INTERFACES"
 #define NSSF_CONFIG_STRING_INTERFACE_NAME "INTERFACE_NAME"
 #define NSSF_CONFIG_STRING_IPV4_ADDRESS "IPV4_ADDRESS"
 #define NSSF_CONFIG_STRING_SBI_PORT_HTTP1 "HTTP1_PORT"
 #define NSSF_CONFIG_STRING_SBI_PORT_HTTP2 "HTTP2_PORT"
-#define NSSF_CONFIG_STRING_INTERFACE_SBI "SBI"
+#define NSSF_CONFIG_STRING_SBI_INTERFACE "SBI"
+#define NSSF_CONFIG_STRING_SBI_API_VERSION "API_VERSION"
+
 #define NSSF_CONFIG_STRING_NETWORK_IPV4 "NETWORK_IPV4"
 #define NSSF_CONFIG_STRING_NETWORK_IPV6 "NETWORK_IPV6"
 #define NSSF_CONFIG_STRING_ADDRESS_PREFIX_DELIMITER "/"
@@ -72,19 +80,9 @@ typedef struct interface_cfg_s {
   struct in6_addr addr6;
   unsigned int mtu;
   unsigned int http1_port;
-  unsigned int http2_port;  
+  unsigned int http2_port;
   util::thread_sched_params thread_rd_sched_params;
 } interface_cfg_t;
-
-typedef struct pdn_cfg_s {
-  struct in_addr network_ipv4;
-  uint32_t network_ipv4_be;
-  uint32_t network_mask_ipv4;
-  uint32_t network_mask_ipv4_be;
-  int prefix_ipv4;
-  struct in6_addr network_ipv6;
-  int prefix_ipv6;
-} pdn_cfg_t;
 
 typedef struct itti_cfg_s {
   util::thread_sched_params itti_timer_sched_params;
@@ -92,6 +90,24 @@ typedef struct itti_cfg_s {
   util::thread_sched_params nssf_app_sched_params;
   util::thread_sched_params async_cmd_sched_params;
 } itti_cfg_t;
+
+typedef struct nsi_info_s {
+  Snssai snssai;
+  NsiInformation nsiInfo;
+} nsi_info_t;
+
+typedef struct nssf_nsi_info_cfg_s {
+  std::vector<nsi_info_t> nsiInfoList;
+} nssf_nsi_info_t;
+
+typedef struct ta_info_s {
+  std::vector<Snssai> supoorted_snssai;
+  Tai tai;
+} ta_info_t;
+
+typedef struct nssf_ta_info_cfg_s {
+  std::vector<ta_info_t> taInfoList;
+} nssf_ta_info_t;
 
 class nssf_config {
 private:
@@ -101,6 +117,12 @@ private:
   //     const libconfig::Setting& thread_sched_params_cfg,
   //     util::thread_sched_params& cfg);
 
+  static const bool ParseNsiInfo(const RAPIDJSON_NAMESPACE::Value &conf,
+                                 nssf_nsi_info_t &cfg);
+
+  static const bool ParseTaInfo(const RAPIDJSON_NAMESPACE::Value &conf,
+                                nssf_ta_info_t &cfg);
+
 public:
   /* Reader/writer lock for this configuration */
   std::mutex m_rw_lock;
@@ -108,10 +130,13 @@ public:
   unsigned int instance;
   std::string fqdn;
   interface_cfg_t sbi;
+  std::string sbi_api_version;
   itti_cfg_t itti;
 
   std::string gateway;
-  std::vector<pdn_cfg_t> pdns;
+
+  static nssf_nsi_info_t nssf_nsi_info;
+  static nssf_ta_info_t nssf_ta_info;
 
   struct {
     bool register_nrf;
@@ -125,9 +150,10 @@ public:
     } nrf_addr;
   } nssf_features;
 
+  static std::string slice_config_file;
+
   nssf_config()
-      : m_rw_lock(), pid_dir(), instance(0), fqdn(), gateway(), sbi(), pdns(),
-        itti() {
+      : m_rw_lock(), pid_dir(), instance(0), fqdn(), gateway(), sbi(), itti() {
     itti.itti_timer_sched_params.sched_priority = 85;
     itti.nssf_app_sched_params.sched_priority = 84;
     itti.async_cmd_sched_params.sched_priority = 84;
@@ -139,8 +165,8 @@ public:
     nssf_features.nrf_addr.api_version = "v1";
     nssf_features.nrf_addr.fqdn = {};
 
-    sbi.http1_port = 80;
-    sbi.http2_port = 8080;
+    sbi.http1_port = 9090;
+    sbi.http2_port = 80;
   };
 
   void lock() { m_rw_lock.lock(); };
@@ -148,6 +174,12 @@ public:
   int load(const std::string &config_file);
   int execute();
   void display();
+
+  static bool ParseJson();
+  static bool ValidateTA(Tai tai, std::vector<Snssai> rejected_snssai);
+  static bool ValidateTA(const Tai &tai);
+  static bool ValidateNSI(const SliceInfoForPDUSession &slice_info,
+                          NsiInformation &nsi_info);
 };
 } // namespace nssf
 

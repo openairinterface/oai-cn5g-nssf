@@ -111,10 +111,10 @@ typedef struct allowed_nssai /*5G ADD it*/
   uint32_t sD : 24;
 } allowed_nssai;
 
-typedef struct allowed_nssai_s /*5G ADD it*/
-{
-  allowed_nssai* s_nssai;
-  uint32_t count;
-} allowed_nssai_t;
+// typedef struct allowed_nssai_s /*5G ADD it*/
+// {
+//   allowed_nssai* s_nssai;
+//   uint32_t count;
+// } allowed_nssai_t;
 
 #endif

@@ -111,7 +111,7 @@ COPY --from=oai-nssf-builder /openair-nssf/etc/nssf.conf .
 WORKDIR /openair-nssf
 
 # expose ports
-EXPOSE 80/tcp 9090/tcp 8805/udp
+EXPOSE 80/tcp 8080/tcp
 
 ENTRYPOINT ["/openair-nssf/bin/entrypoint.sh"]
 

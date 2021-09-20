@@ -26,8 +26,8 @@
  \email: lionel.gauthier@eurecom.fr, tien-thinh.nguyen@eurecom.fr
  */
 
-#ifndef FILEnssfnssf_HPP_SEEN
-#define FILEnssfnssf_HPP_SEEN
+#ifndef FILE_NSSF_SBI_HPP_SEEN
+#define FILE_NSSF_SBI_HPP_SEEN
 
 #include <map>
 #include <thread>
@@ -137,4 +137,4 @@ public:
   void get_nssf_api_root(std::string &api_root);
 };
 } // namespace nssf
-#endif /* FILEnssfnssf_HPP_SEEN */
+#endif /* FILE_NSSF_SBI_HPP_SEEN */

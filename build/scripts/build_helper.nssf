@@ -236,6 +236,7 @@ install_nghttp2_from_git() {
       zlib1g-dev \
       libcunit1-dev \
       libssl-dev \
+      rapidjson-dev \
       libxml2-dev libev-dev libevent-dev libjansson-dev libc-ares-dev \
       libjemalloc-dev libsystemd-dev cython python3-dev python-setuptools"
     elif [[ "$OS_BASEDISTRO" == "fedora" ]]; then
@@ -380,7 +381,6 @@ check_install_nssf_deps() {
     PACKAGE_LIST="\
       $specific_packages 
       libconfig++-dev \
-      libboost1.67-dev \
       guile-2.0-dev \
       libcurl4-gnutls-dev \
       libevent-dev \
@@ -427,7 +427,6 @@ check_install_nssf_deps() {
   else
     echo_fatal "$OS_DISTRO is not a supported distribution."
   fi
-  $SUDO apt autoremove libboost1.65-dev
   echo "Install distro libs"
   $SUDO $INSTALLER install $OPTION $PACKAGE_LIST
   ret=$?;[[ $ret -ne 0 ]] && return $ret
@@ -441,8 +440,8 @@ check_install_nssf_deps() {
   install_spdlog_from_git $1 $2
   ret=$?;[[ $ret -ne 0 ]] && return $ret
 
-  install_fb_folly_from_source $1 $2
-  ret=$?;[[ $ret -ne 0 ]] && return $ret
+  #install_fb_folly_from_source $1 $2
+  #ret=$?;[[ $ret -ne 0 ]] && return $ret
 
   install_pistache_from_git $1 $2
   ret=$?;[[ $ret -ne 0 ]] && return $ret

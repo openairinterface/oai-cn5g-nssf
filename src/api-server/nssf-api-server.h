@@ -38,16 +38,16 @@
 #include "pistache/http.h"
 #include "pistache/router.h"
 #ifdef __linux__
-#include <vector>
 #include <signal.h>
 #include <unistd.h>
+#include <vector>
 #endif
 
 #include "NFInstanceIDDocumentApiImpl.h"
 #include "NSSAIAvailabilityStoreApiImpl.h"
+#include "NetworkSliceInformationDocumentApiImpl.h"
 #include "SubscriptionIDDocumentApiImpl.h"
 #include "SubscriptionsCollectionApiImpl.h"
-#include "NetworkSliceInformationDocumentApiImpl.h"
 // #include "AccessTokenRequestApiImpl.h"
 
 #include "nssf_app.hpp"
@@ -55,47 +55,47 @@
 using namespace oai::nssf_server::api;
 
 class NSSFApiServer {
- public:
-  NSSFApiServer(Pistache::Address address, nssf::nssf_app* nssf_app_inst)
+public:
+  NSSFApiServer(Pistache::Address address, nssf::nssf_app *nssf_app_inst)
       : m_httpEndpoint(std::make_shared<Pistache::Http::Endpoint>(address)) {
 
-    m_router  = std::make_shared<Pistache::Rest::Router>();
+    m_router = std::make_shared<Pistache::Rest::Router>();
     m_address = address.host() + ":" + (address.port()).toString();
 
     m_nfInstanceIDDocumentApiImpl =
-        std::make_shared<NFInstanceIDDocumentApiImpl>(
-            m_router, nssf_app_inst, m_address);
+        std::make_shared<NFInstanceIDDocumentApiImpl>(m_router, nssf_app_inst,
+                                                      m_address);
     m_subscriptionIDDocumentApiImpl =
-        std::make_shared<SubscriptionIDDocumentApiImpl>(
-            m_router, nssf_app_inst, m_address);
+        std::make_shared<SubscriptionIDDocumentApiImpl>(m_router, nssf_app_inst,
+                                                        m_address);
     m_subscriptionsCollectionApiImpl =
         std::make_shared<SubscriptionsCollectionApiImpl>(
             m_router, nssf_app_inst, m_address);
     m_nssaiAvailablityStoreApiImpl =
-        std::make_shared<NSSAIAvailabilityStoreApiImpl>(
-            m_router, nssf_app_inst, m_address);
+        std::make_shared<NSSAIAvailabilityStoreApiImpl>(m_router, nssf_app_inst,
+                                                        m_address);
     m_networkSliceInformationDocumentApiImpl =
         std::make_shared<NetworkSliceInformationDocumentApiImpl>(
             m_router, nssf_app_inst, m_address);
-    // m_accessTokenRequestApiImpl = std::make_shared<AccessTokenRequestApiImpl>(
+    // m_accessTokenRequestApiImpl =
+    // std::make_shared<AccessTokenRequestApiImpl>(
     //     m_router, nssf_app_inst, m_address);
   }
   void init(size_t thr = 1);
   void start();
   void shutdown();
 
- private:
+private:
   std::shared_ptr<Pistache::Http::Endpoint> m_httpEndpoint;
   std::shared_ptr<Pistache::Rest::Router> m_router;
-//   std::shared_ptr<CompleteStoredSearchDocumentApiImpl>
-//       m_completeStoredSearchDocumentApiImpl;
+  //   std::shared_ptr<CompleteStoredSearchDocumentApiImpl>
+  //       m_completeStoredSearchDocumentApiImpl;
   std::shared_ptr<NFInstanceIDDocumentApiImpl> m_nfInstanceIDDocumentApiImpl;
   std::shared_ptr<SubscriptionIDDocumentApiImpl>
       m_subscriptionIDDocumentApiImpl;
   std::shared_ptr<SubscriptionsCollectionApiImpl>
       m_subscriptionsCollectionApiImpl;
-  std::shared_ptr<NSSAIAvailabilityStoreApiImpl>
-      m_nssaiAvailablityStoreApiImpl;
+  std::shared_ptr<NSSAIAvailabilityStoreApiImpl> m_nssaiAvailablityStoreApiImpl;
   std::shared_ptr<NetworkSliceInformationDocumentApiImpl>
       m_networkSliceInformationDocumentApiImpl;
   // std::shared_ptr<AccessTokenRequestApiImpl> m_accessTokenRequestApiImpl;

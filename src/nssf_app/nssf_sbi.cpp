@@ -110,6 +110,8 @@ nssf_nrf::nssf_nrf() {
     throw std::runtime_error("Cannot create task TASK_NSSF_NRF");
   }
 
+  std::thread();
+
   // Register to NRF
   register_to_nrf();
   Logger::nssf_sbi().startup("Started");

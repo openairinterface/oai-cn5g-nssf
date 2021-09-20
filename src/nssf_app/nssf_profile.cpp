@@ -37,27 +37,25 @@
 using namespace nssf;
 
 //------------------------------------------------------------------------------
-void nssf_profile::set_nf_instance_id(const std::string& instance_id) {
+void nssf_profile::set_nf_instance_id(const std::string &instance_id) {
   nf_instance_id = instance_id;
 }
 
 //------------------------------------------------------------------------------
-void nssf_profile::get_nf_instance_id(std::string& instance_id) const {
+void nssf_profile::get_nf_instance_id(std::string &instance_id) const {
   instance_id = nf_instance_id;
 }
 
 //------------------------------------------------------------------------------
-std::string nssf_profile::get_nf_instance_id() const {
-  return nf_instance_id;
-}
+std::string nssf_profile::get_nf_instance_id() const { return nf_instance_id; }
 
 //------------------------------------------------------------------------------
-void nssf_profile::set_nf_instance_name(const std::string& instance_name) {
+void nssf_profile::set_nf_instance_name(const std::string &instance_name) {
   nf_instance_name = instance_name;
 }
 
 //------------------------------------------------------------------------------
-void nssf_profile::get_nf_instance_name(std::string& instance_name) const {
+void nssf_profile::get_nf_instance_name(std::string &instance_name) const {
   instance_name = nf_instance_name;
 }
 
@@ -67,112 +65,84 @@ std::string nssf_profile::get_nf_instance_name() const {
 }
 
 //------------------------------------------------------------------------------
-void nssf_profile::set_nf_type(const std::string& type) {
-  nf_type = type;
-}
+void nssf_profile::set_nf_type(const std::string &type) { nf_type = type; }
 
 //------------------------------------------------------------------------------
-std::string nssf_profile::get_nf_type() const {
-  return nf_type;
-}
+std::string nssf_profile::get_nf_type() const { return nf_type; }
 //------------------------------------------------------------------------------
-void nssf_profile::set_nf_status(const std::string& status) {
+void nssf_profile::set_nf_status(const std::string &status) {
   nf_status = status;
 }
 
 //------------------------------------------------------------------------------
-void nssf_profile::get_nf_status(std::string& status) const {
+void nssf_profile::get_nf_status(std::string &status) const {
   status = nf_status;
 }
 
 //------------------------------------------------------------------------------
-std::string nssf_profile::get_nf_status() const {
-  return nf_status;
-}
+std::string nssf_profile::get_nf_status() const { return nf_status; }
 
 //------------------------------------------------------------------------------
-void nssf_profile::set_nf_heartBeat_timer(const int32_t& timer) {
+void nssf_profile::set_nf_heartBeat_timer(const int32_t &timer) {
   heartBeat_timer = timer;
 }
 
 //------------------------------------------------------------------------------
-void nssf_profile::get_nf_heartBeat_timer(int32_t& timer) const {
+void nssf_profile::get_nf_heartBeat_timer(int32_t &timer) const {
   timer = heartBeat_timer;
 }
 
 //------------------------------------------------------------------------------
-int32_t nssf_profile::get_nf_heartBeat_timer() const {
-  return heartBeat_timer;
-}
+int32_t nssf_profile::get_nf_heartBeat_timer() const { return heartBeat_timer; }
 
 //------------------------------------------------------------------------------
-void nssf_profile::set_nf_priority(const uint16_t& p) {
-  priority = p;
-}
+void nssf_profile::set_nf_priority(const uint16_t &p) { priority = p; }
 
 //------------------------------------------------------------------------------
-void nssf_profile::get_nf_priority(uint16_t& p) const {
-  p = priority;
-}
+void nssf_profile::get_nf_priority(uint16_t &p) const { p = priority; }
 
 //------------------------------------------------------------------------------
-uint16_t nssf_profile::get_nf_priority() const {
-  return priority;
-}
+uint16_t nssf_profile::get_nf_priority() const { return priority; }
 
 //------------------------------------------------------------------------------
-void nssf_profile::set_nf_capacity(const uint16_t& c) {
-  capacity = c;
-}
+void nssf_profile::set_nf_capacity(const uint16_t &c) { capacity = c; }
 
 //------------------------------------------------------------------------------
-void nssf_profile::get_nf_capacity(uint16_t& c) const {
-  c = capacity;
-}
+void nssf_profile::get_nf_capacity(uint16_t &c) const { c = capacity; }
 
 //------------------------------------------------------------------------------
-uint16_t nssf_profile::get_nf_capacity() const {
-  return capacity;
-}
+uint16_t nssf_profile::get_nf_capacity() const { return capacity; }
 
 //------------------------------------------------------------------------------
-void nssf_profile::set_nf_snssais(const std::vector<snssai_t>& s) {
+void nssf_profile::set_nf_snssais(const std::vector<snssai_t> &s) {
   snssais = s;
 }
 
 //------------------------------------------------------------------------------
-void nssf_profile::get_nf_snssais(std::vector<snssai_t>& s) const {
+void nssf_profile::get_nf_snssais(std::vector<snssai_t> &s) const {
   s = snssais;
 }
 
 //------------------------------------------------------------------------------
-void nssf_profile::add_snssai(const snssai_t& s) {
-  snssais.push_back(s);
-}
+void nssf_profile::add_snssai(const snssai_t &s) { snssais.push_back(s); }
 
 //------------------------------------------------------------------------------
-void nssf_profile::set_fqdn(const std::string& fqdN) {
-  fqdn = fqdN;
-}
+void nssf_profile::set_fqdn(const std::string &fqdN) { fqdn = fqdN; }
 
 //------------------------------------------------------------------------------
-std::string nssf_profile::get_fqdn() const {
-  return fqdn;
-}
+std::string nssf_profile::get_fqdn() const { return fqdn; }
 
 //------------------------------------------------------------------------------
-void nssf_profile::set_nf_ipv4_addresses(
-    const std::vector<struct in_addr>& a) {
+void nssf_profile::set_nf_ipv4_addresses(const std::vector<struct in_addr> &a) {
   ipv4_addresses = a;
 }
 
 //------------------------------------------------------------------------------
-void nssf_profile::add_nf_ipv4_addresses(const struct in_addr& a) {
+void nssf_profile::add_nf_ipv4_addresses(const struct in_addr &a) {
   ipv4_addresses.push_back(a);
 }
 //------------------------------------------------------------------------------
-void nssf_profile::get_nf_ipv4_addresses(
-    std::vector<struct in_addr>& a) const {
+void nssf_profile::get_nf_ipv4_addresses(std::vector<struct in_addr> &a) const {
   a = ipv4_addresses;
 }
 
@@ -205,18 +175,18 @@ void nssf_profile::display() const {
 }
 
 //------------------------------------------------------------------------------
-void nssf_profile::to_json(nlohmann::json& data) const {
-  data["nfInstanceId"]   = nf_instance_id;
+void nssf_profile::to_json(nlohmann::json &data) const {
+  data["nfInstanceId"] = nf_instance_id;
   data["nfInstanceName"] = nf_instance_name;
-  data["nfType"]         = nf_type;
-  data["nfStatus"]       = nf_status;
+  data["nfType"] = nf_type;
+  data["nfStatus"] = nf_status;
   data["heartBeatTimer"] = heartBeat_timer;
   // SNSSAIs
   data["sNssais"] = nlohmann::json::array();
   for (auto s : snssais) {
     nlohmann::json tmp = {};
-    tmp["sst"]         = s.sST;
-    tmp["sd"]          = s.sD;
+    tmp["sst"] = s.sST;
+    tmp["sd"] = s.sD;
     data["sNssais"].push_back(tmp);
   }
   data["fqdn"] = fqdn;
@@ -234,7 +204,7 @@ void nssf_profile::to_json(nlohmann::json& data) const {
 }
 
 //------------------------------------------------------------------------------
-void nssf_profile::from_json(const nlohmann::json& data) {
+void nssf_profile::from_json(const nlohmann::json &data) {
   if (data.find("nfInstanceId") != data.end()) {
     nf_instance_id = data["nfInstanceId"].get<std::string>();
   }
@@ -258,8 +228,8 @@ void nssf_profile::from_json(const nlohmann::json& data) {
   if (data.find("sNssais") != data.end()) {
     for (auto it : data["sNssais"]) {
       snssai_t s = {};
-      s.sST      = it["sst"].get<int>();
-      s.sD       = it["sd"].get<std::string>();
+      s.sST = it["sst"].get<int>();
+      s.sD = it["sd"].get<std::string>();
       snssais.push_back(s);
     }
   }
@@ -269,13 +239,13 @@ void nssf_profile::from_json(const nlohmann::json& data) {
 
     for (auto it : addresses) {
       struct in_addr addr4 = {};
-      std::string address  = it.get<std::string>();
+      std::string address = it.get<std::string>();
       unsigned char buf_in_addr[sizeof(struct in_addr)];
       if (inet_pton(AF_INET, util::trim(address).c_str(), buf_in_addr) == 1) {
         memcpy(&addr4, buf_in_addr, sizeof(struct in_addr));
       } else {
-        Logger::nssf_app().warn(
-            "Address conversion: Bad value %s", util::trim(address).c_str());
+        Logger::nssf_app().warn("Address conversion: Bad value %s",
+                                util::trim(address).c_str());
       }
       add_nf_ipv4_addresses(addr4);
     }
@@ -293,8 +263,7 @@ void nssf_profile::from_json(const nlohmann::json& data) {
 
 //------------------------------------------------------------------------------
 void nssf_profile::handle_heartbeart_timeout(uint64_t ms) {
-  Logger::nssf_app().info(
-      "Handle heartbeart timeout profile %s, time %d", nf_instance_id.c_str(),
-      ms);
+  Logger::nssf_app().info("Handle heartbeart timeout profile %s, time %d",
+                          nf_instance_id.c_str(), ms);
   set_nf_status("SUSPENDED");
 }

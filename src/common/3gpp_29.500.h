@@ -18,6 +18,7 @@
  * For more information about the OpenAirInterface (OAI) Software Alliance:
  *      contact@openairinterface.org
  */
+#include <vector>
 
 #ifndef FILE_3GPP_29_500_SEEN
 #define FILE_3GPP_29_500_SEEN

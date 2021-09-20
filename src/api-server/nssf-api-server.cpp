@@ -35,9 +35,9 @@
 #include "pistache/http.h"
 #include "pistache/router.h"
 #ifdef __linux__
-#include <vector>
 #include <signal.h>
 #include <unistd.h>
+#include <vector>
 #endif
 
 #define PISTACHE_SERVER_MAX_PAYLOAD 32768
@@ -45,12 +45,12 @@
 #ifdef __linux__
 void sigHandler(int sig) {
   switch (sig) {
-    case SIGINT:
-    case SIGQUIT:
-    case SIGTERM:
-    case SIGHUP:
-    default:
-      break;
+  case SIGINT:
+  case SIGQUIT:
+  case SIGTERM:
+  case SIGHUP:
+  default:
+    break;
   }
   exit(0);
 }
@@ -58,14 +58,16 @@ void sigHandler(int sig) {
 void setUpUnixSignals(std::vector<int> quitSignals) {
   sigset_t blocking_mask;
   sigemptyset(&blocking_mask);
-  for (auto sig : quitSignals) sigaddset(&blocking_mask, sig);
+  for (auto sig : quitSignals)
+    sigaddset(&blocking_mask, sig);
 
   struct sigaction sa;
   sa.sa_handler = sigHandler;
-  sa.sa_mask    = blocking_mask;
-  sa.sa_flags   = 0;
+  sa.sa_mask = blocking_mask;
+  sa.sa_flags = 0;
 
-  for (auto sig : quitSignals) sigaction(sig, &sa, nullptr);
+  for (auto sig : quitSignals)
+    sigaction(sig, &sa, nullptr);
 }
 #endif
 
@@ -77,12 +79,12 @@ void NSSFApiServer::init(size_t thr) {
   opts.maxRequestSize(PISTACHE_SERVER_MAX_PAYLOAD);
   m_httpEndpoint->init(opts);
 
-    m_nfInstanceIDDocumentApiImpl->init();
-    m_subscriptionIDDocumentApiImpl->init();
-    m_subscriptionsCollectionApiImpl->init();
-    m_nssaiAvailablityStoreApiImpl->init();
-    m_networkSliceInformationDocumentApiImpl->init();
-    // m_accessTokenRequestApiImpl->init();
+  m_nfInstanceIDDocumentApiImpl->init();
+  m_subscriptionIDDocumentApiImpl->init();
+  m_subscriptionsCollectionApiImpl->init();
+  m_nssaiAvailablityStoreApiImpl->init();
+  m_networkSliceInformationDocumentApiImpl->init();
+  // m_accessTokenRequestApiImpl->init();
 }
 
 void NSSFApiServer::start() {
@@ -90,6 +92,4 @@ void NSSFApiServer::start() {
   m_httpEndpoint->setHandler(m_router->handler());
   m_httpEndpoint->serve();
 }
-void NSSFApiServer::shutdown() {
-  m_httpEndpoint->shutdown();
-}
+void NSSFApiServer::shutdown() { m_httpEndpoint->shutdown(); }

@@ -19,9 +19,9 @@
 #ifndef Dnf_H_
 #define Dnf_H_
 
-#include <vector>
 #include "DnfUnit.h"
 #include <nlohmann/json.hpp>
+#include <vector>
 
 namespace oai {
 namespace nssf_server {
@@ -31,7 +31,7 @@ namespace model {
 ///
 /// </summary>
 class Dnf {
- public:
+public:
   Dnf();
   virtual ~Dnf();
 
@@ -43,18 +43,18 @@ class Dnf {
   /// <summary>
   ///
   /// </summary>
-  std::vector<DnfUnit>& getDnfUnits();
-  void setDnfUnits(std::vector<DnfUnit> const& value);
+  std::vector<DnfUnit> &getDnfUnits();
+  void setDnfUnits(std::vector<DnfUnit> const &value);
 
-  friend void to_json(nlohmann::json& j, const Dnf& o);
-  friend void from_json(const nlohmann::json& j, Dnf& o);
+  friend void to_json(nlohmann::json &j, const Dnf &o);
+  friend void from_json(const nlohmann::json &j, Dnf &o);
 
- protected:
+protected:
   std::vector<DnfUnit> m_DnfUnits;
 };
 
-}  // namespace model
-}  // namespace nssf_server
-}  // namespace oai
+} // namespace model
+} // namespace nssf_server
+} // namespace oai
 
 #endif /* Dnf_H_ */

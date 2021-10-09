@@ -62,12 +62,6 @@ RUN ./build_nssf --clean --Verbose --build-type Release --jobs
 
 RUN rm /etc/pki/entitlement/*pem
 
-# debug
-#WORKDIR /openair-nssf
-#RUN ldconfig -v && ldd /usr/local/bin/nssf
-#RUN ls -ls /usr/local/lib/
-
-
 #---------------------------------------------------------------------
 # TARGET IMAGE
 #---------------------------------------------------------------------
@@ -85,28 +79,25 @@ RUN yum update -y && \
 # Copying executable and generated libraries
 WORKDIR /openair-nssf/bin
 COPY --from=oai-nssf-builder /openair-nssf/build/nssf/build/nssf oai_nssf
+
 COPY --from=oai-nssf-builder /usr/local/lib64/libpistache.so.0 /usr/lib64/
 COPY --from=oai-nssf-builder /usr/local/lib/libnghttp2_asio.so /usr/lib64/
-COPY --from=oai-nssf-builder /usr/lib64/libgflags.so.2.1 /usr/lib64/
-COPY --from=oai-nssf-builder /usr/lib64/libglog.so.0 /usr/lib64/
-COPY --from=oai-nssf-builder /usr/lib64/libdouble-conversion.so.1 /usr/lib64/
 COPY --from=oai-nssf-builder /usr/lib64/libconfig++.so.9 /usr/lib64/
 COPY --from=oai-nssf-builder /usr/lib64/libboost_system.so.1.66.0 /usr/lib64/
 COPY --from=oai-nssf-builder /usr/lib64/libboost_thread.so.1.66.0 /usr/lib64/
 COPY --from=oai-nssf-builder /usr/lib64/libboost_chrono.so.1.66.0 /usr/lib64/
 COPY --from=oai-nssf-builder /usr/local/lib/libnghttp2_asio.so.1 /usr/lib64/
-COPY --from=oai-nssf-builder /usr/lib64/libasan.so.5 /usr/lib64/
 
 COPY --from=oai-nssf-builder /openair-nssf/scripts/entrypoint.sh entrypoint.sh
 
 # debug
-#RUN ldconfig -v
-#RUN ldd oai_nssf
+RUN ldconfig -v
 
 # Copying template configuration files
 # The configuration folder will be flat
 WORKDIR /openair-nssf/etc
 COPY --from=oai-nssf-builder /openair-nssf/etc/nssf.conf .
+COPY --from=oai-nssf-builder /openair-nssf/etc/nssf_slice_config.json .
 
 WORKDIR /openair-nssf
 
@@ -114,5 +105,4 @@ WORKDIR /openair-nssf
 EXPOSE 80/tcp 8080/tcp
 
 ENTRYPOINT ["/openair-nssf/bin/entrypoint.sh"]
-
 CMD ["/openair-nssf/bin/oai_nssf", "-c", "/openair-nssf/etc/nssf.conf", "-o"]

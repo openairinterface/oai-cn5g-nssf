@@ -25,22 +25,18 @@ void CnfUnit::validate() {
   // TODO: implement validation
 }
 
-void to_json(nlohmann::json& j, const CnfUnit& o) {
-  j            = nlohmann::json();
+void to_json(nlohmann::json &j, const CnfUnit &o) {
+  j = nlohmann::json();
   j["cnfUnit"] = o.m_CnfUnit;
 }
 
-void from_json(const nlohmann::json& j, CnfUnit& o) {
+void from_json(const nlohmann::json &j, CnfUnit &o) {
   j.at("cnfUnit").get_to(o.m_CnfUnit);
 }
 
-std::vector<Atom>& CnfUnit::getCnfUnit() {
-  return m_CnfUnit;
-}
-void CnfUnit::setCnfUnit(std::vector<Atom> const& value) {
-  m_CnfUnit = value;
-}
+std::vector<Atom> &CnfUnit::getCnfUnit() { return m_CnfUnit; }
+void CnfUnit::setCnfUnit(std::vector<Atom> const &value) { m_CnfUnit = value; }
 
-}  // namespace model
-}  // namespace nssf_server
-}  // namespace oai
+} // namespace model
+} // namespace nssf_server
+} // namespace oai

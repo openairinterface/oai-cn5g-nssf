@@ -31,9 +31,6 @@
 
 #include "3gpp_29.510.h"
 #include "NetworkSliceInformationDocumentApiImpl.h"
-#include "rapidjson/document.h"
-#include "rapidjson/filereadstream.h"
-#include "thread_sched.hpp"
 #include <libconfig.h++>
 #include <mutex>
 #include <netinet/in.h>
@@ -81,15 +78,7 @@ typedef struct interface_cfg_s {
   unsigned int mtu;
   unsigned int http1_port;
   unsigned int http2_port;
-  util::thread_sched_params thread_rd_sched_params;
 } interface_cfg_t;
-
-typedef struct itti_cfg_s {
-  util::thread_sched_params itti_timer_sched_params;
-  util::thread_sched_params sbi_sched_params;
-  util::thread_sched_params nssf_app_sched_params;
-  util::thread_sched_params async_cmd_sched_params;
-} itti_cfg_t;
 
 typedef struct nsi_info_s {
   Snssai snssai;
@@ -111,16 +100,12 @@ typedef struct nssf_ta_info_cfg_s {
 
 class nssf_config {
 private:
-  // int load_itti(const libconfig::Setting& itti_cfg, itti_cfg_t& cfg);
   int load_interface(const libconfig::Setting &if_cfg, interface_cfg_t &cfg);
-  // int load_thread_sched_params(
-  //     const libconfig::Setting& thread_sched_params_cfg,
-  //     util::thread_sched_params& cfg);
 
-  static const bool ParseNsiInfo(const RAPIDJSON_NAMESPACE::Value &conf,
+  static const bool ParseNsiInfo(const nlohmann::json &conf,
                                  nssf_nsi_info_t &cfg);
 
-  static const bool ParseTaInfo(const RAPIDJSON_NAMESPACE::Value &conf,
+  static const bool ParseTaInfo(const nlohmann::json &conf,
                                 nssf_ta_info_t &cfg);
 
 public:
@@ -131,7 +116,6 @@ public:
   std::string fqdn;
   interface_cfg_t sbi;
   std::string sbi_api_version;
-  itti_cfg_t itti;
 
   std::string gateway;
 
@@ -152,18 +136,7 @@ public:
 
   static std::string slice_config_file;
 
-  nssf_config()
-      : m_rw_lock(), pid_dir(), instance(0), fqdn(), gateway(), sbi(), itti() {
-    itti.itti_timer_sched_params.sched_priority = 85;
-    itti.nssf_app_sched_params.sched_priority = 84;
-    itti.async_cmd_sched_params.sched_priority = 84;
-
-    nssf_features.register_nrf = false;
-    nssf_features.use_fqdn = false;
-    nssf_features.nrf_addr.ipv4_addr.s_addr = INADDR_ANY;
-    nssf_features.nrf_addr.port = 80;
-    nssf_features.nrf_addr.api_version = "v1";
-    nssf_features.nrf_addr.fqdn = {};
+  nssf_config() : m_rw_lock(), pid_dir(), instance(0) {
 
     sbi.http1_port = 9090;
     sbi.http2_port = 80;

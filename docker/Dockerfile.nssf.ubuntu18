@@ -68,17 +68,10 @@ RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get upgrade --yes && \
     DEBIAN_FRONTEND=noninteractive apt-get install --yes \
       psmisc \
-      net-tools \
       tzdata \
-      bc \
       tshark \
-      perl \
       openssl \
       libasan4 \
-      libldap-2.4-2 \
-      libgoogle-glog0v5 \
-      libdouble-conversion1 \
-      libconfig++9v5 \
  && rm -rf /var/lib/apt/lists/*
 
 # Copying executable and generated libraries
@@ -93,6 +86,7 @@ COPY --from=oai-nssf-builder /usr/local/lib/libnghttp2_asio.so.1 .
 COPY --from=oai-nssf-builder /usr/lib/x86_64-linux-gnu/libcurl-gnutls.so.4 .
 COPY --from=oai-nssf-builder /usr/lib/x86_64-linux-gnu/librtmp.so.1 .
 COPY --from=oai-nssf-builder /usr/lib/x86_64-linux-gnu/libpsl.so.5 .
+COPY --from=oai-nssf-builder /usr/lib/x86_64-linux-gnu/libconfig++.so.9 .
 
 RUN ldconfig
 
@@ -100,6 +94,7 @@ RUN ldconfig
 # The configuration folder will be flat
 WORKDIR /openair-nssf/etc
 COPY --from=oai-nssf-builder /openair-nssf/etc/nssf.conf .
+COPY --from=oai-nssf-builder /openair-nssf/etc/nssf_slice_config.json .
 
 WORKDIR /openair-nssf
 

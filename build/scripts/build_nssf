@@ -100,12 +100,6 @@ function main()
         var_check_install_deps=1
         shift;
         ;;
-      -i | --install-min-deps)
-        echo "Check installed software necessary to run nssf (support $SUPPORTED_DISTRO):"
-        set_openair_env
-        var_check_install_min_deps=1
-        shift;
-        ;;
       -j | --jobs)
         make_args="$make_args -j`nproc`"
         shift;
@@ -143,19 +137,6 @@ function main()
   mkdir -m 777 -p $dlog
   mkdir -m 777 -p $dext
 
-  if [ $var_check_install_min_deps -gt 0 ];then
-    check_install_nssfmin_deps  $force $debug
-    if [[ $? -ne 0 ]]; then
-        echo_error "Error: NSSF minimal deps installation failed"
-        return 1
-    else
-        # Done now after
-        disable_ipv6
-        echo_success "NSSF minimal deps installation successful"
-        echo_warning "NSSF not compiled, to compile it, re-run build_nssf without -i option"
-        return 0
-    fi
-  fi
   if [ $var_check_install_deps -gt 0 ];then
     check_install_nssf_deps  $force $debug
     if [[ $? -ne 0 ]]; then

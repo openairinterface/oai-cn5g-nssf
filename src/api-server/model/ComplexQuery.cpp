@@ -25,30 +25,26 @@ void ComplexQuery::validate() {
   // TODO: implement validation
 }
 
-void to_json(nlohmann::json& j, const ComplexQuery& o) {
-  j             = nlohmann::json();
+void to_json(nlohmann::json &j, const ComplexQuery &o) {
+  j = nlohmann::json();
   j["cnfUnits"] = o.m_CnfUnits;
   j["dnfUnits"] = o.m_DnfUnits;
 }
 
-void from_json(const nlohmann::json& j, ComplexQuery& o) {
+void from_json(const nlohmann::json &j, ComplexQuery &o) {
   j.at("cnfUnits").get_to(o.m_CnfUnits);
   j.at("dnfUnits").get_to(o.m_DnfUnits);
 }
 
-std::vector<CnfUnit>& ComplexQuery::getCnfUnits() {
-  return m_CnfUnits;
-}
-void ComplexQuery::setCnfUnits(std::vector<CnfUnit> const& value) {
+std::vector<CnfUnit> &ComplexQuery::getCnfUnits() { return m_CnfUnits; }
+void ComplexQuery::setCnfUnits(std::vector<CnfUnit> const &value) {
   m_CnfUnits = value;
 }
-std::vector<DnfUnit>& ComplexQuery::getDnfUnits() {
-  return m_DnfUnits;
-}
-void ComplexQuery::setDnfUnits(std::vector<DnfUnit> const& value) {
+std::vector<DnfUnit> &ComplexQuery::getDnfUnits() { return m_DnfUnits; }
+void ComplexQuery::setDnfUnits(std::vector<DnfUnit> const &value) {
   m_DnfUnits = value;
 }
 
-}  // namespace model
-}  // namespace nssf_server
-}  // namespace oai
+} // namespace model
+} // namespace nssf_server
+} // namespace oai

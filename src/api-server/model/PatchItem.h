@@ -19,8 +19,8 @@
 #ifndef PatchItem_H_
 #define PatchItem_H_
 
-#include <string>
 #include <nlohmann/json.hpp>
+#include <string>
 
 namespace oai {
 namespace nssf_server {
@@ -30,7 +30,7 @@ namespace model {
 ///
 /// </summary>
 class PatchItem {
- public:
+public:
   PatchItem();
   virtual ~PatchItem();
 
@@ -43,31 +43,31 @@ class PatchItem {
   ///
   /// </summary>
   std::string getOp() const;
-  void setOp(std::string const& value);
+  void setOp(std::string const &value);
   /// <summary>
   ///
   /// </summary>
   std::string getPath() const;
-  void setPath(std::string const& value);
+  void setPath(std::string const &value);
   /// <summary>
   ///
   /// </summary>
   std::string getFrom() const;
-  void setFrom(std::string const& value);
+  void setFrom(std::string const &value);
   bool fromIsSet() const;
   void unsetFrom();
   /// <summary>
   ///
   /// </summary>
   std::string getValue() const;
-  void setValue(std::string const& value);
+  void setValue(std::string const &value);
   bool valueIsSet() const;
   void unsetValue();
 
-  friend void to_json(nlohmann::json& j, const PatchItem& o);
-  friend void from_json(const nlohmann::json& j, PatchItem& o);
+  friend void to_json(nlohmann::json &j, const PatchItem &o);
+  friend void from_json(const nlohmann::json &j, PatchItem &o);
 
- protected:
+protected:
   std::string m_Op;
 
   std::string m_Path;
@@ -78,8 +78,8 @@ class PatchItem {
   bool m_ValueIsSet;
 };
 
-}  // namespace model
-}  // namespace nssf_server
-}  // namespace oai
+} // namespace model
+} // namespace nssf_server
+} // namespace oai
 
 #endif /* PatchItem_H_ */

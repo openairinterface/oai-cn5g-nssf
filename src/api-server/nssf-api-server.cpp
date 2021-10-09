@@ -85,6 +85,9 @@ void NSSFApiServer::init(size_t thr) {
   m_nssaiAvailablityStoreApiImpl->init();
   m_networkSliceInformationDocumentApiImpl->init();
   // m_accessTokenRequestApiImpl->init();
+
+  // Custom APIs
+  m_NssfSliceConfigApiImpl->init();
 }
 
 void NSSFApiServer::start() {

@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-#include "async_shell_cmd.hpp"
 #include "common_defs.h"
-#include "itti.hpp"
 #include "logger.hpp"
 #include "options.hpp"
 #include "pid_file.hpp"
@@ -45,8 +43,6 @@ using namespace util;
 using namespace std;
 using namespace oai::nssf_server::api;
 
-itti_mw* itti_inst                    = nullptr;
-async_shell_cmd* async_shell_cmd_inst = nullptr;
 nssf_app* nssf_app_inst               = nullptr;
 nssf_config nssf_cfg;
 boost::asio::io_service io_service;
@@ -57,12 +53,8 @@ nssf_http2_server* nssf_api_server_2 = nullptr;
 void my_app_signal_handler(int s) {
   std::cout << "Caught signal " << s << std::endl;
   Logger::system().startup("exiting");
-  itti_inst->send_terminate_msg(TASK_NSSF_APP);
-  itti_inst->wait_tasks_end();
   std::cout << "Freeing Allocated memory..." << std::endl;
-  if (async_shell_cmd_inst) delete async_shell_cmd_inst;
-  async_shell_cmd_inst = nullptr;
-  std::cout << "Async Shell CMD memory done." << std::endl;
+
     if (nssf_api_server_1) {
     nssf_api_server_1->shutdown();
     delete nssf_api_server_1;
@@ -147,17 +139,6 @@ int main(int argc, char** argv) {
     std::cout << "nssf_cfg::ParseJson() failed" << std::endl;
     return 1;
   }
-  
-  // Inter task Interface
-  // itti_inst = new itti_mw();
-  // itti_inst->start(nssf_cfg.itti.itti_timer_sched_params);
-
-  // system command
-  // async_shell_cmd_inst =
-  //     new async_shell_cmd(nssf_cfg.itti.async_cmd_sched_params);
-
-  // nssf application layer
-  // nssf_app_inst = new nssf_app(Options::getlibconfigConfig());
 
   // PID file
   // Currently hard-coded value. TODO: add as config option.

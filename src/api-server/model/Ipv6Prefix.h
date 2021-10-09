@@ -29,7 +29,7 @@ namespace model {
 ///
 /// </summary>
 class Ipv6Prefix {
- public:
+public:
   Ipv6Prefix();
   virtual ~Ipv6Prefix();
 
@@ -38,14 +38,14 @@ class Ipv6Prefix {
   /////////////////////////////////////////////
   /// Ipv6Prefix members
 
-  friend void to_json(nlohmann::json& j, const Ipv6Prefix& o);
-  friend void from_json(const nlohmann::json& j, Ipv6Prefix& o);
+  friend void to_json(nlohmann::json &j, const Ipv6Prefix &o);
+  friend void from_json(const nlohmann::json &j, Ipv6Prefix &o);
 
- protected:
+protected:
 };
 
-}  // namespace model
-}  // namespace nssf_server
-}  // namespace oai
+} // namespace model
+} // namespace nssf_server
+} // namespace oai
 
 #endif /* Ipv6Prefix_H_ */

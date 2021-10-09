@@ -48,8 +48,9 @@
 #include "NetworkSliceInformationDocumentApiImpl.h"
 #include "SubscriptionIDDocumentApiImpl.h"
 #include "SubscriptionsCollectionApiImpl.h"
-// #include "AccessTokenRequestApiImpl.h"
 
+#include "NssfSliceConfigApiImpl.h"
+#include "logger.hpp"
 #include "nssf_app.hpp"
 
 using namespace oai::nssf_server::api;
@@ -80,6 +81,9 @@ public:
     // m_accessTokenRequestApiImpl =
     // std::make_shared<AccessTokenRequestApiImpl>(
     //     m_router, nssf_app_inst, m_address);
+
+    m_NssfSliceConfigApiImpl = std::make_shared<NssfSliceConfigApiImpl>(
+        m_router, nssf_app_inst, m_address);
   }
   void init(size_t thr = 1);
   void start();
@@ -88,8 +92,7 @@ public:
 private:
   std::shared_ptr<Pistache::Http::Endpoint> m_httpEndpoint;
   std::shared_ptr<Pistache::Rest::Router> m_router;
-  //   std::shared_ptr<CompleteStoredSearchDocumentApiImpl>
-  //       m_completeStoredSearchDocumentApiImpl;
+
   std::shared_ptr<NFInstanceIDDocumentApiImpl> m_nfInstanceIDDocumentApiImpl;
   std::shared_ptr<SubscriptionIDDocumentApiImpl>
       m_subscriptionIDDocumentApiImpl;
@@ -99,6 +102,8 @@ private:
   std::shared_ptr<NetworkSliceInformationDocumentApiImpl>
       m_networkSliceInformationDocumentApiImpl;
   // std::shared_ptr<AccessTokenRequestApiImpl> m_accessTokenRequestApiImpl;
+  std::shared_ptr<NssfSliceConfigApiImpl> m_NssfSliceConfigApiImpl;
+
   std::string m_address;
 };
 

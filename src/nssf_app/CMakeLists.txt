@@ -32,8 +32,6 @@ include_directories(${SRC_TOP_DIR}/api-server/)
 add_library (NSSF STATIC
   nssf_app.cpp
   nssf_config.cpp
-  nssf_profile.cpp
-  nssf_sbi.cpp
   )
 
   

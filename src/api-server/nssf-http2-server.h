@@ -104,6 +104,11 @@ public:
   void remove_subscription_n_ssai_availability_handler(
       const std::string &subscriptionId, const response &response);
 
+  // NSSF Custom API to get slice config
+  void get_slice_config(const response &response);
+  // void get_current_slice_config(const response &response);
+  void get_api_list(const response &response);
+
   void stop();
 
 private:

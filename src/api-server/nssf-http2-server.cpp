@@ -19,12 +19,12 @@
  *      contact@openairinterface.org
  */
 
-/*! \file nrf_http2-server.cpp
+/*! \file nssf_http2-server.h
  \brief
- \author  Tien-Thinh NGUYEN
- \company Eurecom
- \date 2020
- \email: tien-thinh.nguyen@eurecom.fr
+ \author  Rohan Kharade
+ \company Openairinterface Software Allianse
+ \date 2021
+ \email: rohan.kharade@openairinterface.org
  */
 
 #include "nssf-http2-server.h"
@@ -213,6 +213,27 @@ void nssf_http2_server::start() {
                     // ToDo
                   });
                 });
+
+  //###### NSSF Custom APIs ######
+  // Get default slice config
+  server.handle(NSSF_SLICE_CONFIG,
+                [&](const request &request, const response &response) {
+                  request.on_data([&](const uint8_t *data, std::size_t len) {
+                    if (request.method().compare("GET") == 0) {
+                      this->get_slice_config(response);
+                    }
+                  });
+                });
+
+  // Get list of supported APIs
+  server.handle("/", [&](const request &request, const response &response) {
+    request.on_data([&](const uint8_t *data, std::size_t len) {
+      if (request.method().compare("GET") == 0) {
+        this->get_api_list(response);
+      }
+    });
+  });
+
   if (server.listen_and_serve(ec, m_address, std::to_string(m_port))) {
     std::cerr << "HTTP Server error: " << ec.message() << std::endl;
   }
@@ -259,18 +280,25 @@ void nssf_http2_server::get_slice_info_for_pdu_session_handler(
     m_nssf_app->handle_slice_info_for_pdu_session(
         slice_info, tai, home_plmnid, features, http_code, 2, problem_details,
         auth_slice_info);
+    if (http_code == HTTP_STATUS_CODE_200_OK) {
+      to_json(json_data, auth_slice_info);
 
-    to_json(json_data, auth_slice_info);
-
-    response.write_head(http_code, h);
-    response.end(json_data.dump().c_str());
+      response.write_head(http_code, h);
+      response.end(json_data.dump().c_str());
+    } else {
+      response.write_head(http_code, h);
+      to_json(json_data, problem_details);
+      response.end(json_data.dump().c_str());
+    }
   } else {
-    Logger::nssf_sbi().error("Invalid NF_Type (Valid NF_Type is AMF, NSSF, NWDAP, SMF)");
-      Logger::nssf_app().info(
+    Logger::nssf_sbi().error(
+        "Invalid NF_Type (Valid NF_Type is AMF, NSSF, NWDAP, SMF)");
+    Logger::nssf_app().info(
         "//---------------------------------------------------------");
-  Logger::nssf_app().info("");
+    Logger::nssf_app().info("");
     http_code = HTTP_STATUS_CODE_400_BAD_REQUEST;
     response.write_head(http_code, h);
+    to_json(json_data, problem_details);
     response.end();
   }
 }
@@ -299,17 +327,51 @@ void nssf_http2_server::get_slice_info_default_handler(
       nf_id.c_str());
   // ToDo and TBD
 }
+
 //------------------------------------------------------------------------------
 void nssf_http2_server::create_n_ssai_availability_handler(
     const std::string &nfId, const NssaiAvailabilityInfo &nssaiAvailInfo,
     const response &response) {
   Logger::nssf_sbi().info("NSSAI Availability: Got a request to "
                           "Updates/replaces the NSSF with the S-NSSAIs");
-    Logger::nssf_sbi().info("NSSAI Availability: Instance ID: %s",
-                          nfId.c_str());
+  Logger::nssf_sbi().info("NSSAI Availability: Instance ID: %s", nfId.c_str());
+}
+
+//------------------------------------------------------------------------------
+void nssf_http2_server::get_slice_config(const response &response) {
+  Logger::nssf_sbi().info(
+      "OAI-NSSF:: Default Slice Config is requested (HTTP Version 2)!!!");
+  int http_code = 0;
+  nlohmann::json json_data = {};
+  std::string content_type = "application/json";
+  header_map h;
+  h.emplace("content-type", header_value{content_type});
+  if (nssf_cfg.get_slice_config(json_data)) {
+    http_code = HTTP_STATUS_CODE_200_OK;
+    response.write_head(http_code, h);
+    response.end(json_data.dump(4).c_str());
+  } else {
+    http_code = HTTP_STATUS_CODE_503_SERVICE_UNAVAILABLE;
+    response.write_head(http_code, h);
+    response.end();
+  }
 }
 //------------------------------------------------------------------------------
+void nssf_http2_server::get_api_list(const response &response) {
+  int http_code = 0;
+  nlohmann::json json_data = {};
+  std::string content_type = "application/json";
+  header_map h;
+  h.emplace("content-type", header_value{content_type});
+  if (nssf_cfg.get_api_list(json_data)) {
+    http_code = HTTP_STATUS_CODE_200_OK;
+    response.write_head(http_code, h);
+    response.end(json_data.dump(4).c_str());
+  } else {
+    http_code = HTTP_STATUS_CODE_503_SERVICE_UNAVAILABLE;
+    response.write_head(http_code, h);
+    response.end();
+  }
+}
 //------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-
 void nssf_http2_server::stop() { server.stop(); }

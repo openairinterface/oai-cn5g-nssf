@@ -21,7 +21,7 @@
 
 # file build_helper.nssf
 # brief
-# author Rohan KHARADE, Laurent Thomas, Lionel GAUTHIER
+# author Laurent Thomas, Lionel GAUTHIER
 #
 #######################################
 ################################
@@ -37,6 +37,7 @@ source $THIS_SCRIPT_PATH/build_helper.fb_folly
 #arg1 is force (0 or 1) (no interactive script)
 #arg2 is debug (0 or 1) (install debug libraries)
 install_fmt() {
+  echo "Starting to install fmt"
   if [ $1 -eq 0 ]; then
     read -p "Do you want to install open-source formatting library for C++ ? <y/N> " prompt
     OPTION=""
@@ -55,7 +56,9 @@ install_fmt() {
     git clone https://github.com/fmtlib/fmt.git
     ret=$?;[[ $ret -ne 0 ]] && return $ret
     cd fmt
-    cmake .
+    # Looks like since Nov 11 commits, we cannot build
+    git checkout -f 1936dddc3c53c1c0db55a665cf419dc7a257ba62
+    $CMAKE -DFMT_TEST=FALSE  .
     ret=$?;[[ $ret -ne 0 ]] && return $ret
     make -j `nproc`
     ret=$?;[[ $ret -ne 0 ]] && return $ret
@@ -63,13 +66,14 @@ install_fmt() {
     cd /tmp
     rm -rf /tmp/fmt*
   fi
+  echo "fmt installation complete"
   return 0
 }
 #-------------------------------------------------------------------------------
 #arg1 is force (0 or 1) (no interactive script)
 #arg2 is debug (0 or 1) (install debug libraries)
 install_spdlog_from_git() {
-  echo_info "Starting to install spdlog from source"
+  echo "Starting to install spdlog"
   if [ $1 -eq 0 ]; then
     read -p "Do you want to install spdlog ? <y/N> " prompt
     OPTION=""
@@ -98,11 +102,11 @@ install_spdlog_from_git() {
     git clone $GIT_URL
     cd spdlog && git checkout master
     ret=$?;[[ $ret -ne 0 ]] && popd && return $ret
-    # enable syslog, Useless (defined in nssf code)
+    # enable syslog, Useless (defined in NRF code)
     sed -i '/#define SPDLOG_ENABLE_SYSLOG/s/^\/\///g' include/spdlog/tweakme.h
     popd
   fi
-  echo_success "End of spdlog installation"
+  echo "spdlog installation complete"
   return 0
 }
 
@@ -153,10 +157,14 @@ install_pistache_from_git() {
   return 0
 }
 
+
+
+
 #-------------------------------------------------------------------------------
 #arg1 is force (0 or 1) (no interactive script)
 #arg2 is debug (0 or 1) (install debug libraries)
 install_nlohmann_from_git() {
+  echo "Starting to install Nlohmann Json"
   if [ $1 -eq 0 ]; then
     read -p "Do you want to install Nlohmann Json ? <y/N> " prompt
     OPTION=""
@@ -187,11 +195,7 @@ install_nlohmann_from_git() {
     cd json && git checkout master
     ret=$?;[[ $ret -ne 0 ]] && popd && return $ret
     mkdir _build && cd _build
-    if [[ "$OS_BASEDISTRO" == "fedora" ]]; then
-      cmake3  -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DJSON_BuildTests=OFF ..
-    else
-      cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DJSON_BuildTests=OFF ..
-    fi  
+    $CMAKE -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DJSON_BuildTests=OFF ..
     ret=$?;[[ $ret -ne 0 ]] && popd && return $ret
     make
     ret=$?;[[ $ret -ne 0 ]] && popd && return $ret
@@ -199,6 +203,7 @@ install_nlohmann_from_git() {
     ret=$?;[[ $ret -ne 0 ]] && popd && return $ret
     popd
   fi
+  echo "Nlohmann Json installation complete"
   return 0
 }
 
@@ -236,7 +241,6 @@ install_nghttp2_from_git() {
       zlib1g-dev \
       libcunit1-dev \
       libssl-dev \
-      rapidjson-dev \
       libxml2-dev libev-dev libevent-dev libjansson-dev libc-ares-dev \
       libjemalloc-dev libsystemd-dev cython python3-dev python-setuptools"
     elif [[ "$OS_BASEDISTRO" == "fedora" ]]; then
@@ -252,13 +256,14 @@ install_nghttp2_from_git() {
       zlib-devel \
       CUnit-devel \
       openssl-devel \
+      boost-devel \
       libxml2-devel libev-devel libevent-devel jansson-devel c-ares-devel \
       jemalloc-devel systemd-devel python3-Cython python3-devel python3-setuptools"
     else
       echo_fatal "$OS_DISTRO is not a supported distribution."
     fi
     echo "Install build tools"
-    $SUDO $INSTALLER install $OPTION $PACKAGE_LIST
+    $SUDO $INSTALLER install $OPTION $PACKAGE_LIST    
     ret=$?;[[ $ret -ne 0 ]] && return $ret
    
     GIT_URL=https://github.com/nghttp2/nghttp2.git
@@ -281,13 +286,11 @@ install_nghttp2_from_git() {
     ret=$?;[[ $ret -ne 0 ]] && popd && return $ret
     autoconf
     ret=$?;[[ $ret -ne 0 ]] && popd && return $ret
-    ./configure --enable-asio-lib --enable-lib-only
+    ./configure --enable-asio-lib
     ret=$?;[[ $ret -ne 0 ]] && popd && return $ret
     make
     ret=$?;[[ $ret -ne 0 ]] && popd && return $ret
     $SUDO make install
-    ret=$?;[[ $ret -ne 0 ]] && popd && return $ret
-    $SUDO ldconfig
     ret=$?;[[ $ret -ne 0 ]] && popd && return $ret
     popd
   fi
@@ -296,7 +299,77 @@ install_nghttp2_from_git() {
 }
 
 #-------------------------------------------------------------------------------
+#arg1 is force (0 or 1) (no interactive script)
+#arg2 is debug (0 or 1) (install debug libraries)
+install_cpp_jwt_from_git() {
+  echo "Starting to install cpp_jwt"
+  if [ $1 -eq 0 ]; then
+    read -p "Do you want to install CPP-JWT ? <y/N> " prompt
+    OPTION=""
+  else
+    prompt='y'
+    OPTION="-y"
+  fi
+  if [ $2 -eq 0 ]; then
+    debug=0
+  else
+    debug=1
+  fi
 
+
+  if [[ $prompt =~ [yY](es)* ]]
+  then
+    if [[ $OS_DISTRO == "ubuntu" ]]; then
+      PACKAGE_LIST="\
+        libgtest-dev \
+        libssl-dev"
+    elif [[ "$OS_BASEDISTRO" == "fedora" ]]; then
+      PACKAGE_LIST="\
+        gtest-devel \
+        openssl-devel"
+    else
+      echo_fatal "$OS_DISTRO is not a supported distribution." 
+    fi
+    $SUDO $INSTALLER install $OPTION $PACKAGE_LIST
+    ret=$?;[[ $ret -ne 0 ]] && return $ret
+   
+   #install libgtest
+    if [[ $OS_DISTRO == "ubuntu" ]]; then
+      echo "Building the gtest library" 
+      pushd $OPENAIRCN_DIR/build/ext    
+      cd /usr/src/gtest
+      $SUDO $CMAKE CMakeLists.txt
+      $SUDO make
+      $SUDO cp *.a /usr/lib
+      ret=$?;[[ $ret -ne 0 ]] && popd && return $ret
+      popd
+    fi
+ 
+    GIT_URL=https://github.com/arun11299/cpp-jwt.git
+    echo "Install Cpp-jwt from $GIT_URL"
+    pushd $OPENAIRCN_DIR/build/ext
+    echo "Downloading CPP-JWT"
+    
+    if [[ $prompt =~ [yY](es)* ]]
+    then
+      $SUDO rm -rf cpp-jwt
+    fi
+
+    git clone $GIT_URL
+    cd cpp-jwt && git checkout master
+    ret=$?;[[ $ret -ne 0 ]] && popd && return $ret
+    mkdir _build && cd _build
+    $CMAKE ..
+    ret=$?;[[ $ret -ne 0 ]] && popd && return $ret
+    make
+    ret=$?;[[ $ret -ne 0 ]] && popd && return $ret
+    $SUDO make install
+    ret=$?;[[ $ret -ne 0 ]] && popd && return $ret
+    popd
+  fi
+  echo "cpp_jwt installation complete"
+  return 0  
+}
 #-------------------------------------------------------------------------------
 #arg1 is force (0 or 1) (no interactive script)
 #arg2 is debug (0 or 1) (install debug libraries)
@@ -328,6 +401,7 @@ check_install_nssf_deps() {
 
   update_package_db
 
+
   check_enable_epel_repos
 
   # Compilers, generators, ...
@@ -337,11 +411,11 @@ check_install_nssf_deps() {
       automake \
       bison \
       build-essential \
-      cmake \
+      $CMAKE \
+      daemon \
       doxygen \
       flex \
       gdb \
-      wget \
       git"
   elif [[ "$OS_BASEDISTRO" == "fedora" ]]; then
     PACKAGE_LIST="\
@@ -349,8 +423,8 @@ check_install_nssf_deps() {
       automake \
       bison \
       $CMAKE \
-      cppcheck \
-      procps-ng \
+      make \
+      doxygen \
       flex \
       gdb \
       git"
@@ -361,26 +435,21 @@ check_install_nssf_deps() {
   $SUDO $INSTALLER install $OPTION $PACKAGE_LIST
   ret=$?;[[ $ret -ne 0 ]] && return $ret
 
-
   # Libraries
   if [[ $OS_DISTRO == "ubuntu" ]]; then
     case "$(get_distribution_release)" in
       "ubuntu18.04")
-        # Currently Ubuntu18.04 has boost 1.65 as the latest
+              # Currently Ubuntu18.04 has boost 1.65 as the latest
         # We need at least 1.66
         # PPA has 1.67
         $SUDO add-apt-repository ppa:mhier/libboost-latest --yes
         $SUDO $INSTALLER update
-#        specific_packages="libconfig++-dev libboost1.67-dev"
-        ;;
-      *)
-#        specific_packages="libconfig++-dev"
-        ;;
+        specific_packages="libconfig++-dev libboost1.67-dev"
+      ;;
     esac
     # removed libspdlog-dev
     PACKAGE_LIST="\
-      $specific_packages 
-      libconfig++-dev \
+      $specific_packages \
       guile-2.0-dev \
       libcurl4-gnutls-dev \
       libevent-dev \
@@ -396,33 +465,30 @@ check_install_nssf_deps() {
       libxml2-dev \
       openssl \
       python \
+      nettle-dev \
       libcurl4 \
-      wget \
+      net-tools \
       pkg-config"
   elif [[ "$OS_BASEDISTRO" == "fedora" ]]; then
-    case "$(get_distribution_release)" in
-      "centos8")
-         specific_packages="libidn2-devel"
-         ;;
-      "rhel8.2")
-         specific_packages=""
-         ;;
-    esac
     PACKAGE_LIST="\
-      $specific_packages \
       guile-devel \
       libconfig-devel \
       libgcrypt-devel \
       gmp-devel \
+      rapidjson \
+      boost-devel \
       libidn-devel \
+      lksctp-tools \
+      lksctp-tools-devel \
       openssl-devel \
       libtool \
       libxml2 \
       libxml2-devel \
       openssl \
       check \
-      python2 \
+      nettle-devel \
       libcurl-devel \
+      python2 \
       pkgconfig"
   else
     echo_fatal "$OS_DISTRO is not a supported distribution."
@@ -430,98 +496,23 @@ check_install_nssf_deps() {
   echo "Install distro libs"
   $SUDO $INSTALLER install $OPTION $PACKAGE_LIST
   ret=$?;[[ $ret -ne 0 ]] && return $ret
-
-  echo_info "Packages and Libraries installation finished!"
-
-  # Use fmt lib included in spdlog
-  #install_fmt $1
-  #ret=$?;[[ $ret -ne 0 ]] && return $ret
+  echo "distro libs installation complete"
 
   install_spdlog_from_git $1 $2
   ret=$?;[[ $ret -ne 0 ]] && return $ret
-
-  #install_fb_folly_from_source $1 $2
-  #ret=$?;[[ $ret -ne 0 ]] && return $ret
-
-  install_pistache_from_git $1 $2
-  ret=$?;[[ $ret -ne 0 ]] && return $ret
   
-  install_nlohmann_from_git $1 $2
-  ret=$?;[[ $ret -ne 0 ]] && return $ret
-
   install_nghttp2_from_git $1 $2
   ret=$?;[[ $ret -ne 0 ]] && return $ret
 
-  return 0
-}
-#-------------------------------------------------------------------------------
-#arg1 is force (0 or 1) (no interactive script)
-#arg2 is debug (0 or 1) (install debug libraries)
-check_install_nssf_min_deps() {
-
-  if [ $1 -gt 0 ]; then
-    OPTION="-y"
-  else
-    OPTION=""
-  fi
-
-  echo "Check supported distribution"
-  check_supported_distribution
-  [[ $? -ne 0 ]] && return $?
-
-  # prevent lock on /var/lib/dpkg/lock
-  if [[ $OS_DISTRO == "ubuntu" ]]; then
-    #$SUDO systemctl mask apt-daily.service
-    #$SUDO systemctl mask apt-daily.timer
-    #$SUDO systemctl mask apt-daily-upgrade.service
-    #$SUDO systemctl mask apt-daily-upgrade.timer
-    $SUDO sed -i 's/1/0/g' /etc/apt/apt.conf.d/10periodic
-  fi
-
-  update_package_db
-
-  check_enable_epel_repos
-
-  # Compilers, generators, ...
-  if [[ $OS_DISTRO == "ubuntu" ]]; then
-    PACKAGE_LIST="\
-      gdb "
-  elif [[ "$OS_BASEDISTRO" == "fedora" ]]; then
-    PACKAGE_LIST="\
-      gdb "
-  else
-    echo_fatal "$OS_DISTRO is not a supported distribution."
-  fi
-  echo "Install build tools"
-  $SUDO $INSTALLER install $OPTION $PACKAGE_LIST
+  install_nlohmann_from_git $1 $2
   ret=$?;[[ $ret -ne 0 ]] && return $ret
 
-
-  # Networking
-  if [[ $OS_DISTRO == "ubuntu" ]]; then
-    case "$(get_distribution_release)" in
-  "ubuntu18.04")
-      specific_packages="iproute2"
-      ;;
-    esac
-    PACKAGE_LIST="\
-      $specific_packages \
-      ethtool \
-      iptables \
-      vlan"
-  elif [[ "$OS_BASEDISTRO" == "fedora" ]]; then
-    PACKAGE_LIST="\
-      ethtool \
-      iproute \
-      vconfig"
-  else
-    echo_fatal "$OS_DISTRO is not a supported distribution."
-  fi
-  echo "Install networking tools"
-  $SUDO $INSTALLER install $OPTION $PACKAGE_LIST
+  install_cpp_jwt_from_git $1 $2
+  ret=$?;[[ $ret -ne 0 ]] && return $ret
+    
+  install_pistache_from_git $1 $2
   ret=$?;[[ $ret -ne 0 ]] && return $ret
 
+  $SUDO ldconfig
   return 0
 }
-
-

@@ -21,8 +21,8 @@
 
 #include "PlmnId.h"
 #include "Snssai.h"
-#include <vector>
 #include <nlohmann/json.hpp>
+#include <vector>
 
 namespace oai {
 namespace nssf_server {
@@ -32,7 +32,7 @@ namespace model {
 ///
 /// </summary>
 class PlmnSnssai {
- public:
+public:
   PlmnSnssai();
   virtual ~PlmnSnssai();
 
@@ -45,24 +45,24 @@ class PlmnSnssai {
   ///
   /// </summary>
   PlmnId getPlmnId() const;
-  void setPlmnId(PlmnId const& value);
+  void setPlmnId(PlmnId const &value);
   /// <summary>
   ///
   /// </summary>
-  std::vector<Snssai>& getSNssaiList();
-  void setSNssaiList(std::vector<Snssai> const& value);
+  std::vector<Snssai> &getSNssaiList();
+  void setSNssaiList(std::vector<Snssai> const &value);
 
-  friend void to_json(nlohmann::json& j, const PlmnSnssai& o);
-  friend void from_json(const nlohmann::json& j, PlmnSnssai& o);
+  friend void to_json(nlohmann::json &j, const PlmnSnssai &o);
+  friend void from_json(const nlohmann::json &j, PlmnSnssai &o);
 
- protected:
+protected:
   PlmnId m_PlmnId;
 
   std::vector<Snssai> m_SNssaiList;
 };
 
-}  // namespace model
-}  // namespace nssf_server
-}  // namespace oai
+} // namespace model
+} // namespace nssf_server
+} // namespace oai
 
 #endif /* PlmnSnssai_H_ */

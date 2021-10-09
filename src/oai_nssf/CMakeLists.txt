@@ -270,7 +270,6 @@ add_definitions("-DPACKAGE_NAME=\"NSSF\"")
 include_directories(${SRC_TOP_DIR}/nssf_app)
 include_directories(${SRC_TOP_DIR}/oai_nssf)
 include_directories(${SRC_TOP_DIR}/common)
-include_directories(${SRC_TOP_DIR}/itti)
 include_directories(${SRC_TOP_DIR}/common/msg)
 include_directories(${SRC_TOP_DIR}/common/utils)
 include_directories(${SRC_TOP_DIR}/nssf)
@@ -283,8 +282,6 @@ include_directories(${SRC_TOP_DIR}/api-server/model)
 add_executable(nssf
   ${SRC_TOP_DIR}/oai_nssf/main.cpp
   ${SRC_TOP_DIR}/oai_nssf/options.cpp
-  ${SRC_TOP_DIR}/itti/itti.cpp
-  ${SRC_TOP_DIR}/itti/itti_msg.cpp
   )
 
 IF(STATIC_LINKING)
@@ -296,6 +293,6 @@ ENDIF(STATIC_LINKING)
 
 
 # folly glog dl double-conversion for FB folly library
-target_link_libraries (nssf ${ASAN}  -Wl,--start-group CN_UTILS NSSF NSSF_API 3GPP_COMMON_TYPES ${CRYPTO_LIBRARIES} -lnghttp2_asio -lboost_system -lboost_thread -lssl -lcrypto gflags glog dl double-conversion folly -Wl,--end-group
+target_link_libraries (nssf ${ASAN}  -Wl,--start-group CN_UTILS NSSF NSSF_API 3GPP_COMMON_TYPES ${CRYPTO_LIBRARIES} -lnghttp2_asio -lboost_system -lboost_thread -lssl -lcrypto  dl -Wl,--end-group
 pthread m rt config++  event boost_system pistache curl)
 

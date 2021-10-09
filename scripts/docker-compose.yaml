@@ -1,26 +1,10 @@
 version: '3.8'
-services:
-    nrf.oai-5gcn.eur:
-        container_name: "oai-nrf"
-        image: oai-nrf:latest
-        environment:
-            - NRF_INTERFACE_NAME_FOR_SBI=eth0
-            - NRF_INTERFACE_PORT_FOR_SBI=80
-            - NRF_INTERFACE_HTTP2_PORT_FOR_SBI=9090
-            - NRF_API_VERSION=v1
-            - INSTANCE=0
-            - PID_DIRECTORY=/var/run
-        networks:
-            public_net:
-                ipv4_address: 192.168.70.130
-        volumes:
-            - ./nrf-healthcheck.sh:/openair-nrf/bin/nrf-healthcheck.sh
-        
-    nssf.oai-5gcn.eur:
+services:        
+    oai-nssf:
         container_name: "oai-nssf"
         image: oai-nssf:latest
         volumes:
-            - /home/rohan/gitrepo/oai-cn5g-nssf:/oai-cn5g-nssf
+            - ../etc/nssf_slice_config.json:/openair-nssf/etc/nssf_slice_config.json
         environment:
             - INSTANCE=0
             - TZ=Europe/Paris
@@ -32,13 +16,6 @@ services:
             - SBI_API_VERSION=v2
             - SBI_PORT_HTTP1=80
             - SBI_PORT_HTTP2=8080
-            - REGISTER_NRF=no
-            - HTTP_VERSION=1
-            - USE_FQDN=no
-            - NRF_IPV4_ADDRESS=127.0.0.1
-            - NRF_PORT=80
-            - NRF_API_VERSION=v2
-            - NRF_FQDN=nrf.oai-5gcn.eur
             - NSSF_SLICE_CONFIG=/openair-nssf/etc/nssf_slice_config.json
         cap_add:
             - NET_ADMIN
@@ -49,7 +26,6 @@ services:
         networks:
             public_net:
                 ipv4_address: 192.168.70.134
-        entrypoint: /bin/bash -c "sleep infinity"
 networks:
     public_net:
         driver: bridge

@@ -19,14 +19,16 @@
  *      contact@openairinterface.org
  */
 
-/*! \file nssf_app.hpp
-   \author  Lionel GAUTHIER
-   \date 2018
-   \email: lionel.gauthier@eurecom.fr
-*/
+/*! \file nssf_http2-server.h
+ \brief
+ \author  Rohan Kharade
+ \company Openairinterface Software Allianse
+ \date 2021
+ \email: rohan.kharade@openairinterface.org
+ */
 
-#ifndef FILE_nssf_app_HPP_SEEN
-#define FILE_nssf_app_HPP_SEEN
+#ifndef FILE_NSSF_APP_HPP_SEEN
+#define FILE_NSSF_APP_HPP_SEEN
 
 #include "common_root_types.h"
 
@@ -47,7 +49,6 @@
 #include "SliceInfoForRegistration.h"
 #include "SliceInfoForUEConfigurationUpdate.h"
 #include "Tai.h"
-#include "nssf_profile.hpp"
 
 namespace nssf {
 

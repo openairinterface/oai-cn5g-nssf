@@ -20,8 +20,8 @@
 #define Cnf_H_
 
 #include "CnfUnit.h"
-#include <vector>
 #include <nlohmann/json.hpp>
+#include <vector>
 
 namespace oai {
 namespace nssf_server {
@@ -31,7 +31,7 @@ namespace model {
 ///
 /// </summary>
 class Cnf {
- public:
+public:
   Cnf();
   virtual ~Cnf();
 
@@ -43,18 +43,18 @@ class Cnf {
   /// <summary>
   ///
   /// </summary>
-  std::vector<CnfUnit>& getCnfUnits();
-  void setCnfUnits(std::vector<CnfUnit> const& value);
+  std::vector<CnfUnit> &getCnfUnits();
+  void setCnfUnits(std::vector<CnfUnit> const &value);
 
-  friend void to_json(nlohmann::json& j, const Cnf& o);
-  friend void from_json(const nlohmann::json& j, Cnf& o);
+  friend void to_json(nlohmann::json &j, const Cnf &o);
+  friend void from_json(const nlohmann::json &j, Cnf &o);
 
- protected:
+protected:
   std::vector<CnfUnit> m_CnfUnits;
 };
 
-}  // namespace model
-}  // namespace nssf_server
-}  // namespace oai
+} // namespace model
+} // namespace nssf_server
+} // namespace oai
 
 #endif /* Cnf_H_ */

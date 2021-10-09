@@ -19,22 +19,22 @@
  *      contact@openairinterface.org
  */
 
-/*! \file nssf_config.cpp
-  \brief
-  \author Lionel Gauthier
-  \company Eurecom
-  \email: lionel.gauthier@eurecom.fr
-*/
+/*! \file nssf_http2-server.h
+ \brief
+ \author  Rohan Kharade
+ \company Openairinterface Software Allianse
+ \date 2021
+ \email: rohan.kharade@openairinterface.org
+ */
 
 #include "nssf_config.hpp"
-#include "async_shell_cmd.hpp"
 #include "common_defs.h"
 #include "conversions.hpp"
-//#include "fqdn.hpp"
-#include "get_gateway_netlink.hpp"
 #include "if.hpp"
 #include "logger.hpp"
 #include "string.hpp"
+#include <fstream>
+#include <nlohmann/json.hpp>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/classification.hpp>
@@ -54,7 +54,6 @@ nssf_nsi_info_t nssf_config::nssf_nsi_info;
 nssf_ta_info_t nssf_config::nssf_ta_info;
 std::string nssf_config::slice_config_file;
 
-
 // C includes
 #include <arpa/inet.h>
 #include <stdbool.h>
@@ -67,7 +66,6 @@ std::string nssf_config::slice_config_file;
 int nssf_config::execute() { return RETURNok; }
 
 //------------------------------------------------------------------------------
-
 int nssf_config::load_interface(const Setting &if_cfg, interface_cfg_t &cfg) {
   if_cfg.lookupValue(NSSF_CONFIG_STRING_INTERFACE_NAME, cfg.if_name);
   util::trim(cfg.if_name);
@@ -144,14 +142,15 @@ int nssf_config::load(const string &config_file) {
   const Setting &nssf_cfg = root[NSSF_CONFIG_STRING_NSSF_CONFIG];
 
   try {
-    nssf_cfg.lookupValue(NSSF_CONFIG_STRING_NSSF_SLICE_CONFIG, slice_config_file);
+    nssf_cfg.lookupValue(NSSF_CONFIG_STRING_NSSF_SLICE_CONFIG,
+                         slice_config_file);
   } catch (const SettingNotFoundException &nfex) {
-    Logger::nssf_app().info("%s : %s, No slice_config_file configured", nfex.what(),
-                            nfex.getPath());
+    Logger::nssf_app().info("%s : %s, No slice_config_file configured",
+                            nfex.what(), nfex.getPath());
   }
 
   try {
-    nssf_cfg.lookupValue(NSSF_CONFIG_STRING_NSSF_SLICE_CONFIG, fqdn);
+    nssf_cfg.lookupValue(NSSF_CONFIG_STRING_FQDN, fqdn);
     util::trim(fqdn);
   } catch (const SettingNotFoundException &nfex) {
     Logger::nssf_app().info("%s : %s, No FQDN configured", nfex.what(),
@@ -165,97 +164,6 @@ int nssf_config::load(const string &config_file) {
     load_interface(sbi_cfg, sbi);
 
     sbi_cfg.lookupValue(NSSF_CONFIG_STRING_SBI_API_VERSION, sbi_api_version);
-
-    // Supported features
-    const Setting &support_features =
-        nssf_cfg[NSSF_CONFIG_STRING_SUPPORTED_FEATURES];
-
-    string opt;
-    support_features.lookupValue(NSSF_CONFIG_STRING_SUPPORTED_FEATURES_USE_FQDN,
-                                 opt);
-    if (boost::iequals(opt, "yes")) {
-      nssf_features.use_fqdn = true;
-    } else {
-      nssf_features.use_fqdn = false;
-    }
-
-    support_features.lookupValue(
-        NSSF_CONFIG_STRING_SUPPORTED_FEATURES_REGISTER_NRF, opt);
-    if (boost::iequals(opt, "yes")) {
-      nssf_features.register_nrf = true;
-    } else {
-      nssf_features.register_nrf = false;
-    }
-
-    //     // NRF
-    //     const Setting &nrf_cfg =
-    //         support_features[NSSF_CONFIG_STRING_SUPPORTED_FEATURES_NRF];
-    //     struct in_addr nssf_ipv4_addr;
-    //     unsigned int nrf_port = 0;
-    //     unsigned int httpVersion = 0;
-    //     std::string nssf_api_version;
-    //     string nrf_address = {};
-
-    //     if (nssf_features.register_nrf) {
-    //       if (!(nrf_cfg.lookupValue(
-    //               NSSF_CONFIG_STRING_SUPPORTED_FEATURES_NRF_HTTP_VERSION,
-    //               httpVersion))) {
-    //         Logger::nssf_app().error(
-    //             NSSF_CONFIG_STRING_SUPPORTED_FEATURES_NRF_HTTP_VERSION
-    //             "failed");
-    //         throw(NSSF_CONFIG_STRING_SUPPORTED_FEATURES_NRF_HTTP_VERSION
-    //         "failed");
-    //       }
-    //       nssf_features.nrf_addr.http_version = httpVersion;
-
-    //       if (!nssf_features.use_fqdn) {
-    //         nrf_cfg.lookupValue(
-    //             NSSF_CONFIG_STRING_SUPPORTED_FEATURES_NRF_IPV4_ADDRESS,
-    //             nrf_address);
-    //         IPV4_STR_ADDR_TO_INADDR(util::trim(nrf_address).c_str(),
-    //         nssf_ipv4_addr,
-    //                                 "BAD IPv4 ADDRESS FORMAT FOR NSSF !");
-    //         nssf_features.nrf_addr.ipv4_addr = nssf_ipv4_addr;
-    //         if (!(nrf_cfg.lookupValue(
-    //                 NSSF_CONFIG_STRING_SUPPORTED_FEATURES_NRF_PORT,
-    //                 nrf_port))) {
-    //           Logger::nssf_app().error(
-    //               NSSF_CONFIG_STRING_SUPPORTED_FEATURES_NRF_PORT "failed");
-    //           throw(NSSF_CONFIG_STRING_SUPPORTED_FEATURES_NRF_PORT "failed");
-    //         }
-    //         nssf_features.nrf_addr.port = nrf_port;
-
-    //         if (!(nrf_cfg.lookupValue(
-    //                 NSSF_CONFIG_STRING_SUPPORTED_FEATURES_NRF_API_VERSION,
-    //                 nssf_api_version))) {
-    //           Logger::nssf_app().error(
-    //               NSSF_CONFIG_STRING_SUPPORTED_FEATURES_NRF_API_VERSION
-    //               "failed");
-    //           throw(NSSF_CONFIG_STRING_SUPPORTED_FEATURES_NRF_API_VERSION
-    //           "failed");
-    //         }
-    //         nssf_features.nrf_addr.api_version = nssf_api_version;
-    //       } else {
-    //         Logger::nssf_app().info("USE FQDN");
-    //         std::string nssf_fqdn = {};
-    //         nrf_cfg.lookupValue(NSSF_CONFIG_STRING_FQDN, nssf_fqdn);
-    //         nssf_features.nrf_addr.fqdn =
-    //             nssf_fqdn; // TODO: Resolve FQDN at runtime
-    //         uint8_t addr_type = {};
-    //         fqdn::resolve(nssf_fqdn, nrf_address, nrf_port, addr_type);
-    //         if (addr_type != 0) { // IPv6: TODO
-    //           throw("DO NOT SUPPORT IPV6 ADDR FOR nssf!");
-    //         } else { // IPv4
-    //           IPV4_STR_ADDR_TO_INADDR(util::trim(nrf_address).c_str(),
-    //                                   nssf_ipv4_addr,
-    //                                   "BAD IPv4 ADDRESS FORMAT FOR nssf !");
-    //           nssf_features.nrf_addr.ipv4_addr = nssf_ipv4_addr;
-    //           nssf_features.nrf_addr.port = nrf_port;
-    //           nssf_features.nrf_addr.api_version = "v1"; // TODO: get API
-    //           version
-    //         }
-    //       }
-    //     }
   } catch (const SettingNotFoundException &nfex) {
     Logger::nssf_app().error("%s : %s", nfex.what(), nfex.getPath());
     return RETURNerror;
@@ -269,15 +177,6 @@ void nssf_config::display() {
                           PACKAGE_VERSION);
   Logger::nssf_app().info("Configuration:");
   Logger::nssf_app().info("- FQDN ..................: %s", fqdn.c_str());
-  Logger::nssf_app().info("- ITTI tasks:");
-  Logger::nssf_app().info("    ITTI Timer task:");
-  Logger::nssf_app().info("    NSSF task:");
-  Logger::nssf_app().info("      CPU ID .........: %d",
-                          itti.async_cmd_sched_params.cpu_id);
-  Logger::nssf_app().info("      sched policy....: %d",
-                          itti.async_cmd_sched_params.sched_policy);
-  Logger::nssf_app().info("      sched priority..: %d",
-                          itti.async_cmd_sched_params.sched_priority);
   Logger::nssf_app().info("- SBI:");
   Logger::nssf_app().info("    iface ............: %s", sbi.if_name.c_str());
   Logger::nssf_app().info("    ipv4.addr ........: %s", inet_ntoa(sbi.addr4));
@@ -288,30 +187,6 @@ void nssf_config::display() {
   Logger::nssf_app().info("    http2_port .......: %u", sbi.http2_port);
   Logger::nssf_app().info("    api_version ......: %s",
                           sbi_api_version.c_str());
-  // Logger::nssf_app().info("    Reader thread:");
-  // Logger::nssf_app().info("      CPU ID .........: %d (TODO)",
-  //                         sbi.thread_rd_sched_params.cpu_id);
-  // Logger::nssf_app().info("      sched policy....: %d (TODO)",
-  //                         sbi.thread_rd_sched_params.sched_policy);
-  // Logger::nssf_app().info("      sched priority..: %d (TODO)",
-  //                         sbi.thread_rd_sched_params.sched_priority);
-  // Logger::nssf_app().info("      thread pool size: %d (TODO)",
-  //                         sbi.thread_rd_sched_params.thread_pool_size);
-  // Logger::nssf_app().info("- SUPPORTED_FEATURES:");
-
-  // Logger::nssf_app().info("    Register NRF: %s",
-  //                         (nssf_features.register_nrf) ? "yes" : "no");
-
-  // Logger::nssf_app().info("    NRF:");
-  // Logger::nssf_app().info(
-  //     "        IPv4 Addr .......: %s",
-  //     inet_ntoa(*((struct in_addr *)&nssf_features.nrf_addr.ipv4_addr)));
-  // Logger::nssf_app().info("        Port ............: %lu  ",
-  //                         nssf_features.nrf_addr.port);
-  // Logger::nssf_app().info("        HTTP Version ....: %lu  ",
-  //                         nssf_features.nrf_addr.http_version);
-  // Logger::nssf_app().info("        API version .....: %s",
-  //                         nssf_features.nrf_addr.api_version.c_str());
 }
 
 //------------------------------------------------------------------------------
@@ -343,10 +218,10 @@ bool nssf_config::ValidateNSI(const SliceInfoForPDUSession &slice_info,
     }
   }
 
-  Logger::nssf_app().warn(
-      "NS Selection: S-NSSAI from SliceInfoForPDUSession is not authorised !!!");
+  Logger::nssf_app().warn("NS Selection: S-NSSAI from SliceInfoForPDUSession "
+                          "is not authorised !!!");
   Logger::nssf_app().info(
-        "//---------------------------------------------------------");
+      "//---------------------------------------------------------");
   Logger::nssf_app().info("");
   return false;
 }
@@ -373,63 +248,63 @@ bool nssf_config::ValidateTA(const Tai &tai) {
   return false;
 }
 //------------------------------------------------------------------------------
-const bool nssf_config::ParseTaInfo(const RAPIDJSON_NAMESPACE::Value &conf,
+const bool nssf_config::ParseTaInfo(const nlohmann::json &conf,
                                     nssf_ta_info_t &cfg) {
-  if (!conf.IsArray()) {
+  if (!conf.is_array()) {
     Logger::nssf_app().error(
-        "Error parsing json value: taInfoList is not array");
+        "Error parsing json value: nsiInfoList is not array");
     return false;
   }
-  for (RAPIDJSON_NAMESPACE::SizeType i = 0; i < conf.Size(); i++) {
+  static std::mutex mutex;
+  for (auto it : conf) {
     ta_info_t ta_info;
     PlmnId plmn_id;
-    const RAPIDJSON_NAMESPACE::Value &tai = conf[i]["tai"];
-    const RAPIDJSON_NAMESPACE::Value &nssai = conf[i]["supportedSnssaiList"];
+    nlohmann::json tai = it["tai"];
+    nlohmann::json nssai = it["supportedSnssaiList"];
 
     // Set Tai
-    plmn_id.setMcc(tai["plmnId"]["mcc"].GetString());
-    plmn_id.setMnc(tai["plmnId"]["mnc"].GetString());
+    plmn_id.setMcc(tai["plmnId"]["mcc"]);
+    plmn_id.setMnc(tai["plmnId"]["mnc"]);
     ta_info.tai.setPlmnId(plmn_id);
-    ta_info.tai.setTac(tai["tac"].GetString());
+    ta_info.tai.setTac(tai["tac"]);
 
     // Set Supported Snssai List
-    // if (!nssai.IsArray()) {
+    // if (!nssai.is_array()) {
     //   Logger::nssf_app().error(
     //       "Error parsing json value: supportedSnssaiList is not array");
     //   return false;
     // } else {
     //   //ToDo
     // }
-
     cfg.taInfoList.push_back(ta_info);
   }
   return true;
 }
 
 //------------------------------------------------------------------------------
-const bool nssf_config::ParseNsiInfo(const RAPIDJSON_NAMESPACE::Value &conf,
+const bool nssf_config::ParseNsiInfo(const nlohmann::json &conf,
                                      nssf_nsi_info_t &cfg) {
-  if (!conf.IsArray()) {
+  if (!conf.is_array()) {
     Logger::nssf_app().error(
         "Error parsing json value: nsiInfoList is not array");
     return false;
   }
-static std::mutex mutex;
-  for (RAPIDJSON_NAMESPACE::SizeType i = 0; i < conf.Size(); i++) {
+  static std::mutex mutex;
+  for (auto it : conf) {
     nsi_info_t nsi_info;
-    const RAPIDJSON_NAMESPACE::Value &snssai = conf[i]["snssai"];
-    const RAPIDJSON_NAMESPACE::Value &nsi = conf[i]["nsiInformationList"];
+    nlohmann::json snssai = it["snssai"];
+    nlohmann::json nsi = it["nsiInformationList"];
 
     // Set S-NSSAI
-    nsi_info.snssai.setSst(snssai["sst"].GetInt());
-    if (snssai.HasMember("sd"))
-      nsi_info.snssai.setSd(snssai["sd"].GetString());
+    nsi_info.snssai.setSst(snssai["sst"]);
+    if (!snssai["sd"].empty())
+      nsi_info.snssai.setSd(snssai["sd"]);
 
     // Set NSI Info List
-    nsi_info.nsiInfo.setNrfId(nsi["nrfId"].GetString());
-    nsi_info.nsiInfo.setNsiId(nsi["nsiId"].GetString());
-      std::lock_guard<std::mutex> lock(mutex);
+    nsi_info.nsiInfo.setNrfId(nsi["nrfId"]);
+    nsi_info.nsiInfo.setNsiId(nsi["nsiId"]);
 
+    std::lock_guard<std::mutex> lock(mutex);
     cfg.nsiInfoList.push_back(nsi_info);
   }
   return true;
@@ -437,38 +312,37 @@ static std::mutex mutex;
 
 //------------------------------------------------------------------------------
 bool nssf_config::ParseJson() {
-  FILE *fp = fopen(slice_config_file.c_str(), "r");
-  if (fp == NULL) {
+  nlohmann::json data = {};
+  try {
+    std::ifstream ifs(slice_config_file.c_str());
+    data = nlohmann::json::parse(ifs);
+  } catch (nlohmann::detail::exception &e) {
     std::cout << "The json config file specified does not exists" << std::endl;
     return false;
   }
 
-  char readBuffer[kJsonFileBuffer];
-  RAPIDJSON_NAMESPACE::FileReadStream is(fp, readBuffer, sizeof(readBuffer));
-  RAPIDJSON_NAMESPACE::Document doc;
-  doc.ParseStream(is);
-  fclose(fp);
-
-  if (!doc.IsObject()) {
-    std::cout << "Error parsing the json config file" << std::endl;
+  nlohmann::json config = data["configuration"];
+  try {
+    if (!config.empty()) {
+      nlohmann::json &nsi_info = config["nsiInfoList"];
+      if (!nsi_info.empty()) {
+        if (!ParseNsiInfo(nsi_info, nssf_nsi_info)) {
+          Logger::nssf_app().error("Error parsing json section: nsiInfoList");
+          return false;
+        }
+      }
+      nlohmann::json &ta_info = config1["taInfoList"];
+      if (!ta_info.empty()) {
+        if (!ParseTaInfo(ta_info, nssf_ta_info)) {
+          Logger::nssf_app().error("Error parsing json section: taInfoList");
+          return false;
+        }
+      }
+      return true;
+    }
+  } catch (nlohmann::detail::exception &e) {
+    Logger::nssf_sbi().warn("Can not parse the json data (error: %s)!",
+                            e.what());
     return false;
   }
-
-  const RAPIDJSON_NAMESPACE::Value &config = doc["configuration"];
-  if (config.HasMember("nsiInfoList")) {
-    const RAPIDJSON_NAMESPACE::Value &nsi_info = config["nsiInfoList"];
-    if (!ParseNsiInfo(nsi_info, nssf_nsi_info)) {
-      Logger::nssf_app().error("Error parsing json section: nsiInfoList");
-      return false;
-    }
-  }
-
-  if (config.HasMember("taInfoList")) {
-    const RAPIDJSON_NAMESPACE::Value &ta_info = config["taInfoList"];
-    if (!ParseTaInfo(ta_info, nssf_ta_info)) {
-      Logger::nssf_app().error("Error parsing json section: taInfoList");
-      return false;
-    }
-  }
-  return true;
 }

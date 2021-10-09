@@ -25,12 +25,10 @@ void ServiceName::validate() {
   // TODO: implement validation
 }
 
-void to_json(nlohmann::json& j, const ServiceName& o) {
-  j = nlohmann::json();
-}
+void to_json(nlohmann::json &j, const ServiceName &o) { j = nlohmann::json(); }
 
-void from_json(const nlohmann::json& j, ServiceName& o) {}
+void from_json(const nlohmann::json &j, ServiceName &o) {}
 
-}  // namespace model
-}  // namespace nssf_server
-}  // namespace oai
+} // namespace model
+} // namespace nssf_server
+} // namespace oai

@@ -19,9 +19,9 @@
 #ifndef Guami_H_
 #define Guami_H_
 
-#include <string>
 #include "PlmnId.h"
 #include <nlohmann/json.hpp>
+#include <string>
 
 namespace oai {
 namespace nssf_server {
@@ -31,7 +31,7 @@ namespace model {
 ///
 /// </summary>
 class Guami {
- public:
+public:
   Guami();
   virtual ~Guami();
 
@@ -44,24 +44,24 @@ class Guami {
   ///
   /// </summary>
   PlmnId getPlmnId() const;
-  void setPlmnId(PlmnId const& value);
+  void setPlmnId(PlmnId const &value);
   /// <summary>
   ///
   /// </summary>
   std::string getAmfId() const;
-  void setAmfId(std::string const& value);
+  void setAmfId(std::string const &value);
 
-  friend void to_json(nlohmann::json& j, const Guami& o);
-  friend void from_json(const nlohmann::json& j, Guami& o);
+  friend void to_json(nlohmann::json &j, const Guami &o);
+  friend void from_json(const nlohmann::json &j, Guami &o);
 
- protected:
+protected:
   PlmnId m_PlmnId;
 
   std::string m_AmfId;
 };
 
-}  // namespace model
-}  // namespace nssf_server
-}  // namespace oai
+} // namespace model
+} // namespace nssf_server
+} // namespace oai
 
 #endif /* Guami_H_ */

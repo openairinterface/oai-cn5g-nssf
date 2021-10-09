@@ -31,7 +31,7 @@ namespace model {
 ///
 /// </summary>
 class Atom {
- public:
+public:
   Atom();
   virtual ~Atom();
 
@@ -44,12 +44,12 @@ class Atom {
   ///
   /// </summary>
   std::string getAttr() const;
-  void setAttr(std::string const& value);
+  void setAttr(std::string const &value);
   /// <summary>
   ///
   /// </summary>
   std::string getValue() const;
-  void setValue(std::string const& value);
+  void setValue(std::string const &value);
   /// <summary>
   ///
   /// </summary>
@@ -58,10 +58,10 @@ class Atom {
   bool negativeIsSet() const;
   void unsetNegative();
 
-  friend void to_json(nlohmann::json& j, const Atom& o);
-  friend void from_json(const nlohmann::json& j, Atom& o);
+  friend void to_json(nlohmann::json &j, const Atom &o);
+  friend void from_json(const nlohmann::json &j, Atom &o);
 
- protected:
+protected:
   std::string m_Attr;
 
   std::string m_Value;
@@ -70,8 +70,8 @@ class Atom {
   bool m_NegativeIsSet;
 };
 
-}  // namespace model
-}  // namespace nssf_server
-}  // namespace oai
+} // namespace model
+} // namespace nssf_server
+} // namespace oai
 
 #endif /* Atom_H_ */

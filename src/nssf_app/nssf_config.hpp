@@ -107,6 +107,7 @@ private:
 
   static const bool ParseTaInfo(const nlohmann::json &conf,
                                 nssf_ta_info_t &cfg);
+  static nlohmann::json nssf_slice_config;
 
 public:
   /* Reader/writer lock for this configuration */
@@ -153,6 +154,9 @@ public:
   static bool ValidateTA(const Tai &tai);
   static bool ValidateNSI(const SliceInfoForPDUSession &slice_info,
                           NsiInformation &nsi_info);
+
+  static bool get_slice_config(nlohmann::json &slice_config);
+  static bool get_api_list(nlohmann::json &api_list);
 };
 } // namespace nssf
 

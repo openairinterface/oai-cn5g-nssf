@@ -53,6 +53,7 @@ using namespace nssf;
 nssf_nsi_info_t nssf_config::nssf_nsi_info;
 nssf_ta_info_t nssf_config::nssf_ta_info;
 std::string nssf_config::slice_config_file;
+nlohmann::json nssf_config::nssf_slice_config;
 
 // C includes
 #include <arpa/inet.h>
@@ -321,17 +322,17 @@ bool nssf_config::ParseJson() {
     return false;
   }
 
-  nlohmann::json config = data["configuration"];
+  nssf_slice_config = data["configuration"];
   try {
-    if (!config.empty()) {
-      nlohmann::json &nsi_info = config["nsiInfoList"];
+    if (!nssf_slice_config.empty()) {
+      nlohmann::json &nsi_info = nssf_slice_config["nsiInfoList"];
       if (!nsi_info.empty()) {
         if (!ParseNsiInfo(nsi_info, nssf_nsi_info)) {
           Logger::nssf_app().error("Error parsing json section: nsiInfoList");
           return false;
         }
       }
-      nlohmann::json &ta_info = config1["taInfoList"];
+      nlohmann::json &ta_info = nssf_slice_config["taInfoList"];
       if (!ta_info.empty()) {
         if (!ParseTaInfo(ta_info, nssf_ta_info)) {
           Logger::nssf_app().error("Error parsing json section: taInfoList");
@@ -346,3 +347,25 @@ bool nssf_config::ParseJson() {
     return false;
   }
 }
+
+//------------------------------------------------------------------------------
+bool nssf_config::get_slice_config(nlohmann::json &slice_config) {
+  slice_config = nssf_slice_config;
+  return true;
+}
+
+//------------------------------------------------------------------------------
+bool nssf_config::get_api_list(nlohmann::json &api_list) {
+  api_list["OAI-NSSF"] = {
+      {"Organisation", "Openairinterface Software Aliance"},
+      {"Description", "OAI-NSSF initial Release"},
+      {"Version", "1.0.0"},
+      {"Supported APIs",
+       {{"API", "Network Slice Information (Document)"},
+        {"Method", "GET"},
+        {"URI Path", "/nnssf-nsselection/v2/network-slice-information"},
+        {"Details",
+         "Retrieve the Network Slice Selection Information (PDU Session)"}}}};
+  return true;
+}
+//------------------------------------------------------------------------------

@@ -216,7 +216,7 @@ void nssf_http2_server::start() {
 
   //###### NSSF Custom APIs ######
   // Get default slice config
-  server.handle(NSSF_SLICE_CONFIG,
+  server.handle("/nnssf-slice-config",
                 [&](const request &request, const response &response) {
                   request.on_data([&](const uint8_t *data, std::size_t len) {
                     if (request.method().compare("GET") == 0) {

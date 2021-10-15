@@ -13,6 +13,9 @@
 
 #include "NFInstanceIDDocumentApi.h"
 #include "Helpers.h"
+#include "nssf_config.hpp"
+
+extern nssf::nssf_config nssf_cfg;
 
 namespace oai {
 namespace nssf_server {
@@ -21,7 +24,7 @@ namespace api {
 using namespace oai::nssf_server::helpers;
 using namespace oai::nssf_server::model;
 
-const std::string NFInstanceIDDocumentApi::base = "/nnssf-nssaiavailability/v1";
+const std::string NFInstanceIDDocumentApi::base = "/nnssf-nssaiavailability/";
 
 NFInstanceIDDocumentApi::NFInstanceIDDocumentApi(
     const std::shared_ptr<Pistache::Rest::Router> &rtr)
@@ -33,7 +36,7 @@ void NFInstanceIDDocumentApi::setupRoutes() {
   using namespace Pistache::Rest;
 
   Routes::Delete(
-      *router, base + "/nssai-availability/:nfId",
+      *router, base + nssf_cfg.sbi_api_version + "/nssai-availability/:nfId",
       Routes::bind(&NFInstanceIDDocumentApi::n_ssai_availability_delete_handler,
                    this));
   Routes::Patch(
@@ -52,8 +55,8 @@ void NFInstanceIDDocumentApi::setupRoutes() {
 }
 
 std::pair<Pistache::Http::Code, std::string>
-NFInstanceIDDocumentApi::handleParsingException(
-    const std::exception &ex) const noexcept {
+NFInstanceIDDocumentApi::handleParsingException(const std::exception &ex) const
+    noexcept {
   try {
     throw;
   } catch (nlohmann::detail::exception &e) {

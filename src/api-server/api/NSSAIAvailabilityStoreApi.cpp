@@ -13,6 +13,9 @@
 
 #include "NSSAIAvailabilityStoreApi.h"
 #include "Helpers.h"
+#include "nssf_config.hpp"
+
+extern nssf::nssf_config nssf_cfg;
 
 namespace oai {
 namespace nssf_server {
@@ -21,8 +24,7 @@ namespace api {
 using namespace oai::nssf_server::helpers;
 using namespace oai::nssf_server::model;
 
-const std::string NSSAIAvailabilityStoreApi::base =
-    "/nnssf-nssaiavailability/v1";
+const std::string NSSAIAvailabilityStoreApi::base = "/nnssf-nssaiavailability/";
 
 NSSAIAvailabilityStoreApi::NSSAIAvailabilityStoreApi(
     const std::shared_ptr<Pistache::Rest::Router> &rtr)
@@ -34,7 +36,7 @@ void NSSAIAvailabilityStoreApi::setupRoutes() {
   using namespace Pistache::Rest;
 
   Routes::Options(
-      *router, base + "/nssai-availability",
+      *router, base + nssf_cfg.sbi_api_version + "/nssai-availability",
       Routes::bind(
           &NSSAIAvailabilityStoreApi::n_ssai_availability_options_handler,
           this));

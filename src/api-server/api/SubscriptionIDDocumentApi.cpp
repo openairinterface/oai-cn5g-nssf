@@ -13,6 +13,9 @@
 
 #include "SubscriptionIDDocumentApi.h"
 #include "Helpers.h"
+#include "nssf_config.hpp"
+
+extern nssf::nssf_config nssf_cfg;
 
 namespace oai {
 namespace nssf_server {
@@ -21,8 +24,7 @@ namespace api {
 using namespace oai::nssf_server::helpers;
 using namespace oai::nssf_server::model;
 
-const std::string SubscriptionIDDocumentApi::base =
-    "/nnssf-nssaiavailability/v1";
+const std::string SubscriptionIDDocumentApi::base = "/nnssf-nssaiavailability/";
 
 SubscriptionIDDocumentApi::SubscriptionIDDocumentApi(
     const std::shared_ptr<Pistache::Rest::Router> &rtr)
@@ -34,7 +36,8 @@ void SubscriptionIDDocumentApi::setupRoutes() {
   using namespace Pistache::Rest;
 
   Routes::Patch(*router,
-                base + "/nssai-availability/subscriptions/:subscriptionId",
+                base + nssf_cfg.sbi_api_version +
+                    "/nssai-availability/subscriptions/:subscriptionId",
                 Routes::bind(&SubscriptionIDDocumentApi::
                                  n_ssai_availability_sub_modify_patch_handler,
                              this));

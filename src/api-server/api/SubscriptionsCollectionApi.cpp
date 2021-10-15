@@ -13,6 +13,9 @@
 
 #include "SubscriptionsCollectionApi.h"
 #include "Helpers.h"
+#include "nssf_config.hpp"
+
+extern nssf::nssf_config nssf_cfg;
 
 namespace oai {
 namespace nssf_server {
@@ -22,7 +25,7 @@ using namespace oai::nssf_server::helpers;
 using namespace oai::nssf_server::model;
 
 const std::string SubscriptionsCollectionApi::base =
-    "/nnssf-nssaiavailability/v1";
+    "/nnssf-nssaiavailability/";
 
 SubscriptionsCollectionApi::SubscriptionsCollectionApi(
     const std::shared_ptr<Pistache::Rest::Router> &rtr)
@@ -34,7 +37,8 @@ void SubscriptionsCollectionApi::setupRoutes() {
   using namespace Pistache::Rest;
 
   Routes::Post(
-      *router, base + "/nssai-availability/subscriptions",
+      *router,
+      base + nssf_cfg.sbi_api_version + "/nssai-availability/subscriptions",
       Routes::bind(
           &SubscriptionsCollectionApi::n_ssai_availability_post_handler, this));
 

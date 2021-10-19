@@ -66,8 +66,7 @@ pipeline {
       "Build U18 NSSF Image",
       "Build RHEL8 NSSF Image",
       "Static Code Analysis",
-      "Code Formatting Checker",
-      "Test with DsTester on Docker environment"
+      "Code Formatting Checker"
     ])
 
   }

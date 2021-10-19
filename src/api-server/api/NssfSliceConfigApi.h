@@ -45,24 +45,25 @@ namespace api {
 using namespace oai::nssf_server::model;
 
 class NssfSliceConfigApi {
-public:
+ public:
   explicit NssfSliceConfigApi(
-      const std::shared_ptr<Pistache::Rest::Router> &rtr);
+      const std::shared_ptr<Pistache::Rest::Router>& rtr);
   virtual ~NssfSliceConfigApi() = default;
   void init();
 
   static const std::string base;
 
-private:
+ private:
   void setupRoutes();
 
-  void nssf_slice_config_get_handler(const Pistache::Rest::Request &request,
-                                     Pistache::Http::ResponseWriter response);
-  void
-  nssf_slice_config_get_apis_handler(const Pistache::Rest::Request &request,
-                                     Pistache::Http::ResponseWriter response);
+  void nssf_slice_config_get_handler(
+      const Pistache::Rest::Request& request,
+      Pistache::Http::ResponseWriter response);
+  void nssf_slice_config_get_apis_handler(
+      const Pistache::Rest::Request& request,
+      Pistache::Http::ResponseWriter response);
   void nssf_slice_config_api_default_handler(
-      const Pistache::Rest::Request &request,
+      const Pistache::Rest::Request& request,
       Pistache::Http::ResponseWriter response);
 
   const std::shared_ptr<Pistache::Rest::Router> router;
@@ -73,8 +74,8 @@ private:
   /// called inside a catch block. Important: When overriding, do not call
   /// `throw ex;`, but instead use `throw;`.
   /// </summary>
-  virtual std::pair<Pistache::Http::Code, std::string>
-  handleParsingException(const std::exception &ex) const noexcept;
+  virtual std::pair<Pistache::Http::Code, std::string> handleParsingException(
+      const std::exception& ex) const noexcept;
 
   /// <summary>
   /// Helper function to handle unexpected Exceptions during processing of the
@@ -82,16 +83,16 @@ private:
   /// formats. This is called inside a catch block. Important: When overriding,
   /// do not call `throw ex;`, but instead use `throw;`.
   /// </summary>
-  virtual std::pair<Pistache::Http::Code, std::string>
-  handleOperationException(const std::exception &ex) const noexcept;
-  virtual void
-  nssf_slice_config_get_apis(Pistache::Http::ResponseWriter &response) = 0;
-  virtual void
-  nssf_slice_config_get(Pistache::Http::ResponseWriter &response) = 0;
+  virtual std::pair<Pistache::Http::Code, std::string> handleOperationException(
+      const std::exception& ex) const noexcept;
+  virtual void nssf_slice_config_get_apis(
+      Pistache::Http::ResponseWriter& response) = 0;
+  virtual void nssf_slice_config_get(
+      Pistache::Http::ResponseWriter& response) = 0;
 };
 
-} // namespace api
-} // namespace nssf_server
-} // namespace oai
+}  // namespace api
+}  // namespace nssf_server
+}  // namespace oai
 
 #endif /* NssfSliceConfig_H */

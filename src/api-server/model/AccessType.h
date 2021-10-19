@@ -29,7 +29,7 @@ namespace model {
 ///
 /// </summary>
 class AccessType {
-public:
+ public:
   AccessType();
   virtual ~AccessType();
 
@@ -38,14 +38,14 @@ public:
   /////////////////////////////////////////////
   /// AccessType members
 
-  friend void to_json(nlohmann::json &j, const AccessType &o);
-  friend void from_json(const nlohmann::json &j, AccessType &o);
+  friend void to_json(nlohmann::json& j, const AccessType& o);
+  friend void from_json(const nlohmann::json& j, AccessType& o);
 
-protected:
+ protected:
 };
 
-} // namespace model
-} // namespace nssf_server
-} // namespace oai
+}  // namespace model
+}  // namespace nssf_server
+}  // namespace oai
 
 #endif /* AccessType_H_ */

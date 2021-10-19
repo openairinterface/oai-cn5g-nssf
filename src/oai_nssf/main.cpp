@@ -43,7 +43,7 @@ using namespace util;
 using namespace std;
 using namespace oai::nssf_server::api;
 
-nssf_app* nssf_app_inst               = nullptr;
+nssf_app* nssf_app_inst = nullptr;
 nssf_config nssf_cfg;
 boost::asio::io_service io_service;
 NSSFApiServer* nssf_api_server_1     = nullptr;
@@ -55,7 +55,7 @@ void my_app_signal_handler(int s) {
   Logger::system().startup("exiting");
   std::cout << "Freeing Allocated memory..." << std::endl;
 
-    if (nssf_api_server_1) {
+  if (nssf_api_server_1) {
     nssf_api_server_1->shutdown();
     delete nssf_api_server_1;
     nssf_api_server_1 = nullptr;
@@ -159,7 +159,8 @@ int main(int argc, char** argv) {
 
   // NSSF NGHTTP API server (HTTP2)
   nssf_api_server_2 = new nssf_http2_server(
-      conv::toString(nssf_cfg.sbi.addr4), nssf_cfg.sbi.http2_port, nssf_app_inst);
+      conv::toString(nssf_cfg.sbi.addr4), nssf_cfg.sbi.http2_port,
+      nssf_app_inst);
   std::thread nssf_http2_manager(&nssf_http2_server::start, nssf_api_server_2);
 
   nssf_http1_manager.join();

@@ -36,22 +36,22 @@ namespace api {
 using namespace oai::nssf_server::model;
 
 class NSSAIAvailabilityStoreApi {
-public:
+ public:
   explicit NSSAIAvailabilityStoreApi(
-      const std::shared_ptr<Pistache::Rest::Router> &rtr);
+      const std::shared_ptr<Pistache::Rest::Router>& rtr);
   virtual ~NSSAIAvailabilityStoreApi() = default;
   void init();
 
   static const std::string base;
 
-private:
+ private:
   void setupRoutes();
 
-  void
-  n_ssai_availability_options_handler(const Pistache::Rest::Request &request,
-                                      Pistache::Http::ResponseWriter response);
+  void n_ssai_availability_options_handler(
+      const Pistache::Rest::Request& request,
+      Pistache::Http::ResponseWriter response);
   void nssai_availability_store_api_default_handler(
-      const Pistache::Rest::Request &request,
+      const Pistache::Rest::Request& request,
       Pistache::Http::ResponseWriter response);
 
   const std::shared_ptr<Pistache::Rest::Router> router;
@@ -62,8 +62,8 @@ private:
   /// called inside a catch block. Important: When overriding, do not call
   /// `throw ex;`, but instead use `throw;`.
   /// </summary>
-  virtual std::pair<Pistache::Http::Code, std::string>
-  handleParsingException(const std::exception &ex) const noexcept;
+  virtual std::pair<Pistache::Http::Code, std::string> handleParsingException(
+      const std::exception& ex) const noexcept;
 
   /// <summary>
   /// Helper function to handle unexpected Exceptions during processing of the
@@ -71,8 +71,8 @@ private:
   /// formats. This is called inside a catch block. Important: When overriding,
   /// do not call `throw ex;`, but instead use `throw;`.
   /// </summary>
-  virtual std::pair<Pistache::Http::Code, std::string>
-  handleOperationException(const std::exception &ex) const noexcept;
+  virtual std::pair<Pistache::Http::Code, std::string> handleOperationException(
+      const std::exception& ex) const noexcept;
 
   /// <summary>
   /// Discover communication options supported by NSSF for NSSAI Availability
@@ -80,12 +80,12 @@ private:
   /// <remarks>
   ///
   /// </remarks>
-  virtual void
-  n_ssai_availability_options(Pistache::Http::ResponseWriter &response) = 0;
+  virtual void n_ssai_availability_options(
+      Pistache::Http::ResponseWriter& response) = 0;
 };
 
-} // namespace api
-} // namespace nssf_server
-} // namespace oai
+}  // namespace api
+}  // namespace nssf_server
+}  // namespace oai
 
 #endif /* NSSAIAvailabilityStoreApi_H_ */

@@ -45,21 +45,22 @@ namespace api {
 using namespace oai::nssf_server::model;
 
 class NetworkSliceInformationDocumentApi {
-public:
+ public:
   explicit NetworkSliceInformationDocumentApi(
-      const std::shared_ptr<Pistache::Rest::Router> &rtr);
+      const std::shared_ptr<Pistache::Rest::Router>& rtr);
   virtual ~NetworkSliceInformationDocumentApi() = default;
   void init();
 
   static const std::string base;
 
-private:
+ private:
   void setupRoutes();
 
-  void n_s_selection_get_handler(const Pistache::Rest::Request &request,
-                                 Pistache::Http::ResponseWriter response);
+  void n_s_selection_get_handler(
+      const Pistache::Rest::Request& request,
+      Pistache::Http::ResponseWriter response);
   void network_slice_information_document_api_default_handler(
-      const Pistache::Rest::Request &request,
+      const Pistache::Rest::Request& request,
       Pistache::Http::ResponseWriter response);
 
   const std::shared_ptr<Pistache::Rest::Router> router;
@@ -70,8 +71,8 @@ private:
   /// called inside a catch block. Important: When overriding, do not call
   /// `throw ex;`, but instead use `throw;`.
   /// </summary>
-  virtual std::pair<Pistache::Http::Code, std::string>
-  handleParsingException(const std::exception &ex) const noexcept;
+  virtual std::pair<Pistache::Http::Code, std::string> handleParsingException(
+      const std::exception& ex) const noexcept;
 
   /// <summary>
   /// Helper function to handle unexpected Exceptions during processing of the
@@ -79,8 +80,8 @@ private:
   /// formats. This is called inside a catch block. Important: When overriding,
   /// do not call `throw ex;`, but instead use `throw;`.
   /// </summary>
-  virtual std::pair<Pistache::Http::Code, std::string>
-  handleOperationException(const std::exception &ex) const noexcept;
+  virtual std::pair<Pistache::Http::Code, std::string> handleOperationException(
+      const std::exception& ex) const noexcept;
 
   /// <summary>
   /// Retrieve the Network Slice Selection Information
@@ -103,23 +104,23 @@ private:
   /// name="tai">TAI of the UE (optional, default to Tai())</param> <param
   /// name="supportedFeatures">Features required to be supported by the NFs in
   /// the target slice instance (optional, default to &quot;&quot;)</param>
-  virtual void
-  n_s_selection_get(const Pistache::Optional<NFType> &nfType,
-                    const Pistache::Optional<std::string> &nfId,
-                    const Pistache::Optional<SliceInfoForRegistration>
-                        &sliceInfoRequestForRegistration,
-                    const Pistache::Optional<SliceInfoForPDUSession>
-                        &sliceInfoRequestForPduSession,
-                    const Pistache::Optional<SliceInfoForUEConfigurationUpdate>
-                        &sliceInfoRequestForUeCu,
-                    const Pistache::Optional<PlmnId> &homePlmnId,
-                    const Pistache::Optional<Tai> &tai,
-                    const Pistache::Optional<std::string> &supportedFeatures,
-                    Pistache::Http::ResponseWriter &response) = 0;
+  virtual void n_s_selection_get(
+      const Pistache::Optional<NFType>& nfType,
+      const Pistache::Optional<std::string>& nfId,
+      const Pistache::Optional<SliceInfoForRegistration>&
+          sliceInfoRequestForRegistration,
+      const Pistache::Optional<SliceInfoForPDUSession>&
+          sliceInfoRequestForPduSession,
+      const Pistache::Optional<SliceInfoForUEConfigurationUpdate>&
+          sliceInfoRequestForUeCu,
+      const Pistache::Optional<PlmnId>& homePlmnId,
+      const Pistache::Optional<Tai>& tai,
+      const Pistache::Optional<std::string>& supportedFeatures,
+      Pistache::Http::ResponseWriter& response) = 0;
 };
 
-} // namespace api
-} // namespace nssf_server
-} // namespace oai
+}  // namespace api
+}  // namespace nssf_server
+}  // namespace oai
 
 #endif /* NetworkSliceInformationDocumentApi_H_ */

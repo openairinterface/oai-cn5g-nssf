@@ -40,25 +40,25 @@ namespace api {
 using namespace oai::nssf_server::model;
 
 class SubscriptionIDDocumentApi {
-public:
+ public:
   explicit SubscriptionIDDocumentApi(
-      const std::shared_ptr<Pistache::Rest::Router> &rtr);
+      const std::shared_ptr<Pistache::Rest::Router>& rtr);
   virtual ~SubscriptionIDDocumentApi() = default;
   void init();
 
   static const std::string base;
 
-private:
+ private:
   void setupRoutes();
 
   void n_ssai_availability_sub_modify_patch_handler(
-      const Pistache::Rest::Request &request,
+      const Pistache::Rest::Request& request,
       Pistache::Http::ResponseWriter response);
   void n_ssai_availability_unsubscribe_handler(
-      const Pistache::Rest::Request &request,
+      const Pistache::Rest::Request& request,
       Pistache::Http::ResponseWriter response);
   void subscription_id_document_api_default_handler(
-      const Pistache::Rest::Request &request,
+      const Pistache::Rest::Request& request,
       Pistache::Http::ResponseWriter response);
 
   const std::shared_ptr<Pistache::Rest::Router> router;
@@ -69,8 +69,8 @@ private:
   /// called inside a catch block. Important: When overriding, do not call
   /// `throw ex;`, but instead use `throw;`.
   /// </summary>
-  virtual std::pair<Pistache::Http::Code, std::string>
-  handleParsingException(const std::exception &ex) const noexcept;
+  virtual std::pair<Pistache::Http::Code, std::string> handleParsingException(
+      const std::exception& ex) const noexcept;
 
   /// <summary>
   /// Helper function to handle unexpected Exceptions during processing of the
@@ -78,8 +78,8 @@ private:
   /// formats. This is called inside a catch block. Important: When overriding,
   /// do not call `throw ex;`, but instead use `throw;`.
   /// </summary>
-  virtual std::pair<Pistache::Http::Code, std::string>
-  handleOperationException(const std::exception &ex) const noexcept;
+  virtual std::pair<Pistache::Http::Code, std::string> handleOperationException(
+      const std::exception& ex) const noexcept;
 
   /// <summary>
   /// updates an already existing NSSAI availability notification subscription
@@ -93,10 +93,10 @@ private:
   /// subscription</param> <param name="contentEncoding">Content-Encoding,
   /// described in IETF RFC 7231 (optional, default to &quot;&quot;)</param>
   virtual void n_ssai_availability_sub_modify_patch(
-      const std::string &subscriptionId,
-      const std::vector<PatchItem> &patchItem,
-      const Pistache::Optional<Pistache::Http::Header::Raw> &contentEncoding,
-      Pistache::Http::ResponseWriter &response) = 0;
+      const std::string& subscriptionId,
+      const std::vector<PatchItem>& patchItem,
+      const Pistache::Optional<Pistache::Http::Header::Raw>& contentEncoding,
+      Pistache::Http::ResponseWriter& response) = 0;
   /// <summary>
   /// Deletes an already existing NSSAI availability notification subscription
   /// </summary>
@@ -105,13 +105,13 @@ private:
   /// </remarks>
   /// <param name="subscriptionId">Identifier of the subscription for
   /// notification</param>
-  virtual void
-  n_ssai_availability_unsubscribe(const std::string &subscriptionId,
-                                  Pistache::Http::ResponseWriter &response) = 0;
+  virtual void n_ssai_availability_unsubscribe(
+      const std::string& subscriptionId,
+      Pistache::Http::ResponseWriter& response) = 0;
 };
 
-} // namespace api
-} // namespace nssf_server
-} // namespace oai
+}  // namespace api
+}  // namespace nssf_server
+}  // namespace oai
 
 #endif /* SubscriptionIDDocumentApi_H_ */

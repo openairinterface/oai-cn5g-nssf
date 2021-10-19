@@ -33,7 +33,7 @@ namespace model {
 /// Range of TAIs (Tracking Area Identities)
 /// </summary>
 class TaiRange {
-public:
+ public:
   TaiRange();
   virtual ~TaiRange() = default;
 
@@ -47,16 +47,16 @@ public:
   /// Validate the current data in the model. Returns false on error and writes
   /// an error message into the given stringstream.
   /// </summary>
-  bool validate(std::stringstream &msg) const;
+  bool validate(std::stringstream& msg) const;
 
   /// <summary>
   /// Helper overload for validate. Used when one model stores another model and
   /// calls it's validate. Not meant to be called outside that case.
   /// </summary>
-  bool validate(std::stringstream &msg, const std::string &pathPrefix) const;
+  bool validate(std::stringstream& msg, const std::string& pathPrefix) const;
 
-  bool operator==(const TaiRange &rhs) const;
-  bool operator!=(const TaiRange &rhs) const;
+  bool operator==(const TaiRange& rhs) const;
+  bool operator!=(const TaiRange& rhs) const;
 
   /////////////////////////////////////////////
   /// TaiRange members
@@ -65,24 +65,24 @@ public:
   ///
   /// </summary>
   PlmnId getPlmnId() const;
-  void setPlmnId(PlmnId const &value);
+  void setPlmnId(PlmnId const& value);
   /// <summary>
   ///
   /// </summary>
   std::vector<TacRange> getTacRangeList() const;
-  void setTacRangeList(std::vector<TacRange> const &value);
+  void setTacRangeList(std::vector<TacRange> const& value);
   /// <summary>
   ///
   /// </summary>
   std::string getNid() const;
-  void setNid(std::string const &value);
+  void setNid(std::string const& value);
   bool nidIsSet() const;
   void unsetNid();
 
-  friend void to_json(nlohmann::json &j, const TaiRange &o);
-  friend void from_json(const nlohmann::json &j, TaiRange &o);
+  friend void to_json(nlohmann::json& j, const TaiRange& o);
+  friend void from_json(const nlohmann::json& j, TaiRange& o);
 
-protected:
+ protected:
   PlmnId m_PlmnId;
 
   std::vector<TacRange> m_TacRangeList;
@@ -91,8 +91,8 @@ protected:
   bool m_NidIsSet;
 };
 
-} // namespace model
-} // namespace nssf_server
-} // namespace oai
+}  // namespace model
+}  // namespace nssf_server
+}  // namespace oai
 
 #endif /* TaiRange_H_ */

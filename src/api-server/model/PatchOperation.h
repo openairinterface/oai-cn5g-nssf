@@ -30,7 +30,7 @@ namespace model {
 ///
 /// </summary>
 class PatchOperation {
-public:
+ public:
   PatchOperation();
   virtual ~PatchOperation() = default;
 
@@ -44,16 +44,16 @@ public:
   /// Validate the current data in the model. Returns false on error and writes
   /// an error message into the given stringstream.
   /// </summary>
-  bool validate(std::stringstream &msg) const;
+  bool validate(std::stringstream& msg) const;
 
   /// <summary>
   /// Helper overload for validate. Used when one model stores another model and
   /// calls it's validate. Not meant to be called outside that case.
   /// </summary>
-  bool validate(std::stringstream &msg, const std::string &pathPrefix) const;
+  bool validate(std::stringstream& msg, const std::string& pathPrefix) const;
 
-  bool operator==(const PatchOperation &rhs) const;
-  bool operator!=(const PatchOperation &rhs) const;
+  bool operator==(const PatchOperation& rhs) const;
+  bool operator!=(const PatchOperation& rhs) const;
 
   /////////////////////////////////////////////
   /// PatchOperation members
@@ -62,17 +62,17 @@ public:
   void setValue(PatchOperation_anyOf value);
   PatchOperation_anyOf::ePatchOperation_anyOf getEnumValue() const;
   void setEnumValue(PatchOperation_anyOf::ePatchOperation_anyOf value);
-  friend void to_json(nlohmann::json &j, const PatchOperation &o);
-  friend void from_json(const nlohmann::json &j, PatchOperation &o);
-  friend void to_json(nlohmann::json &j, const PatchOperation_anyOf &o);
-  friend void from_json(const nlohmann::json &j, PatchOperation_anyOf &o);
+  friend void to_json(nlohmann::json& j, const PatchOperation& o);
+  friend void from_json(const nlohmann::json& j, PatchOperation& o);
+  friend void to_json(nlohmann::json& j, const PatchOperation_anyOf& o);
+  friend void from_json(const nlohmann::json& j, PatchOperation_anyOf& o);
 
-protected:
+ protected:
   PatchOperation_anyOf m_value;
 };
 
-} // namespace model
-} // namespace nssf_server
-} // namespace oai
+}  // namespace model
+}  // namespace nssf_server
+}  // namespace oai
 
 #endif /* PatchOperation_H_ */

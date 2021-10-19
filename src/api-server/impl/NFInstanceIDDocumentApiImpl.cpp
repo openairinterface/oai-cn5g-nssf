@@ -23,33 +23,34 @@ using namespace oai::nssf_server::model;
 using namespace nssf;
 
 NFInstanceIDDocumentApiImpl::NFInstanceIDDocumentApiImpl(
-    std::shared_ptr<Pistache::Rest::Router> rtr, nssf_app *nssf_app_inst,
+    std::shared_ptr<Pistache::Rest::Router> rtr, nssf_app* nssf_app_inst,
     std::string address)
-    : NFInstanceIDDocumentApi(rtr), m_nssf_app(nssf_app_inst),
+    : NFInstanceIDDocumentApi(rtr),
+      m_nssf_app(nssf_app_inst),
       m_address(address) {}
 
 void NFInstanceIDDocumentApiImpl::n_ssai_availability_delete(
-    const std::string &nfId, Pistache::Http::ResponseWriter &response) {
-  response.send(Pistache::Http::Code::Service_Unavailable,
-                "API NOT IMPLEMENTED\n");
+    const std::string& nfId, Pistache::Http::ResponseWriter& response) {
+  response.send(
+      Pistache::Http::Code::Service_Unavailable, "API NOT IMPLEMENTED\n");
 }
 void NFInstanceIDDocumentApiImpl::n_ssai_availability_patch(
-    const std::string &nfId, const std::vector<PatchItem> &patchItem,
-    const Pistache::Optional<Pistache::Http::Header::Raw> &contentEncoding,
-    const Pistache::Optional<Pistache::Http::Header::Raw> &acceptEncoding,
-    Pistache::Http::ResponseWriter &response) {
-  response.send(Pistache::Http::Code::Service_Unavailable,
-                "API NOT IMPLEMENTED\n");
+    const std::string& nfId, const std::vector<PatchItem>& patchItem,
+    const Pistache::Optional<Pistache::Http::Header::Raw>& contentEncoding,
+    const Pistache::Optional<Pistache::Http::Header::Raw>& acceptEncoding,
+    Pistache::Http::ResponseWriter& response) {
+  response.send(
+      Pistache::Http::Code::Service_Unavailable, "API NOT IMPLEMENTED\n");
 }
 void NFInstanceIDDocumentApiImpl::n_ssai_availability_put(
-    const std::string &nfId, const NssaiAvailabilityInfo &nssaiAvailabilityInfo,
-    const Pistache::Optional<Pistache::Http::Header::Raw> &contentEncoding,
-    const Pistache::Optional<Pistache::Http::Header::Raw> &acceptEncoding,
-    Pistache::Http::ResponseWriter &response) {
-  response.send(Pistache::Http::Code::Service_Unavailable,
-                "API NOT IMPLEMENTED\n");
+    const std::string& nfId, const NssaiAvailabilityInfo& nssaiAvailabilityInfo,
+    const Pistache::Optional<Pistache::Http::Header::Raw>& contentEncoding,
+    const Pistache::Optional<Pistache::Http::Header::Raw>& acceptEncoding,
+    Pistache::Http::ResponseWriter& response) {
+  response.send(
+      Pistache::Http::Code::Service_Unavailable, "API NOT IMPLEMENTED\n");
 }
 
-} // namespace api
-} // namespace nssf_server
-} // namespace oai
+}  // namespace api
+}  // namespace nssf_server
+}  // namespace oai

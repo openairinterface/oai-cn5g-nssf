@@ -34,7 +34,7 @@ namespace model {
 ///
 /// </summary>
 class ProblemDetails {
-public:
+ public:
   ProblemDetails();
   virtual ~ProblemDetails() = default;
 
@@ -48,16 +48,16 @@ public:
   /// Validate the current data in the model. Returns false on error and writes
   /// an error message into the given stringstream.
   /// </summary>
-  bool validate(std::stringstream &msg) const;
+  bool validate(std::stringstream& msg) const;
 
   /// <summary>
   /// Helper overload for validate. Used when one model stores another model and
   /// calls it's validate. Not meant to be called outside that case.
   /// </summary>
-  bool validate(std::stringstream &msg, const std::string &pathPrefix) const;
+  bool validate(std::stringstream& msg, const std::string& pathPrefix) const;
 
-  bool operator==(const ProblemDetails &rhs) const;
-  bool operator!=(const ProblemDetails &rhs) const;
+  bool operator==(const ProblemDetails& rhs) const;
+  bool operator!=(const ProblemDetails& rhs) const;
 
   /////////////////////////////////////////////
   /// ProblemDetails members
@@ -66,14 +66,14 @@ public:
   ///
   /// </summary>
   std::string getType() const;
-  void setType(std::string const &value);
+  void setType(std::string const& value);
   bool typeIsSet() const;
   void unsetType();
   /// <summary>
   ///
   /// </summary>
   std::string getTitle() const;
-  void setTitle(std::string const &value);
+  void setTitle(std::string const& value);
   bool titleIsSet() const;
   void unsetTitle();
   /// <summary>
@@ -87,63 +87,63 @@ public:
   ///
   /// </summary>
   std::string getDetail() const;
-  void setDetail(std::string const &value);
+  void setDetail(std::string const& value);
   bool detailIsSet() const;
   void unsetDetail();
   /// <summary>
   ///
   /// </summary>
   std::string getInstance() const;
-  void setInstance(std::string const &value);
+  void setInstance(std::string const& value);
   bool instanceIsSet() const;
   void unsetInstance();
   /// <summary>
   ///
   /// </summary>
   std::string getCause() const;
-  void setCause(std::string const &value);
+  void setCause(std::string const& value);
   bool causeIsSet() const;
   void unsetCause();
   /// <summary>
   ///
   /// </summary>
   std::vector<InvalidParam> getInvalidParams() const;
-  void setInvalidParams(std::vector<InvalidParam> const &value);
+  void setInvalidParams(std::vector<InvalidParam> const& value);
   bool invalidParamsIsSet() const;
   void unsetInvalidParams();
   /// <summary>
   ///
   /// </summary>
   std::string getSupportedFeatures() const;
-  void setSupportedFeatures(std::string const &value);
+  void setSupportedFeatures(std::string const& value);
   bool supportedFeaturesIsSet() const;
   void unsetSupportedFeatures();
   /// <summary>
   ///
   /// </summary>
   AccessTokenErr getAccessTokenError() const;
-  void setAccessTokenError(AccessTokenErr const &value);
+  void setAccessTokenError(AccessTokenErr const& value);
   bool accessTokenErrorIsSet() const;
   void unsetAccessTokenError();
   /// <summary>
   ///
   /// </summary>
   AccessTokenReq getAccessTokenRequest() const;
-  void setAccessTokenRequest(AccessTokenReq const &value);
+  void setAccessTokenRequest(AccessTokenReq const& value);
   bool accessTokenRequestIsSet() const;
   void unsetAccessTokenRequest();
   /// <summary>
   ///
   /// </summary>
   std::string getNrfId() const;
-  void setNrfId(std::string const &value);
+  void setNrfId(std::string const& value);
   bool nrfIdIsSet() const;
   void unsetNrfId();
 
-  friend void to_json(nlohmann::json &j, const ProblemDetails &o);
-  friend void from_json(const nlohmann::json &j, ProblemDetails &o);
+  friend void to_json(nlohmann::json& j, const ProblemDetails& o);
+  friend void from_json(const nlohmann::json& j, ProblemDetails& o);
 
-protected:
+ protected:
   std::string m_Type;
   bool m_TypeIsSet;
   std::string m_Title;
@@ -168,8 +168,8 @@ protected:
   bool m_NrfIdIsSet;
 };
 
-} // namespace model
-} // namespace nssf_server
-} // namespace oai
+}  // namespace model
+}  // namespace nssf_server
+}  // namespace oai
 
 #endif /* ProblemDetails_H_ */

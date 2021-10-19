@@ -30,7 +30,7 @@ namespace model {
 ///
 /// </summary>
 class AccessTokenErr {
-public:
+ public:
   AccessTokenErr();
   virtual ~AccessTokenErr();
 
@@ -43,26 +43,26 @@ public:
   ///
   /// </summary>
   std::string getError() const;
-  void setError(std::string const &value);
+  void setError(std::string const& value);
   /// <summary>
   ///
   /// </summary>
   std::string getErrorDescription() const;
-  void setErrorDescription(std::string const &value);
+  void setErrorDescription(std::string const& value);
   bool errorDescriptionIsSet() const;
   void unsetError_description();
   /// <summary>
   ///
   /// </summary>
   std::string getErrorUri() const;
-  void setErrorUri(std::string const &value);
+  void setErrorUri(std::string const& value);
   bool errorUriIsSet() const;
   void unsetError_uri();
 
-  friend void to_json(nlohmann::json &j, const AccessTokenErr &o);
-  friend void from_json(const nlohmann::json &j, AccessTokenErr &o);
+  friend void to_json(nlohmann::json& j, const AccessTokenErr& o);
+  friend void from_json(const nlohmann::json& j, AccessTokenErr& o);
 
-protected:
+ protected:
   std::string m_Error;
 
   std::string m_Error_description;
@@ -71,8 +71,8 @@ protected:
   bool m_Error_uriIsSet;
 };
 
-} // namespace model
-} // namespace nssf_server
-} // namespace oai
+}  // namespace model
+}  // namespace nssf_server
+}  // namespace oai
 
 #endif /* AccessTokenErr_H_ */

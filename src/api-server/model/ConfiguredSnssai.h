@@ -30,7 +30,7 @@ namespace model {
 ///
 /// </summary>
 class ConfiguredSnssai {
-public:
+ public:
   ConfiguredSnssai();
   virtual ~ConfiguredSnssai() = default;
 
@@ -44,16 +44,16 @@ public:
   /// Validate the current data in the model. Returns false on error and writes
   /// an error message into the given stringstream.
   /// </summary>
-  bool validate(std::stringstream &msg) const;
+  bool validate(std::stringstream& msg) const;
 
   /// <summary>
   /// Helper overload for validate. Used when one model stores another model and
   /// calls it's validate. Not meant to be called outside that case.
   /// </summary>
-  bool validate(std::stringstream &msg, const std::string &pathPrefix) const;
+  bool validate(std::stringstream& msg, const std::string& pathPrefix) const;
 
-  bool operator==(const ConfiguredSnssai &rhs) const;
-  bool operator!=(const ConfiguredSnssai &rhs) const;
+  bool operator==(const ConfiguredSnssai& rhs) const;
+  bool operator!=(const ConfiguredSnssai& rhs) const;
 
   /////////////////////////////////////////////
   /// ConfiguredSnssai members
@@ -62,27 +62,27 @@ public:
   ///
   /// </summary>
   Snssai getConfiguredSnssai() const;
-  void setConfiguredSnssai(Snssai const &value);
+  void setConfiguredSnssai(Snssai const& value);
   /// <summary>
   ///
   /// </summary>
   Snssai getMappedHomeSnssai() const;
-  void setMappedHomeSnssai(Snssai const &value);
+  void setMappedHomeSnssai(Snssai const& value);
   bool mappedHomeSnssaiIsSet() const;
   void unsetMappedHomeSnssai();
 
-  friend void to_json(nlohmann::json &j, const ConfiguredSnssai &o);
-  friend void from_json(const nlohmann::json &j, ConfiguredSnssai &o);
+  friend void to_json(nlohmann::json& j, const ConfiguredSnssai& o);
+  friend void from_json(const nlohmann::json& j, ConfiguredSnssai& o);
 
-protected:
+ protected:
   Snssai m_ConfiguredSnssai;
 
   Snssai m_MappedHomeSnssai;
   bool m_MappedHomeSnssaiIsSet;
 };
 
-} // namespace model
-} // namespace nssf_server
-} // namespace oai
+}  // namespace model
+}  // namespace nssf_server
+}  // namespace oai
 
 #endif /* ConfiguredSnssai_H_ */

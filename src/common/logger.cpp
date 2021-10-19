@@ -54,10 +54,10 @@ void Logger::_init(
   ss << "[%Y-%m-%dT%H:%M:%S.%f] [" << app << "] [%n] [%l] %v";
 
   m_async_cmd = new _Logger("async_c  ", m_sinks, ss.str().c_str());
-  m_itti     = new _Logger("itti     ", m_sinks, ss.str().c_str());
-  m_nssf_app   = new _Logger("nssf_app ", m_sinks, ss.str().c_str());
-  m_nssf_sbi   = new _Logger("nssf_sbi ", m_sinks, ss.str().c_str());
-  m_system      = new _Logger("system   ", m_sinks, ss.str().c_str());
+  m_itti      = new _Logger("itti     ", m_sinks, ss.str().c_str());
+  m_nssf_app  = new _Logger("nssf_app ", m_sinks, ss.str().c_str());
+  m_nssf_sbi  = new _Logger("nssf_sbi ", m_sinks, ss.str().c_str());
+  m_system    = new _Logger("system   ", m_sinks, ss.str().c_str());
 }
 
 ////////////////////////////////////////////////////////////////////////////////

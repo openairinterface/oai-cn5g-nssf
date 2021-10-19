@@ -32,7 +32,7 @@ namespace model {
 ///
 /// </summary>
 class AccessTokenReq {
-public:
+ public:
   AccessTokenReq();
   virtual ~AccessTokenReq();
 
@@ -45,57 +45,57 @@ public:
   ///
   /// </summary>
   std::string getGrantType() const;
-  void setGrantType(std::string const &value);
+  void setGrantType(std::string const& value);
   /// <summary>
   ///
   /// </summary>
   std::string getNfInstanceId() const;
-  void setNfInstanceId(std::string const &value);
+  void setNfInstanceId(std::string const& value);
   /// <summary>
   ///
   /// </summary>
   NFType getNfType() const;
-  void setNfType(NFType const &value);
+  void setNfType(NFType const& value);
   bool nfTypeIsSet() const;
   void unsetNfType();
   /// <summary>
   ///
   /// </summary>
   NFType getTargetNfType() const;
-  void setTargetNfType(NFType const &value);
+  void setTargetNfType(NFType const& value);
   bool targetNfTypeIsSet() const;
   void unsetTargetNfType();
   /// <summary>
   ///
   /// </summary>
   std::string getScope() const;
-  void setScope(std::string const &value);
+  void setScope(std::string const& value);
   /// <summary>
   ///
   /// </summary>
   std::string getTargetNfInstanceId() const;
-  void setTargetNfInstanceId(std::string const &value);
+  void setTargetNfInstanceId(std::string const& value);
   bool targetNfInstanceIdIsSet() const;
   void unsetTargetNfInstanceId();
   /// <summary>
   ///
   /// </summary>
   PlmnId getRequesterPlmn() const;
-  void setRequesterPlmn(PlmnId const &value);
+  void setRequesterPlmn(PlmnId const& value);
   bool requesterPlmnIsSet() const;
   void unsetRequesterPlmn();
   /// <summary>
   ///
   /// </summary>
   PlmnId getTargetPlmn() const;
-  void setTargetPlmn(PlmnId const &value);
+  void setTargetPlmn(PlmnId const& value);
   bool targetPlmnIsSet() const;
   void unsetTargetPlmn();
 
-  friend void to_json(nlohmann::json &j, const AccessTokenReq &o);
-  friend void from_json(const nlohmann::json &j, AccessTokenReq &o);
+  friend void to_json(nlohmann::json& j, const AccessTokenReq& o);
+  friend void from_json(const nlohmann::json& j, AccessTokenReq& o);
 
-protected:
+ protected:
   std::string m_Grant_type;
 
   std::string m_NfInstanceId;
@@ -114,8 +114,8 @@ protected:
   bool m_TargetPlmnIsSet;
 };
 
-} // namespace model
-} // namespace nssf_server
-} // namespace oai
+}  // namespace model
+}  // namespace nssf_server
+}  // namespace oai
 
 #endif /* AccessTokenReq_H_ */

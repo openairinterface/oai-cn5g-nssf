@@ -28,10 +28,12 @@ const std::string SubscriptionsCollectionApi::base =
     "/nnssf-nssaiavailability/";
 
 SubscriptionsCollectionApi::SubscriptionsCollectionApi(
-    const std::shared_ptr<Pistache::Rest::Router> &rtr)
+    const std::shared_ptr<Pistache::Rest::Router>& rtr)
     : router(rtr) {}
 
-void SubscriptionsCollectionApi::init() { setupRoutes(); }
+void SubscriptionsCollectionApi::init() {
+  setupRoutes();
+}
 
 void SubscriptionsCollectionApi::setupRoutes() {
   using namespace Pistache::Rest;
@@ -50,30 +52,29 @@ void SubscriptionsCollectionApi::setupRoutes() {
 
 std::pair<Pistache::Http::Code, std::string>
 SubscriptionsCollectionApi::handleParsingException(
-    const std::exception &ex) const noexcept {
+    const std::exception& ex) const noexcept {
   try {
     throw;
-  } catch (nlohmann::detail::exception &e) {
+  } catch (nlohmann::detail::exception& e) {
     return std::make_pair(Pistache::Http::Code::Bad_Request, e.what());
     // } catch (oai::nssf_server::helpers::ValidationException &e) {
     //     return std::make_pair(Pistache::Http::Code::Bad_Request, e.what());
-  } catch (std::exception &e) {
-    return std::make_pair(Pistache::Http::Code::Internal_Server_Error,
-                          e.what());
+  } catch (std::exception& e) {
+    return std::make_pair(
+        Pistache::Http::Code::Internal_Server_Error, e.what());
   }
 }
 
 std::pair<Pistache::Http::Code, std::string>
 SubscriptionsCollectionApi::handleOperationException(
-    const std::exception &ex) const noexcept {
+    const std::exception& ex) const noexcept {
   return std::make_pair(Pistache::Http::Code::Internal_Server_Error, ex.what());
 }
 
 void SubscriptionsCollectionApi::n_ssai_availability_post_handler(
-    const Pistache::Rest::Request &request,
+    const Pistache::Rest::Request& request,
     Pistache::Http::ResponseWriter response) {
   try {
-
     // Getting the body param
 
     NssfEventSubscriptionCreateData nssfEventSubscriptionCreateData;
@@ -85,7 +86,7 @@ void SubscriptionsCollectionApi::n_ssai_availability_post_handler(
       nlohmann::json::parse(request.body())
           .get_to(nssfEventSubscriptionCreateData);
       nssfEventSubscriptionCreateData.validate();
-    } catch (std::exception &e) {
+    } catch (std::exception& e) {
       const std::pair<Pistache::Http::Code, std::string> errorInfo =
           this->handleParsingException(e);
       response.send(errorInfo.first, errorInfo.second);
@@ -93,29 +94,29 @@ void SubscriptionsCollectionApi::n_ssai_availability_post_handler(
     }
 
     try {
-      this->n_ssai_availability_post(nssfEventSubscriptionCreateData,
-                                     contentEncoding, response);
-    } catch (Pistache::Http::HttpError &e) {
+      this->n_ssai_availability_post(
+          nssfEventSubscriptionCreateData, contentEncoding, response);
+    } catch (Pistache::Http::HttpError& e) {
       response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
       return;
-    } catch (std::exception &e) {
+    } catch (std::exception& e) {
       const std::pair<Pistache::Http::Code, std::string> errorInfo =
           this->handleOperationException(e);
       response.send(errorInfo.first, errorInfo.second);
       return;
     }
 
-  } catch (std::exception &e) {
+  } catch (std::exception& e) {
     response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
   }
 }
 
 void SubscriptionsCollectionApi::subscriptions_collection_api_default_handler(
-    const Pistache::Rest::Request &, Pistache::Http::ResponseWriter response) {
-  response.send(Pistache::Http::Code::Not_Found,
-                "The requested method does not exist");
+    const Pistache::Rest::Request&, Pistache::Http::ResponseWriter response) {
+  response.send(
+      Pistache::Http::Code::Not_Found, "The requested method does not exist");
 }
 
-} // namespace api
-} // namespace nssf_server
-} // namespace oai
+}  // namespace api
+}  // namespace nssf_server
+}  // namespace oai

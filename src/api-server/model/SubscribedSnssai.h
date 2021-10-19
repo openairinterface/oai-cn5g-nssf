@@ -30,7 +30,7 @@ namespace model {
 ///
 /// </summary>
 class SubscribedSnssai {
-public:
+ public:
   SubscribedSnssai();
   virtual ~SubscribedSnssai() = default;
 
@@ -44,16 +44,16 @@ public:
   /// Validate the current data in the model. Returns false on error and writes
   /// an error message into the given stringstream.
   /// </summary>
-  bool validate(std::stringstream &msg) const;
+  bool validate(std::stringstream& msg) const;
 
   /// <summary>
   /// Helper overload for validate. Used when one model stores another model and
   /// calls it's validate. Not meant to be called outside that case.
   /// </summary>
-  bool validate(std::stringstream &msg, const std::string &pathPrefix) const;
+  bool validate(std::stringstream& msg, const std::string& pathPrefix) const;
 
-  bool operator==(const SubscribedSnssai &rhs) const;
-  bool operator!=(const SubscribedSnssai &rhs) const;
+  bool operator==(const SubscribedSnssai& rhs) const;
+  bool operator!=(const SubscribedSnssai& rhs) const;
 
   /////////////////////////////////////////////
   /// SubscribedSnssai members
@@ -62,7 +62,7 @@ public:
   ///
   /// </summary>
   Snssai getSubscribedSnssai() const;
-  void setSubscribedSnssai(Snssai const &value);
+  void setSubscribedSnssai(Snssai const& value);
   /// <summary>
   ///
   /// </summary>
@@ -71,18 +71,18 @@ public:
   bool defaultIndicationIsSet() const;
   void unsetDefaultIndication();
 
-  friend void to_json(nlohmann::json &j, const SubscribedSnssai &o);
-  friend void from_json(const nlohmann::json &j, SubscribedSnssai &o);
+  friend void to_json(nlohmann::json& j, const SubscribedSnssai& o);
+  friend void from_json(const nlohmann::json& j, SubscribedSnssai& o);
 
-protected:
+ protected:
   Snssai m_SubscribedSnssai;
 
   bool m_DefaultIndication;
   bool m_DefaultIndicationIsSet;
 };
 
-} // namespace model
-} // namespace nssf_server
-} // namespace oai
+}  // namespace model
+}  // namespace nssf_server
+}  // namespace oai
 
 #endif /* SubscribedSnssai_H_ */

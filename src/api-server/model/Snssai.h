@@ -30,7 +30,7 @@ namespace model {
 ///
 /// </summary>
 class Snssai {
-public:
+ public:
   Snssai();
   virtual ~Snssai() = default;
 
@@ -44,16 +44,16 @@ public:
   /// Validate the current data in the model. Returns false on error and writes
   /// an error message into the given stringstream.
   /// </summary>
-  bool validate(std::stringstream &msg) const;
+  bool validate(std::stringstream& msg) const;
 
   /// <summary>
   /// Helper overload for validate. Used when one model stores another model and
   /// calls it's validate. Not meant to be called outside that case.
   /// </summary>
-  bool validate(std::stringstream &msg, const std::string &pathPrefix) const;
+  bool validate(std::stringstream& msg, const std::string& pathPrefix) const;
 
-  bool operator==(const Snssai &rhs) const;
-  bool operator!=(const Snssai &rhs) const;
+  bool operator==(const Snssai& rhs) const;
+  bool operator!=(const Snssai& rhs) const;
 
   /////////////////////////////////////////////
   /// Snssai members
@@ -67,22 +67,22 @@ public:
   ///
   /// </summary>
   std::string getSd() const;
-  void setSd(std::string const &value);
+  void setSd(std::string const& value);
   bool sdIsSet() const;
   void unsetSd();
 
-  friend void to_json(nlohmann::json &j, const Snssai &o);
-  friend void from_json(const nlohmann::json &j, Snssai &o);
+  friend void to_json(nlohmann::json& j, const Snssai& o);
+  friend void from_json(const nlohmann::json& j, Snssai& o);
 
-protected:
+ protected:
   int32_t m_Sst;
 
   std::string m_Sd;
   bool m_SdIsSet;
 };
 
-} // namespace model
-} // namespace nssf_server
-} // namespace oai
+}  // namespace model
+}  // namespace nssf_server
+}  // namespace oai
 
 #endif /* Snssai_H_ */

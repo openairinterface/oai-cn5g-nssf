@@ -42,23 +42,24 @@ using namespace nssf;
 
 class NSSAIAvailabilityStoreApiImpl
     : public oai::nssf_server::api::NSSAIAvailabilityStoreApi {
-public:
+ public:
   // explicit NFInstanceIDDocumentApiImpl(const
   // std::shared_ptr<Pistache::Rest::Router>& rtr);
   // ~NFInstanceIDDocumentApiImpl() override = default;
-  NSSAIAvailabilityStoreApiImpl(std::shared_ptr<Pistache::Rest::Router>,
-                                nssf_app *nssf_app_inst, std::string address);
+  NSSAIAvailabilityStoreApiImpl(
+      std::shared_ptr<Pistache::Rest::Router>, nssf_app* nssf_app_inst,
+      std::string address);
   ~NSSAIAvailabilityStoreApiImpl() {}
 
-  void n_ssai_availability_options(Pistache::Http::ResponseWriter &response);
+  void n_ssai_availability_options(Pistache::Http::ResponseWriter& response);
 
-private:
-  nssf_app *m_nssf_app;
+ private:
+  nssf_app* m_nssf_app;
   std::string m_address;
 };
 
-} // namespace api
-} // namespace nssf_server
-} // namespace oai
+}  // namespace api
+}  // namespace nssf_server
+}  // namespace oai
 
 #endif

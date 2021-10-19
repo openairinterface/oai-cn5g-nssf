@@ -34,7 +34,7 @@ namespace model {
 ///
 /// </summary>
 class ExtSnssai {
-public:
+ public:
   ExtSnssai();
   virtual ~ExtSnssai() = default;
 
@@ -48,16 +48,16 @@ public:
   /// Validate the current data in the model. Returns false on error and writes
   /// an error message into the given stringstream.
   /// </summary>
-  bool validate(std::stringstream &msg) const;
+  bool validate(std::stringstream& msg) const;
 
   /// <summary>
   /// Helper overload for validate. Used when one model stores another model and
   /// calls it's validate. Not meant to be called outside that case.
   /// </summary>
-  bool validate(std::stringstream &msg, const std::string &pathPrefix) const;
+  bool validate(std::stringstream& msg, const std::string& pathPrefix) const;
 
-  bool operator==(const ExtSnssai &rhs) const;
-  bool operator!=(const ExtSnssai &rhs) const;
+  bool operator==(const ExtSnssai& rhs) const;
+  bool operator!=(const ExtSnssai& rhs) const;
 
   /////////////////////////////////////////////
   /// ExtSnssai members
@@ -71,14 +71,14 @@ public:
   ///
   /// </summary>
   std::string getSd() const;
-  void setSd(std::string const &value);
+  void setSd(std::string const& value);
   bool sdIsSet() const;
   void unsetSd();
   /// <summary>
   ///
   /// </summary>
   std::vector<SdRange> getSdRanges() const;
-  void setSdRanges(std::vector<SdRange> const &value);
+  void setSdRanges(std::vector<SdRange> const& value);
   bool sdRangesIsSet() const;
   void unsetSdRanges();
   /// <summary>
@@ -89,10 +89,10 @@ public:
   bool wildcardSdIsSet() const;
   void unsetWildcardSd();
 
-  friend void to_json(nlohmann::json &j, const ExtSnssai &o);
-  friend void from_json(const nlohmann::json &j, ExtSnssai &o);
+  friend void to_json(nlohmann::json& j, const ExtSnssai& o);
+  friend void from_json(const nlohmann::json& j, ExtSnssai& o);
 
-protected:
+ protected:
   int32_t m_Sst;
 
   std::string m_Sd;
@@ -103,8 +103,8 @@ protected:
   bool m_WildcardSdIsSet;
 };
 
-} // namespace model
-} // namespace nssf_server
-} // namespace oai
+}  // namespace model
+}  // namespace nssf_server
+}  // namespace oai
 
 #endif /* ExtSnssai_H_ */

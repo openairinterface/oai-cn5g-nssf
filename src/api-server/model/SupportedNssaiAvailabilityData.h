@@ -33,7 +33,7 @@ namespace model {
 ///
 /// </summary>
 class SupportedNssaiAvailabilityData {
-public:
+ public:
   SupportedNssaiAvailabilityData();
   virtual ~SupportedNssaiAvailabilityData() = default;
 
@@ -47,16 +47,16 @@ public:
   /// Validate the current data in the model. Returns false on error and writes
   /// an error message into the given stringstream.
   /// </summary>
-  bool validate(std::stringstream &msg) const;
+  bool validate(std::stringstream& msg) const;
 
   /// <summary>
   /// Helper overload for validate. Used when one model stores another model and
   /// calls it's validate. Not meant to be called outside that case.
   /// </summary>
-  bool validate(std::stringstream &msg, const std::string &pathPrefix) const;
+  bool validate(std::stringstream& msg, const std::string& pathPrefix) const;
 
-  bool operator==(const SupportedNssaiAvailabilityData &rhs) const;
-  bool operator!=(const SupportedNssaiAvailabilityData &rhs) const;
+  bool operator==(const SupportedNssaiAvailabilityData& rhs) const;
+  bool operator!=(const SupportedNssaiAvailabilityData& rhs) const;
 
   /////////////////////////////////////////////
   /// SupportedNssaiAvailabilityData members
@@ -65,33 +65,33 @@ public:
   ///
   /// </summary>
   Tai getTai() const;
-  void setTai(Tai const &value);
+  void setTai(Tai const& value);
   /// <summary>
   ///
   /// </summary>
   std::vector<ExtSnssai> getSupportedSnssaiList() const;
-  void setSupportedSnssaiList(std::vector<ExtSnssai> const &value);
+  void setSupportedSnssaiList(std::vector<ExtSnssai> const& value);
   /// <summary>
   ///
   /// </summary>
   std::vector<Tai> getTaiList() const;
-  void setTaiList(std::vector<Tai> const &value);
+  void setTaiList(std::vector<Tai> const& value);
   bool taiListIsSet() const;
   void unsetTaiList();
   /// <summary>
   ///
   /// </summary>
   std::vector<TaiRange> getTaiRangeList() const;
-  void setTaiRangeList(std::vector<TaiRange> const &value);
+  void setTaiRangeList(std::vector<TaiRange> const& value);
   bool taiRangeListIsSet() const;
   void unsetTaiRangeList();
 
-  friend void to_json(nlohmann::json &j,
-                      const SupportedNssaiAvailabilityData &o);
-  friend void from_json(const nlohmann::json &j,
-                        SupportedNssaiAvailabilityData &o);
+  friend void to_json(
+      nlohmann::json& j, const SupportedNssaiAvailabilityData& o);
+  friend void from_json(
+      const nlohmann::json& j, SupportedNssaiAvailabilityData& o);
 
-protected:
+ protected:
   Tai m_Tai;
 
   std::vector<ExtSnssai> m_SupportedSnssaiList;
@@ -102,8 +102,8 @@ protected:
   bool m_TaiRangeListIsSet;
 };
 
-} // namespace model
-} // namespace nssf_server
-} // namespace oai
+}  // namespace model
+}  // namespace nssf_server
+}  // namespace oai
 
 #endif /* SupportedNssaiAvailabilityData_H_ */

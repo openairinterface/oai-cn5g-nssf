@@ -30,7 +30,7 @@ namespace model {
 ///
 /// </summary>
 class RedirectResponse {
-public:
+ public:
   RedirectResponse();
   virtual ~RedirectResponse() = default;
 
@@ -44,16 +44,16 @@ public:
   /// Validate the current data in the model. Returns false on error and writes
   /// an error message into the given stringstream.
   /// </summary>
-  bool validate(std::stringstream &msg) const;
+  bool validate(std::stringstream& msg) const;
 
   /// <summary>
   /// Helper overload for validate. Used when one model stores another model and
   /// calls it's validate. Not meant to be called outside that case.
   /// </summary>
-  bool validate(std::stringstream &msg, const std::string &pathPrefix) const;
+  bool validate(std::stringstream& msg, const std::string& pathPrefix) const;
 
-  bool operator==(const RedirectResponse &rhs) const;
-  bool operator!=(const RedirectResponse &rhs) const;
+  bool operator==(const RedirectResponse& rhs) const;
+  bool operator!=(const RedirectResponse& rhs) const;
 
   /////////////////////////////////////////////
   /// RedirectResponse members
@@ -62,29 +62,29 @@ public:
   ///
   /// </summary>
   std::string getCause() const;
-  void setCause(std::string const &value);
+  void setCause(std::string const& value);
   bool causeIsSet() const;
   void unsetCause();
   /// <summary>
   ///
   /// </summary>
   std::string getTargetScp() const;
-  void setTargetScp(std::string const &value);
+  void setTargetScp(std::string const& value);
   bool targetScpIsSet() const;
   void unsetTargetScp();
 
-  friend void to_json(nlohmann::json &j, const RedirectResponse &o);
-  friend void from_json(const nlohmann::json &j, RedirectResponse &o);
+  friend void to_json(nlohmann::json& j, const RedirectResponse& o);
+  friend void from_json(const nlohmann::json& j, RedirectResponse& o);
 
-protected:
+ protected:
   std::string m_Cause;
   bool m_CauseIsSet;
   std::string m_TargetScp;
   bool m_TargetScpIsSet;
 };
 
-} // namespace model
-} // namespace nssf_server
-} // namespace oai
+}  // namespace model
+}  // namespace nssf_server
+}  // namespace oai
 
 #endif /* RedirectResponse_H_ */

@@ -41,27 +41,28 @@ namespace api {
 using namespace oai::nssf_server::model;
 
 class NFInstanceIDDocumentApi {
-public:
+ public:
   explicit NFInstanceIDDocumentApi(
-      const std::shared_ptr<Pistache::Rest::Router> &rtr);
+      const std::shared_ptr<Pistache::Rest::Router>& rtr);
   virtual ~NFInstanceIDDocumentApi() = default;
   void init();
 
   static const std::string base;
 
-private:
+ private:
   void setupRoutes();
 
-  void
-  n_ssai_availability_delete_handler(const Pistache::Rest::Request &request,
-                                     Pistache::Http::ResponseWriter response);
-  void
-  n_ssai_availability_patch_handler(const Pistache::Rest::Request &request,
-                                    Pistache::Http::ResponseWriter response);
-  void n_ssai_availability_put_handler(const Pistache::Rest::Request &request,
-                                       Pistache::Http::ResponseWriter response);
+  void n_ssai_availability_delete_handler(
+      const Pistache::Rest::Request& request,
+      Pistache::Http::ResponseWriter response);
+  void n_ssai_availability_patch_handler(
+      const Pistache::Rest::Request& request,
+      Pistache::Http::ResponseWriter response);
+  void n_ssai_availability_put_handler(
+      const Pistache::Rest::Request& request,
+      Pistache::Http::ResponseWriter response);
   void nf_instance_id_document_api_default_handler(
-      const Pistache::Rest::Request &request,
+      const Pistache::Rest::Request& request,
       Pistache::Http::ResponseWriter response);
 
   const std::shared_ptr<Pistache::Rest::Router> router;
@@ -72,8 +73,8 @@ private:
   /// called inside a catch block. Important: When overriding, do not call
   /// `throw ex;`, but instead use `throw;`.
   /// </summary>
-  virtual std::pair<Pistache::Http::Code, std::string>
-  handleParsingException(const std::exception &ex) const noexcept;
+  virtual std::pair<Pistache::Http::Code, std::string> handleParsingException(
+      const std::exception& ex) const noexcept;
 
   /// <summary>
   /// Helper function to handle unexpected Exceptions during processing of the
@@ -81,8 +82,8 @@ private:
   /// formats. This is called inside a catch block. Important: When overriding,
   /// do not call `throw ex;`, but instead use `throw;`.
   /// </summary>
-  virtual std::pair<Pistache::Http::Code, std::string>
-  handleOperationException(const std::exception &ex) const noexcept;
+  virtual std::pair<Pistache::Http::Code, std::string> handleOperationException(
+      const std::exception& ex) const noexcept;
 
   /// <summary>
   /// Deletes an already existing S-NSSAIs per TA provided by the NF service
@@ -92,9 +93,8 @@ private:
   ///
   /// </remarks>
   /// <param name="nfId">Identifier of the NF service consumer instance</param>
-  virtual void
-  n_ssai_availability_delete(const std::string &nfId,
-                             Pistache::Http::ResponseWriter &response) = 0;
+  virtual void n_ssai_availability_delete(
+      const std::string& nfId, Pistache::Http::ResponseWriter& response) = 0;
   /// <summary>
   /// Updates an already existing S-NSSAIs per TA provided by the NF service
   /// consumer (e.g AMF)
@@ -110,10 +110,10 @@ private:
   /// name="acceptEncoding">Accept-Encoding, described in IETF RFC 7231
   /// (optional, default to &quot;&quot;)</param>
   virtual void n_ssai_availability_patch(
-      const std::string &nfId, const std::vector<PatchItem> &patchItem,
-      const Pistache::Optional<Pistache::Http::Header::Raw> &contentEncoding,
-      const Pistache::Optional<Pistache::Http::Header::Raw> &acceptEncoding,
-      Pistache::Http::ResponseWriter &response) = 0;
+      const std::string& nfId, const std::vector<PatchItem>& patchItem,
+      const Pistache::Optional<Pistache::Http::Header::Raw>& contentEncoding,
+      const Pistache::Optional<Pistache::Http::Header::Raw>& acceptEncoding,
+      Pistache::Http::ResponseWriter& response) = 0;
   /// <summary>
   /// Updates/replaces the NSSF with the S-NSSAIs the NF service consumer (e.g
   /// AMF)supports per TA
@@ -129,16 +129,16 @@ private:
   /// name="acceptEncoding">Accept-Encoding, described in IETF RFC 7231
   /// (optional, default to &quot;&quot;)</param>
   virtual void n_ssai_availability_put(
-      const std::string &nfId,
-      const oai::nssf_server::model::NssaiAvailabilityInfo
-          &nssaiAvailabilityInfo,
-      const Pistache::Optional<Pistache::Http::Header::Raw> &contentEncoding,
-      const Pistache::Optional<Pistache::Http::Header::Raw> &acceptEncoding,
-      Pistache::Http::ResponseWriter &response) = 0;
+      const std::string& nfId,
+      const oai::nssf_server::model::NssaiAvailabilityInfo&
+          nssaiAvailabilityInfo,
+      const Pistache::Optional<Pistache::Http::Header::Raw>& contentEncoding,
+      const Pistache::Optional<Pistache::Http::Header::Raw>& acceptEncoding,
+      Pistache::Http::ResponseWriter& response) = 0;
 };
 
-} // namespace api
-} // namespace nssf_server
-} // namespace oai
+}  // namespace api
+}  // namespace nssf_server
+}  // namespace oai
 
 #endif /* NFInstanceIDDocumentApi_H_ */

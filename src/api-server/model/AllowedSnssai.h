@@ -32,7 +32,7 @@ namespace model {
 ///
 /// </summary>
 class AllowedSnssai {
-public:
+ public:
   AllowedSnssai();
   virtual ~AllowedSnssai() = default;
 
@@ -46,16 +46,16 @@ public:
   /// Validate the current data in the model. Returns false on error and writes
   /// an error message into the given stringstream.
   /// </summary>
-  bool validate(std::stringstream &msg) const;
+  bool validate(std::stringstream& msg) const;
 
   /// <summary>
   /// Helper overload for validate. Used when one model stores another model and
   /// calls it's validate. Not meant to be called outside that case.
   /// </summary>
-  bool validate(std::stringstream &msg, const std::string &pathPrefix) const;
+  bool validate(std::stringstream& msg, const std::string& pathPrefix) const;
 
-  bool operator==(const AllowedSnssai &rhs) const;
-  bool operator!=(const AllowedSnssai &rhs) const;
+  bool operator==(const AllowedSnssai& rhs) const;
+  bool operator!=(const AllowedSnssai& rhs) const;
 
   /////////////////////////////////////////////
   /// AllowedSnssai members
@@ -64,26 +64,26 @@ public:
   ///
   /// </summary>
   Snssai getAllowedSnssai() const;
-  void setAllowedSnssai(Snssai const &value);
+  void setAllowedSnssai(Snssai const& value);
   /// <summary>
   ///
   /// </summary>
   std::vector<NsiInformation> getNsiInformationList() const;
-  void setNsiInformationList(std::vector<NsiInformation> const &value);
+  void setNsiInformationList(std::vector<NsiInformation> const& value);
   bool nsiInformationListIsSet() const;
   void unsetNsiInformationList();
   /// <summary>
   ///
   /// </summary>
   Snssai getMappedHomeSnssai() const;
-  void setMappedHomeSnssai(Snssai const &value);
+  void setMappedHomeSnssai(Snssai const& value);
   bool mappedHomeSnssaiIsSet() const;
   void unsetMappedHomeSnssai();
 
-  friend void to_json(nlohmann::json &j, const AllowedSnssai &o);
-  friend void from_json(const nlohmann::json &j, AllowedSnssai &o);
+  friend void to_json(nlohmann::json& j, const AllowedSnssai& o);
+  friend void from_json(const nlohmann::json& j, AllowedSnssai& o);
 
-protected:
+ protected:
   Snssai m_AllowedSnssai;
 
   std::vector<NsiInformation> m_NsiInformationList;
@@ -92,8 +92,8 @@ protected:
   bool m_MappedHomeSnssaiIsSet;
 };
 
-} // namespace model
-} // namespace nssf_server
-} // namespace oai
+}  // namespace model
+}  // namespace nssf_server
+}  // namespace oai
 
 #endif /* AllowedSnssai_H_ */

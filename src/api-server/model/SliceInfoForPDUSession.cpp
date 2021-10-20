@@ -20,7 +20,9 @@ namespace oai {
 namespace nssf_server {
 namespace model {
 
-SliceInfoForPDUSession::SliceInfoForPDUSession() { m_HomeSnssaiIsSet = false; }
+SliceInfoForPDUSession::SliceInfoForPDUSession() {
+  m_HomeSnssaiIsSet = false;
+}
 
 void SliceInfoForPDUSession::validate() const {
   std::stringstream msg;
@@ -30,12 +32,12 @@ void SliceInfoForPDUSession::validate() const {
   // }
 }
 
-bool SliceInfoForPDUSession::validate(std::stringstream &msg) const {
+bool SliceInfoForPDUSession::validate(std::stringstream& msg) const {
   return validate(msg, "");
 }
 
-bool SliceInfoForPDUSession::validate(std::stringstream &msg,
-                                      const std::string &pathPrefix) const {
+bool SliceInfoForPDUSession::validate(
+    std::stringstream& msg, const std::string& pathPrefix) const {
   bool success = true;
   const std::string _pathPrefix =
       pathPrefix.empty() ? "SliceInfoForPDUSession" : pathPrefix;
@@ -44,7 +46,7 @@ bool SliceInfoForPDUSession::validate(std::stringstream &msg,
 }
 
 bool SliceInfoForPDUSession::operator==(
-    const SliceInfoForPDUSession &rhs) const {
+    const SliceInfoForPDUSession& rhs) const {
   return
 
       (getSNssai() == rhs.getSNssai()) &&
@@ -59,19 +61,18 @@ bool SliceInfoForPDUSession::operator==(
 }
 
 bool SliceInfoForPDUSession::operator!=(
-    const SliceInfoForPDUSession &rhs) const {
+    const SliceInfoForPDUSession& rhs) const {
   return !(*this == rhs);
 }
 
-void to_json(nlohmann::json &j, const SliceInfoForPDUSession &o) {
-  j = nlohmann::json();
-  j["sNssai"] = o.m_SNssai;
+void to_json(nlohmann::json& j, const SliceInfoForPDUSession& o) {
+  j                      = nlohmann::json();
+  j["sNssai"]            = o.m_SNssai;
   j["roamingIndication"] = o.m_RoamingIndication;
-  if (o.homeSnssaiIsSet())
-    j["homeSnssai"] = o.m_HomeSnssai;
+  if (o.homeSnssaiIsSet()) j["homeSnssai"] = o.m_HomeSnssai;
 }
 
-void from_json(const nlohmann::json &j, SliceInfoForPDUSession &o) {
+void from_json(const nlohmann::json& j, SliceInfoForPDUSession& o) {
   j.at("sNssai").get_to(o.m_SNssai);
   j.at("roamingIndication").get_to(o.m_RoamingIndication);
   if (j.find("homeSnssai") != j.end()) {
@@ -80,27 +81,33 @@ void from_json(const nlohmann::json &j, SliceInfoForPDUSession &o) {
   }
 }
 
-Snssai SliceInfoForPDUSession::getSNssai() const { return m_SNssai; }
-void SliceInfoForPDUSession::setSNssai(Snssai const &value) {
+Snssai SliceInfoForPDUSession::getSNssai() const {
+  return m_SNssai;
+}
+void SliceInfoForPDUSession::setSNssai(Snssai const& value) {
   m_SNssai = value;
 }
 RoamingIndication SliceInfoForPDUSession::getRoamingIndication() const {
   return m_RoamingIndication;
 }
 void SliceInfoForPDUSession::setRoamingIndication(
-    RoamingIndication const &value) {
+    RoamingIndication const& value) {
   m_RoamingIndication = value;
 }
-Snssai SliceInfoForPDUSession::getHomeSnssai() const { return m_HomeSnssai; }
-void SliceInfoForPDUSession::setHomeSnssai(Snssai const &value) {
-  m_HomeSnssai = value;
+Snssai SliceInfoForPDUSession::getHomeSnssai() const {
+  return m_HomeSnssai;
+}
+void SliceInfoForPDUSession::setHomeSnssai(Snssai const& value) {
+  m_HomeSnssai      = value;
   m_HomeSnssaiIsSet = true;
 }
 bool SliceInfoForPDUSession::homeSnssaiIsSet() const {
   return m_HomeSnssaiIsSet;
 }
-void SliceInfoForPDUSession::unsetHomeSnssai() { m_HomeSnssaiIsSet = false; }
+void SliceInfoForPDUSession::unsetHomeSnssai() {
+  m_HomeSnssaiIsSet = false;
+}
 
-} // namespace model
-} // namespace nssf_server
-} // namespace oai
+}  // namespace model
+}  // namespace nssf_server
+}  // namespace oai

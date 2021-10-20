@@ -29,19 +29,20 @@ using namespace nssf;
 // }
 
 SubscriptionsCollectionApiImpl::SubscriptionsCollectionApiImpl(
-    std::shared_ptr<Pistache::Rest::Router> rtr, nssf_app *nssf_app_inst,
+    std::shared_ptr<Pistache::Rest::Router> rtr, nssf_app* nssf_app_inst,
     std::string address)
-    : SubscriptionsCollectionApi(rtr), m_nssf_app(nssf_app_inst),
+    : SubscriptionsCollectionApi(rtr),
+      m_nssf_app(nssf_app_inst),
       m_address(address) {}
 
 void SubscriptionsCollectionApiImpl::n_ssai_availability_post(
-    const NssfEventSubscriptionCreateData &nssfEventSubscriptionCreateData,
-    const Pistache::Optional<Pistache::Http::Header::Raw> &contentEncoding,
-    Pistache::Http::ResponseWriter &response) {
-  response.send(Pistache::Http::Code::Service_Unavailable,
-                "API NOT IMPLEMENTED\n");
+    const NssfEventSubscriptionCreateData& nssfEventSubscriptionCreateData,
+    const Pistache::Optional<Pistache::Http::Header::Raw>& contentEncoding,
+    Pistache::Http::ResponseWriter& response) {
+  response.send(
+      Pistache::Http::Code::Service_Unavailable, "API NOT IMPLEMENTED\n");
 }
 
-} // namespace api
-} // namespace nssf_server
-} // namespace oai
+}  // namespace api
+}  // namespace nssf_server
+}  // namespace oai

@@ -34,7 +34,7 @@ namespace model {
 ///
 /// </summary>
 class ComplexQuery {
-public:
+ public:
   ComplexQuery();
   virtual ~ComplexQuery();
 
@@ -46,25 +46,25 @@ public:
   /// <summary>
   ///
   /// </summary>
-  std::vector<CnfUnit> &getCnfUnits();
-  void setCnfUnits(std::vector<CnfUnit> const &value);
+  std::vector<CnfUnit>& getCnfUnits();
+  void setCnfUnits(std::vector<CnfUnit> const& value);
   /// <summary>
   ///
   /// </summary>
-  std::vector<DnfUnit> &getDnfUnits();
-  void setDnfUnits(std::vector<DnfUnit> const &value);
+  std::vector<DnfUnit>& getDnfUnits();
+  void setDnfUnits(std::vector<DnfUnit> const& value);
 
-  friend void to_json(nlohmann::json &j, const ComplexQuery &o);
-  friend void from_json(const nlohmann::json &j, ComplexQuery &o);
+  friend void to_json(nlohmann::json& j, const ComplexQuery& o);
+  friend void from_json(const nlohmann::json& j, ComplexQuery& o);
 
-protected:
+ protected:
   std::vector<CnfUnit> m_CnfUnits;
 
   std::vector<DnfUnit> m_DnfUnits;
 };
 
-} // namespace model
-} // namespace nssf_server
-} // namespace oai
+}  // namespace model
+}  // namespace nssf_server
+}  // namespace oai
 
 #endif /* ComplexQuery_H_ */

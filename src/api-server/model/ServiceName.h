@@ -29,7 +29,7 @@ namespace model {
 ///
 /// </summary>
 class ServiceName {
-public:
+ public:
   ServiceName();
   virtual ~ServiceName();
 
@@ -38,14 +38,14 @@ public:
   /////////////////////////////////////////////
   /// ServiceName members
 
-  friend void to_json(nlohmann::json &j, const ServiceName &o);
-  friend void from_json(const nlohmann::json &j, ServiceName &o);
+  friend void to_json(nlohmann::json& j, const ServiceName& o);
+  friend void from_json(const nlohmann::json& j, ServiceName& o);
 
-protected:
+ protected:
 };
 
-} // namespace model
-} // namespace nssf_server
-} // namespace oai
+}  // namespace model
+}  // namespace nssf_server
+}  // namespace oai
 
 #endif /* ServiceName_H_ */

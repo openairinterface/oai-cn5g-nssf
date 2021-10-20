@@ -27,26 +27,28 @@ using namespace oai::nssf_server::model;
 const std::string NFInstanceIDDocumentApi::base = "/nnssf-nssaiavailability/";
 
 NFInstanceIDDocumentApi::NFInstanceIDDocumentApi(
-    const std::shared_ptr<Pistache::Rest::Router> &rtr)
+    const std::shared_ptr<Pistache::Rest::Router>& rtr)
     : router(rtr) {}
 
-void NFInstanceIDDocumentApi::init() { setupRoutes(); }
+void NFInstanceIDDocumentApi::init() {
+  setupRoutes();
+}
 
 void NFInstanceIDDocumentApi::setupRoutes() {
   using namespace Pistache::Rest;
 
   Routes::Delete(
       *router, base + nssf_cfg.sbi_api_version + "/nssai-availability/:nfId",
-      Routes::bind(&NFInstanceIDDocumentApi::n_ssai_availability_delete_handler,
-                   this));
+      Routes::bind(
+          &NFInstanceIDDocumentApi::n_ssai_availability_delete_handler, this));
   Routes::Patch(
       *router, base + "/nssai-availability/:nfId",
-      Routes::bind(&NFInstanceIDDocumentApi::n_ssai_availability_patch_handler,
-                   this));
+      Routes::bind(
+          &NFInstanceIDDocumentApi::n_ssai_availability_patch_handler, this));
   Routes::Put(
       *router, base + "/nssai-availability/:nfId",
-      Routes::bind(&NFInstanceIDDocumentApi::n_ssai_availability_put_handler,
-                   this));
+      Routes::bind(
+          &NFInstanceIDDocumentApi::n_ssai_availability_put_handler, this));
 
   // Default handler, called when a route is not found
   router->addCustomHandler(Routes::bind(
@@ -55,55 +57,53 @@ void NFInstanceIDDocumentApi::setupRoutes() {
 }
 
 std::pair<Pistache::Http::Code, std::string>
-NFInstanceIDDocumentApi::handleParsingException(const std::exception &ex) const
+NFInstanceIDDocumentApi::handleParsingException(const std::exception& ex) const
     noexcept {
   try {
     throw;
-  } catch (nlohmann::detail::exception &e) {
+  } catch (nlohmann::detail::exception& e) {
     return std::make_pair(Pistache::Http::Code::Bad_Request, e.what());
     // } catch (oai::nssf_server::helpers::ValidationException &e) {
     //     return std::make_pair(Pistache::Http::Code::Bad_Request, e.what());
-  } catch (std::exception &e) {
-    return std::make_pair(Pistache::Http::Code::Internal_Server_Error,
-                          e.what());
+  } catch (std::exception& e) {
+    return std::make_pair(
+        Pistache::Http::Code::Internal_Server_Error, e.what());
   }
 }
 
 std::pair<Pistache::Http::Code, std::string>
 NFInstanceIDDocumentApi::handleOperationException(
-    const std::exception &ex) const noexcept {
+    const std::exception& ex) const noexcept {
   return std::make_pair(Pistache::Http::Code::Internal_Server_Error, ex.what());
 }
 
 void NFInstanceIDDocumentApi::n_ssai_availability_delete_handler(
-    const Pistache::Rest::Request &request,
+    const Pistache::Rest::Request& request,
     Pistache::Http::ResponseWriter response) {
   try {
-
     // Getting the path params
     auto nfId = request.param(":nfId").as<std::string>();
 
     try {
       this->n_ssai_availability_delete(nfId, response);
-    } catch (Pistache::Http::HttpError &e) {
+    } catch (Pistache::Http::HttpError& e) {
       response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
       return;
-    } catch (std::exception &e) {
+    } catch (std::exception& e) {
       const std::pair<Pistache::Http::Code, std::string> errorInfo =
           this->handleOperationException(e);
       response.send(errorInfo.first, errorInfo.second);
       return;
     }
 
-  } catch (std::exception &e) {
+  } catch (std::exception& e) {
     response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
   }
 }
 void NFInstanceIDDocumentApi::n_ssai_availability_patch_handler(
-    const Pistache::Rest::Request &request,
+    const Pistache::Rest::Request& request,
     Pistache::Http::ResponseWriter response) {
   try {
-
     // Getting the path params
     auto nfId = request.param(":nfId").as<std::string>();
 
@@ -112,12 +112,12 @@ void NFInstanceIDDocumentApi::n_ssai_availability_patch_handler(
 
     // Getting the header params
     auto contentEncoding = request.headers().tryGetRaw("Content-Encoding");
-    auto acceptEncoding = request.headers().tryGetRaw("Accept-Encoding");
+    auto acceptEncoding  = request.headers().tryGetRaw("Accept-Encoding");
 
     try {
       nlohmann::json::parse(request.body()).get_to(patchItem);
       // patchItem.validate();
-    } catch (std::exception &e) {
+    } catch (std::exception& e) {
       const std::pair<Pistache::Http::Code, std::string> errorInfo =
           this->handleParsingException(e);
       response.send(errorInfo.first, errorInfo.second);
@@ -125,27 +125,26 @@ void NFInstanceIDDocumentApi::n_ssai_availability_patch_handler(
     }
 
     try {
-      this->n_ssai_availability_patch(nfId, patchItem, contentEncoding,
-                                      acceptEncoding, response);
-    } catch (Pistache::Http::HttpError &e) {
+      this->n_ssai_availability_patch(
+          nfId, patchItem, contentEncoding, acceptEncoding, response);
+    } catch (Pistache::Http::HttpError& e) {
       response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
       return;
-    } catch (std::exception &e) {
+    } catch (std::exception& e) {
       const std::pair<Pistache::Http::Code, std::string> errorInfo =
           this->handleOperationException(e);
       response.send(errorInfo.first, errorInfo.second);
       return;
     }
 
-  } catch (std::exception &e) {
+  } catch (std::exception& e) {
     response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
   }
 }
 void NFInstanceIDDocumentApi::n_ssai_availability_put_handler(
-    const Pistache::Rest::Request &request,
+    const Pistache::Rest::Request& request,
     Pistache::Http::ResponseWriter response) {
   try {
-
     // Getting the path params
     auto nfId = request.param(":nfId").as<std::string>();
 
@@ -155,12 +154,12 @@ void NFInstanceIDDocumentApi::n_ssai_availability_put_handler(
 
     // Getting the header params
     auto contentEncoding = request.headers().tryGetRaw("Content-Encoding");
-    auto acceptEncoding = request.headers().tryGetRaw("Accept-Encoding");
+    auto acceptEncoding  = request.headers().tryGetRaw("Accept-Encoding");
 
     try {
       nlohmann::json::parse(request.body()).get_to(nssaiAvailabilityInfo);
       nssaiAvailabilityInfo.validate();
-    } catch (std::exception &e) {
+    } catch (std::exception& e) {
       const std::pair<Pistache::Http::Code, std::string> errorInfo =
           this->handleParsingException(e);
       response.send(errorInfo.first, errorInfo.second);
@@ -168,29 +167,30 @@ void NFInstanceIDDocumentApi::n_ssai_availability_put_handler(
     }
 
     try {
-      this->n_ssai_availability_put(nfId, nssaiAvailabilityInfo,
-                                    contentEncoding, acceptEncoding, response);
-    } catch (Pistache::Http::HttpError &e) {
+      this->n_ssai_availability_put(
+          nfId, nssaiAvailabilityInfo, contentEncoding, acceptEncoding,
+          response);
+    } catch (Pistache::Http::HttpError& e) {
       response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
       return;
-    } catch (std::exception &e) {
+    } catch (std::exception& e) {
       const std::pair<Pistache::Http::Code, std::string> errorInfo =
           this->handleOperationException(e);
       response.send(errorInfo.first, errorInfo.second);
       return;
     }
 
-  } catch (std::exception &e) {
+  } catch (std::exception& e) {
     response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
   }
 }
 
 void NFInstanceIDDocumentApi::nf_instance_id_document_api_default_handler(
-    const Pistache::Rest::Request &, Pistache::Http::ResponseWriter response) {
-  response.send(Pistache::Http::Code::Not_Found,
-                "The requested method does not exist");
+    const Pistache::Rest::Request&, Pistache::Http::ResponseWriter response) {
+  response.send(
+      Pistache::Http::Code::Not_Found, "The requested method does not exist");
 }
 
-} // namespace api
-} // namespace nssf_server
-} // namespace oai
+}  // namespace api
+}  // namespace nssf_server
+}  // namespace oai

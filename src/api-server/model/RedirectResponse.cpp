@@ -21,9 +21,9 @@ namespace nssf_server {
 namespace model {
 
 RedirectResponse::RedirectResponse() {
-  m_Cause = "";
-  m_CauseIsSet = false;
-  m_TargetScp = "";
+  m_Cause          = "";
+  m_CauseIsSet     = false;
+  m_TargetScp      = "";
   m_TargetScpIsSet = false;
 }
 
@@ -35,12 +35,12 @@ void RedirectResponse::validate() const {
   // }
 }
 
-bool RedirectResponse::validate(std::stringstream &msg) const {
+bool RedirectResponse::validate(std::stringstream& msg) const {
   return validate(msg, "");
 }
 
-bool RedirectResponse::validate(std::stringstream &msg,
-                                const std::string &pathPrefix) const {
+bool RedirectResponse::validate(
+    std::stringstream& msg, const std::string& pathPrefix) const {
   bool success = true;
   const std::string _pathPrefix =
       pathPrefix.empty() ? "RedirectResponse" : pathPrefix;
@@ -48,7 +48,7 @@ bool RedirectResponse::validate(std::stringstream &msg,
   return success;
 }
 
-bool RedirectResponse::operator==(const RedirectResponse &rhs) const {
+bool RedirectResponse::operator==(const RedirectResponse& rhs) const {
   return
 
       ((!causeIsSet() && !rhs.causeIsSet()) ||
@@ -61,19 +61,17 @@ bool RedirectResponse::operator==(const RedirectResponse &rhs) const {
           ;
 }
 
-bool RedirectResponse::operator!=(const RedirectResponse &rhs) const {
+bool RedirectResponse::operator!=(const RedirectResponse& rhs) const {
   return !(*this == rhs);
 }
 
-void to_json(nlohmann::json &j, const RedirectResponse &o) {
+void to_json(nlohmann::json& j, const RedirectResponse& o) {
   j = nlohmann::json();
-  if (o.causeIsSet())
-    j["cause"] = o.m_Cause;
-  if (o.targetScpIsSet())
-    j["targetScp"] = o.m_TargetScp;
+  if (o.causeIsSet()) j["cause"] = o.m_Cause;
+  if (o.targetScpIsSet()) j["targetScp"] = o.m_TargetScp;
 }
 
-void from_json(const nlohmann::json &j, RedirectResponse &o) {
+void from_json(const nlohmann::json& j, RedirectResponse& o) {
   if (j.find("cause") != j.end()) {
     j.at("cause").get_to(o.m_Cause);
     o.m_CauseIsSet = true;
@@ -84,21 +82,33 @@ void from_json(const nlohmann::json &j, RedirectResponse &o) {
   }
 }
 
-std::string RedirectResponse::getCause() const { return m_Cause; }
-void RedirectResponse::setCause(std::string const &value) {
-  m_Cause = value;
+std::string RedirectResponse::getCause() const {
+  return m_Cause;
+}
+void RedirectResponse::setCause(std::string const& value) {
+  m_Cause      = value;
   m_CauseIsSet = true;
 }
-bool RedirectResponse::causeIsSet() const { return m_CauseIsSet; }
-void RedirectResponse::unsetCause() { m_CauseIsSet = false; }
-std::string RedirectResponse::getTargetScp() const { return m_TargetScp; }
-void RedirectResponse::setTargetScp(std::string const &value) {
-  m_TargetScp = value;
+bool RedirectResponse::causeIsSet() const {
+  return m_CauseIsSet;
+}
+void RedirectResponse::unsetCause() {
+  m_CauseIsSet = false;
+}
+std::string RedirectResponse::getTargetScp() const {
+  return m_TargetScp;
+}
+void RedirectResponse::setTargetScp(std::string const& value) {
+  m_TargetScp      = value;
   m_TargetScpIsSet = true;
 }
-bool RedirectResponse::targetScpIsSet() const { return m_TargetScpIsSet; }
-void RedirectResponse::unsetTargetScp() { m_TargetScpIsSet = false; }
+bool RedirectResponse::targetScpIsSet() const {
+  return m_TargetScpIsSet;
+}
+void RedirectResponse::unsetTargetScp() {
+  m_TargetScpIsSet = false;
+}
 
-} // namespace model
-} // namespace nssf_server
-} // namespace oai
+}  // namespace model
+}  // namespace nssf_server
+}  // namespace oai

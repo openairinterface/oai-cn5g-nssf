@@ -29,7 +29,7 @@ namespace model {
 ///
 /// </summary>
 class AtsssCapability {
-public:
+ public:
   AtsssCapability();
   virtual ~AtsssCapability();
 
@@ -53,18 +53,18 @@ public:
   bool mptcpIsSet() const;
   void unsetMptcp();
 
-  friend void to_json(nlohmann::json &j, const AtsssCapability &o);
-  friend void from_json(const nlohmann::json &j, AtsssCapability &o);
+  friend void to_json(nlohmann::json& j, const AtsssCapability& o);
+  friend void from_json(const nlohmann::json& j, AtsssCapability& o);
 
-protected:
+ protected:
   bool m_AtsssLL;
   bool m_AtsssLLIsSet;
   bool m_Mptcp;
   bool m_MptcpIsSet;
 };
 
-} // namespace model
-} // namespace nssf_server
-} // namespace oai
+}  // namespace model
+}  // namespace nssf_server
+}  // namespace oai
 
 #endif /* AtsssCapability_H_ */

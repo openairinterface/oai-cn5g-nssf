@@ -23,18 +23,20 @@ using namespace oai::nssf_server::model;
 const std::string NssfSliceConfigApi::base = "/";
 
 NssfSliceConfigApi::NssfSliceConfigApi(
-    const std::shared_ptr<Pistache::Rest::Router> &rtr)
+    const std::shared_ptr<Pistache::Rest::Router>& rtr)
     : router(rtr) {}
 
-void NssfSliceConfigApi::init() { setupRoutes(); }
+void NssfSliceConfigApi::init() {
+  setupRoutes();
+}
 
 void NssfSliceConfigApi::setupRoutes() {
   using namespace Pistache::Rest;
 
   Routes::Get(
       *router, base,
-      Routes::bind(&NssfSliceConfigApi::nssf_slice_config_get_apis_handler,
-                   this));
+      Routes::bind(
+          &NssfSliceConfigApi::nssf_slice_config_get_apis_handler, this));
   Routes::Get(
       *router, base + "nnssf-slice-config",
       Routes::bind(&NssfSliceConfigApi::nssf_slice_config_get_handler, this));
@@ -45,45 +47,43 @@ void NssfSliceConfigApi::setupRoutes() {
 }
 
 std::pair<Pistache::Http::Code, std::string>
-NssfSliceConfigApi::handleParsingException(const std::exception &ex) const
+NssfSliceConfigApi::handleParsingException(const std::exception& ex) const
     noexcept {
   try {
     throw;
-  } catch (nlohmann::detail::exception &e) {
+  } catch (nlohmann::detail::exception& e) {
     return std::make_pair(Pistache::Http::Code::Bad_Request, e.what());
     // } catch (oai::nssf_server::helpers::ValidationException &e) {
     //     return std::make_pair(Pistache::Http::Code::Bad_Request, e.what());
-  } catch (std::exception &e) {
-    return std::make_pair(Pistache::Http::Code::Internal_Server_Error,
-                          e.what());
+  } catch (std::exception& e) {
+    return std::make_pair(
+        Pistache::Http::Code::Internal_Server_Error, e.what());
   }
 }
 
 std::pair<Pistache::Http::Code, std::string>
-NssfSliceConfigApi::handleOperationException(const std::exception &ex) const
+NssfSliceConfigApi::handleOperationException(const std::exception& ex) const
     noexcept {
   return std::make_pair(Pistache::Http::Code::Internal_Server_Error, ex.what());
 }
 
 void NssfSliceConfigApi::nssf_slice_config_get_handler(
-    const Pistache::Rest::Request &request,
+    const Pistache::Rest::Request& request,
     Pistache::Http::ResponseWriter response) {
-
   try {
     this->nssf_slice_config_get(response);
-  } catch (Pistache::Http::HttpError &e) {
+  } catch (Pistache::Http::HttpError& e) {
     response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
     return;
   }
 }
 
 void NssfSliceConfigApi::nssf_slice_config_get_apis_handler(
-    const Pistache::Rest::Request &request,
+    const Pistache::Rest::Request& request,
     Pistache::Http::ResponseWriter response) {
-
   try {
     this->nssf_slice_config_get_apis(response);
-  } catch (Pistache::Http::HttpError &e) {
+  } catch (Pistache::Http::HttpError& e) {
     response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
     return;
   }
@@ -94,6 +94,6 @@ void NssfSliceConfigApi::nssf_slice_config_get_apis_handler(
 //     not exist");
 // }
 
-} // namespace api
-} // namespace nssf_server
-} // namespace oai
+}  // namespace api
+}  // namespace nssf_server
+}  // namespace oai

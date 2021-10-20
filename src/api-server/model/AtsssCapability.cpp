@@ -18,10 +18,10 @@ namespace nssf_server {
 namespace model {
 
 AtsssCapability::AtsssCapability() {
-  m_AtsssLL = false;
+  m_AtsssLL      = false;
   m_AtsssLLIsSet = false;
-  m_Mptcp = false;
-  m_MptcpIsSet = false;
+  m_Mptcp        = false;
+  m_MptcpIsSet   = false;
 }
 
 AtsssCapability::~AtsssCapability() {}
@@ -30,15 +30,13 @@ void AtsssCapability::validate() {
   // TODO: implement validation
 }
 
-void to_json(nlohmann::json &j, const AtsssCapability &o) {
+void to_json(nlohmann::json& j, const AtsssCapability& o) {
   j = nlohmann::json();
-  if (o.atsssLLIsSet())
-    j["atsssLL"] = o.m_AtsssLL;
-  if (o.mptcpIsSet())
-    j["mptcp"] = o.m_Mptcp;
+  if (o.atsssLLIsSet()) j["atsssLL"] = o.m_AtsssLL;
+  if (o.mptcpIsSet()) j["mptcp"] = o.m_Mptcp;
 }
 
-void from_json(const nlohmann::json &j, AtsssCapability &o) {
+void from_json(const nlohmann::json& j, AtsssCapability& o) {
   if (j.find("atsssLL") != j.end()) {
     j.at("atsssLL").get_to(o.m_AtsssLL);
     o.m_AtsssLLIsSet = true;
@@ -49,21 +47,33 @@ void from_json(const nlohmann::json &j, AtsssCapability &o) {
   }
 }
 
-bool AtsssCapability::isAtsssLL() const { return m_AtsssLL; }
+bool AtsssCapability::isAtsssLL() const {
+  return m_AtsssLL;
+}
 void AtsssCapability::setAtsssLL(bool const value) {
-  m_AtsssLL = value;
+  m_AtsssLL      = value;
   m_AtsssLLIsSet = true;
 }
-bool AtsssCapability::atsssLLIsSet() const { return m_AtsssLLIsSet; }
-void AtsssCapability::unsetAtsssLL() { m_AtsssLLIsSet = false; }
-bool AtsssCapability::isMptcp() const { return m_Mptcp; }
+bool AtsssCapability::atsssLLIsSet() const {
+  return m_AtsssLLIsSet;
+}
+void AtsssCapability::unsetAtsssLL() {
+  m_AtsssLLIsSet = false;
+}
+bool AtsssCapability::isMptcp() const {
+  return m_Mptcp;
+}
 void AtsssCapability::setMptcp(bool const value) {
-  m_Mptcp = value;
+  m_Mptcp      = value;
   m_MptcpIsSet = true;
 }
-bool AtsssCapability::mptcpIsSet() const { return m_MptcpIsSet; }
-void AtsssCapability::unsetMptcp() { m_MptcpIsSet = false; }
+bool AtsssCapability::mptcpIsSet() const {
+  return m_MptcpIsSet;
+}
+void AtsssCapability::unsetMptcp() {
+  m_MptcpIsSet = false;
+}
 
-} // namespace model
-} // namespace nssf_server
-} // namespace oai
+}  // namespace model
+}  // namespace nssf_server
+}  // namespace oai

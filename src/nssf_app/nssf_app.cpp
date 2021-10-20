@@ -42,26 +42,26 @@
 using namespace nssf;
 using namespace std;
 
-extern nssf_app *nssf_app_inst;
+extern nssf_app* nssf_app_inst;
 extern nssf_config nssf_cfg;
 
-void nssf_app_task(void *);
+void nssf_app_task(void*);
 
 //------------------------------------------------------------------------------
 void nssf_app::handle_slice_info_for_registration(
-    const SliceInfoForRegistration &slice_info, const Tai &tai,
-    const PlmnId &home_plmnid, const std::string &features, int &http_code,
-    const uint8_t http_version, const ProblemDetails &problem_details) {
+    const SliceInfoForRegistration& slice_info, const Tai& tai,
+    const PlmnId& home_plmnid, const std::string& features, int& http_code,
+    const uint8_t http_version, const ProblemDetails& problem_details) {
   Logger::nssf_app().info(
       "NS Selection: Handle case - Registration (Not Supported)");
   // ToDo
 }
 //------------------------------------------------------------------------------
 void nssf_app::handle_slice_info_for_pdu_session(
-    const SliceInfoForPDUSession &slice_info, const Tai &tai,
-    const PlmnId &home_plmnid, const std::string &features, int &http_code,
-    const uint8_t http_version, const ProblemDetails &problem_details,
-    AuthorizedNetworkSliceInfo &auth_slice_info) {
+    const SliceInfoForPDUSession& slice_info, const Tai& tai,
+    const PlmnId& home_plmnid, const std::string& features, int& http_code,
+    const uint8_t http_version, const ProblemDetails& problem_details,
+    AuthorizedNetworkSliceInfo& auth_slice_info) {
   Logger::nssf_app().info(
       "NS Selection: Handle case - PDU Session (HTTP_VERSION %d)",
       http_version);
@@ -86,8 +86,9 @@ void nssf_app::handle_slice_info_for_pdu_session(
     // ToDo - Validate PlmnId from nssf config (Currently we don't support
     // Roaming scenario)
     http_code = HTTP_STATUS_CODE_503_SERVICE_UNAVAILABLE;
-    Logger::nssf_app().warn("NS Selection: Roming is not Supported yet. "
-                            "HomePlmnId can not be validated !!");
+    Logger::nssf_app().warn(
+        "NS Selection: Roming is not Supported yet. "
+        "HomePlmnId can not be validated !!");
     Logger::nssf_app().info(
         "//---------------------------------------------------------");
     Logger::nssf_app().info("");

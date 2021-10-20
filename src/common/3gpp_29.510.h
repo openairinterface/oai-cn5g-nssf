@@ -51,7 +51,6 @@ typedef struct s_nssai {
 typedef struct dnai_s {
 } dnai_t;
 
-
 typedef struct patch_item_s {
   std::string op;
   std::string path;
@@ -73,15 +72,15 @@ typedef struct patch_item_s {
 
 // #### new data types
 typedef struct tac_range_s {
-std::string start;
-std::string end;
-std::string pattern;
+  std::string start;
+  std::string end;
+  std::string pattern;
 } tac_range_t;
 
 typedef struct tai_range_s {
-plmn_t plmnid;
-std::vector<tac_range_t> tac_range_list;
-// std::string Nid;
+  plmn_t plmnid;
+  std::vector<tac_range_t> tac_range_list;
+  // std::string Nid;
 } tai_range_t;
 
 #endif

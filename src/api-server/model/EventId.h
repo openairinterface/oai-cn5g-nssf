@@ -53,7 +53,7 @@ namespace model {
 /// and the optionally associated Network Slice Instance.
 /// </summary>
 class EventId {
-public:
+ public:
   EventId();
   virtual ~EventId();
 
@@ -62,14 +62,14 @@ public:
   /////////////////////////////////////////////
   /// EventId members
 
-  friend void to_json(nlohmann::json &j, const EventId &o);
-  friend void from_json(const nlohmann::json &j, EventId &o);
+  friend void to_json(nlohmann::json& j, const EventId& o);
+  friend void from_json(const nlohmann::json& j, EventId& o);
 
-protected:
+ protected:
 };
 
-} // namespace model
-} // namespace nssf_server
-} // namespace oai
+}  // namespace model
+}  // namespace nssf_server
+}  // namespace oai
 
 #endif /* EventId_H_ */

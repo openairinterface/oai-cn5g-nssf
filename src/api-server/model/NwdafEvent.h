@@ -55,7 +55,7 @@ namespace model {
 /// associated Network Slice Instance
 /// </summary>
 class NwdafEvent {
-public:
+ public:
   NwdafEvent();
   virtual ~NwdafEvent();
 
@@ -64,14 +64,14 @@ public:
   /////////////////////////////////////////////
   /// NwdafEvent members
 
-  friend void to_json(nlohmann::json &j, const NwdafEvent &o);
-  friend void from_json(const nlohmann::json &j, NwdafEvent &o);
+  friend void to_json(nlohmann::json& j, const NwdafEvent& o);
+  friend void from_json(const nlohmann::json& j, NwdafEvent& o);
 
-protected:
+ protected:
 };
 
-} // namespace model
-} // namespace nssf_server
-} // namespace oai
+}  // namespace model
+}  // namespace nssf_server
+}  // namespace oai
 
 #endif /* NwdafEvent_H_ */

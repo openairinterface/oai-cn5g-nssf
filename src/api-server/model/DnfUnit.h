@@ -31,7 +31,7 @@ namespace model {
 ///
 /// </summary>
 class DnfUnit {
-public:
+ public:
   DnfUnit();
   virtual ~DnfUnit();
 
@@ -43,18 +43,18 @@ public:
   /// <summary>
   ///
   /// </summary>
-  std::vector<Atom> &getDnfUnit();
-  void setDnfUnit(std::vector<Atom> const &value);
+  std::vector<Atom>& getDnfUnit();
+  void setDnfUnit(std::vector<Atom> const& value);
 
-  friend void to_json(nlohmann::json &j, const DnfUnit &o);
-  friend void from_json(const nlohmann::json &j, DnfUnit &o);
+  friend void to_json(nlohmann::json& j, const DnfUnit& o);
+  friend void from_json(const nlohmann::json& j, DnfUnit& o);
 
-protected:
+ protected:
   std::vector<Atom> m_DnfUnit;
 };
 
-} // namespace model
-} // namespace nssf_server
-} // namespace oai
+}  // namespace model
+}  // namespace nssf_server
+}  // namespace oai
 
 #endif /* DnfUnit_H_ */

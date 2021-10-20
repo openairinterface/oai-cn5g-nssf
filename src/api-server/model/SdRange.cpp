@@ -21,10 +21,10 @@ namespace nssf_server {
 namespace model {
 
 SdRange::SdRange() {
-  m_Start = "";
+  m_Start      = "";
   m_StartIsSet = false;
-  m_End = "";
-  m_EndIsSet = false;
+  m_End        = "";
+  m_EndIsSet   = false;
 }
 
 void SdRange::validate() const {
@@ -35,29 +35,29 @@ void SdRange::validate() const {
   // }
 }
 
-bool SdRange::validate(std::stringstream &msg) const {
+bool SdRange::validate(std::stringstream& msg) const {
   return validate(msg, "");
 }
 
-bool SdRange::validate(std::stringstream &msg,
-                       const std::string &pathPrefix) const {
-  bool success = true;
+bool SdRange::validate(
+    std::stringstream& msg, const std::string& pathPrefix) const {
+  bool success                  = true;
   const std::string _pathPrefix = pathPrefix.empty() ? "SdRange" : pathPrefix;
 
   if (startIsSet()) {
-    const std::string &value = m_Start;
+    const std::string& value           = m_Start;
     const std::string currentValuePath = _pathPrefix + ".start";
   }
 
   if (endIsSet()) {
-    const std::string &value = m_End;
+    const std::string& value           = m_End;
     const std::string currentValuePath = _pathPrefix + ".end";
   }
 
   return success;
 }
 
-bool SdRange::operator==(const SdRange &rhs) const {
+bool SdRange::operator==(const SdRange& rhs) const {
   return
 
       ((!startIsSet() && !rhs.startIsSet()) ||
@@ -69,17 +69,17 @@ bool SdRange::operator==(const SdRange &rhs) const {
           ;
 }
 
-bool SdRange::operator!=(const SdRange &rhs) const { return !(*this == rhs); }
-
-void to_json(nlohmann::json &j, const SdRange &o) {
-  j = nlohmann::json();
-  if (o.startIsSet())
-    j["start"] = o.m_Start;
-  if (o.endIsSet())
-    j["end"] = o.m_End;
+bool SdRange::operator!=(const SdRange& rhs) const {
+  return !(*this == rhs);
 }
 
-void from_json(const nlohmann::json &j, SdRange &o) {
+void to_json(nlohmann::json& j, const SdRange& o) {
+  j = nlohmann::json();
+  if (o.startIsSet()) j["start"] = o.m_Start;
+  if (o.endIsSet()) j["end"] = o.m_End;
+}
+
+void from_json(const nlohmann::json& j, SdRange& o) {
   if (j.find("start") != j.end()) {
     j.at("start").get_to(o.m_Start);
     o.m_StartIsSet = true;
@@ -90,21 +90,33 @@ void from_json(const nlohmann::json &j, SdRange &o) {
   }
 }
 
-std::string SdRange::getStart() const { return m_Start; }
-void SdRange::setStart(std::string const &value) {
-  m_Start = value;
+std::string SdRange::getStart() const {
+  return m_Start;
+}
+void SdRange::setStart(std::string const& value) {
+  m_Start      = value;
   m_StartIsSet = true;
 }
-bool SdRange::startIsSet() const { return m_StartIsSet; }
-void SdRange::unsetStart() { m_StartIsSet = false; }
-std::string SdRange::getEnd() const { return m_End; }
-void SdRange::setEnd(std::string const &value) {
-  m_End = value;
+bool SdRange::startIsSet() const {
+  return m_StartIsSet;
+}
+void SdRange::unsetStart() {
+  m_StartIsSet = false;
+}
+std::string SdRange::getEnd() const {
+  return m_End;
+}
+void SdRange::setEnd(std::string const& value) {
+  m_End      = value;
   m_EndIsSet = true;
 }
-bool SdRange::endIsSet() const { return m_EndIsSet; }
-void SdRange::unsetEnd() { m_EndIsSet = false; }
+bool SdRange::endIsSet() const {
+  return m_EndIsSet;
+}
+void SdRange::unsetEnd() {
+  m_EndIsSet = false;
+}
 
-} // namespace model
-} // namespace nssf_server
-} // namespace oai
+}  // namespace model
+}  // namespace nssf_server
+}  // namespace oai

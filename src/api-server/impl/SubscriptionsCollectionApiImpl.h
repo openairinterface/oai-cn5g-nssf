@@ -46,26 +46,27 @@ using namespace nssf;
 
 class SubscriptionsCollectionApiImpl
     : public oai::nssf_server::api::SubscriptionsCollectionApi {
-public:
+ public:
   // explicit SubscriptionsCollectionApiImpl(const
   // std::shared_ptr<Pistache::Rest::Router>& rtr);
   // ~SubscriptionsCollectionApiImpl() override = default;
-  SubscriptionsCollectionApiImpl(std::shared_ptr<Pistache::Rest::Router>,
-                                 nssf_app *nssf_app_inst, std::string address);
+  SubscriptionsCollectionApiImpl(
+      std::shared_ptr<Pistache::Rest::Router>, nssf_app* nssf_app_inst,
+      std::string address);
   ~SubscriptionsCollectionApiImpl() {}
 
   void n_ssai_availability_post(
-      const NssfEventSubscriptionCreateData &nssfEventSubscriptionCreateData,
-      const Pistache::Optional<Pistache::Http::Header::Raw> &contentEncoding,
-      Pistache::Http::ResponseWriter &response);
+      const NssfEventSubscriptionCreateData& nssfEventSubscriptionCreateData,
+      const Pistache::Optional<Pistache::Http::Header::Raw>& contentEncoding,
+      Pistache::Http::ResponseWriter& response);
 
-private:
-  nssf_app *m_nssf_app;
+ private:
+  nssf_app* m_nssf_app;
   std::string m_address;
 };
 
-} // namespace api
-} // namespace nssf_server
-} // namespace oai
+}  // namespace api
+}  // namespace nssf_server
+}  // namespace oai
 
 #endif

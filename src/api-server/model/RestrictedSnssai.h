@@ -32,7 +32,7 @@ namespace model {
 ///
 /// </summary>
 class RestrictedSnssai {
-public:
+ public:
   RestrictedSnssai();
   virtual ~RestrictedSnssai() = default;
 
@@ -46,16 +46,16 @@ public:
   /// Validate the current data in the model. Returns false on error and writes
   /// an error message into the given stringstream.
   /// </summary>
-  bool validate(std::stringstream &msg) const;
+  bool validate(std::stringstream& msg) const;
 
   /// <summary>
   /// Helper overload for validate. Used when one model stores another model and
   /// calls it's validate. Not meant to be called outside that case.
   /// </summary>
-  bool validate(std::stringstream &msg, const std::string &pathPrefix) const;
+  bool validate(std::stringstream& msg, const std::string& pathPrefix) const;
 
-  bool operator==(const RestrictedSnssai &rhs) const;
-  bool operator!=(const RestrictedSnssai &rhs) const;
+  bool operator==(const RestrictedSnssai& rhs) const;
+  bool operator!=(const RestrictedSnssai& rhs) const;
 
   /////////////////////////////////////////////
   /// RestrictedSnssai members
@@ -64,17 +64,17 @@ public:
   ///
   /// </summary>
   PlmnId getHomePlmnId() const;
-  void setHomePlmnId(PlmnId const &value);
+  void setHomePlmnId(PlmnId const& value);
   /// <summary>
   ///
   /// </summary>
   std::vector<ExtSnssai> getSNssaiList() const;
-  void setSNssaiList(std::vector<ExtSnssai> const &value);
+  void setSNssaiList(std::vector<ExtSnssai> const& value);
   /// <summary>
   ///
   /// </summary>
   std::vector<PlmnId> getHomePlmnIdList() const;
-  void setHomePlmnIdList(std::vector<PlmnId> const &value);
+  void setHomePlmnIdList(std::vector<PlmnId> const& value);
   bool homePlmnIdListIsSet() const;
   void unsetHomePlmnIdList();
   /// <summary>
@@ -85,10 +85,10 @@ public:
   bool roamingRestrictionIsSet() const;
   void unsetRoamingRestriction();
 
-  friend void to_json(nlohmann::json &j, const RestrictedSnssai &o);
-  friend void from_json(const nlohmann::json &j, RestrictedSnssai &o);
+  friend void to_json(nlohmann::json& j, const RestrictedSnssai& o);
+  friend void from_json(const nlohmann::json& j, RestrictedSnssai& o);
 
-protected:
+ protected:
   PlmnId m_HomePlmnId;
 
   std::vector<ExtSnssai> m_SNssaiList;
@@ -99,8 +99,8 @@ protected:
   bool m_RoamingRestrictionIsSet;
 };
 
-} // namespace model
-} // namespace nssf_server
-} // namespace oai
+}  // namespace model
+}  // namespace nssf_server
+}  // namespace oai
 
 #endif /* RestrictedSnssai_H_ */

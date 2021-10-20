@@ -102,7 +102,7 @@ class Logger {
   _Logger* m_itti;
   _Logger* m_nssf_app;
   _Logger* m_nssf_sbi;
-  _Logger*  m_nssf_api_server;
+  _Logger* m_nssf_api_server;
   _Logger* m_system;
 };
 

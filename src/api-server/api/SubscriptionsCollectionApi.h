@@ -40,22 +40,22 @@ namespace api {
 using namespace oai::nssf_server::model;
 
 class SubscriptionsCollectionApi {
-public:
+ public:
   explicit SubscriptionsCollectionApi(
-      const std::shared_ptr<Pistache::Rest::Router> &rtr);
+      const std::shared_ptr<Pistache::Rest::Router>& rtr);
   virtual ~SubscriptionsCollectionApi() = default;
   void init();
 
   static const std::string base;
 
-private:
+ private:
   void setupRoutes();
 
-  void
-  n_ssai_availability_post_handler(const Pistache::Rest::Request &request,
-                                   Pistache::Http::ResponseWriter response);
+  void n_ssai_availability_post_handler(
+      const Pistache::Rest::Request& request,
+      Pistache::Http::ResponseWriter response);
   void subscriptions_collection_api_default_handler(
-      const Pistache::Rest::Request &request,
+      const Pistache::Rest::Request& request,
       Pistache::Http::ResponseWriter response);
 
   const std::shared_ptr<Pistache::Rest::Router> router;
@@ -66,8 +66,8 @@ private:
   /// called inside a catch block. Important: When overriding, do not call
   /// `throw ex;`, but instead use `throw;`.
   /// </summary>
-  virtual std::pair<Pistache::Http::Code, std::string>
-  handleParsingException(const std::exception &ex) const noexcept;
+  virtual std::pair<Pistache::Http::Code, std::string> handleParsingException(
+      const std::exception& ex) const noexcept;
 
   /// <summary>
   /// Helper function to handle unexpected Exceptions during processing of the
@@ -75,8 +75,8 @@ private:
   /// formats. This is called inside a catch block. Important: When overriding,
   /// do not call `throw ex;`, but instead use `throw;`.
   /// </summary>
-  virtual std::pair<Pistache::Http::Code, std::string>
-  handleOperationException(const std::exception &ex) const noexcept;
+  virtual std::pair<Pistache::Http::Code, std::string> handleOperationException(
+      const std::exception& ex) const noexcept;
 
   /// <summary>
   /// Creates subscriptions for notification about updates to NSSAI availability
@@ -90,14 +90,14 @@ private:
   /// <param name="contentEncoding">Content-Encoding, described in IETF RFC 7231
   /// (optional, default to &quot;&quot;)</param>
   virtual void n_ssai_availability_post(
-      const oai::nssf_server::model::NssfEventSubscriptionCreateData
-          &nssfEventSubscriptionCreateData,
-      const Pistache::Optional<Pistache::Http::Header::Raw> &contentEncoding,
-      Pistache::Http::ResponseWriter &response) = 0;
+      const oai::nssf_server::model::NssfEventSubscriptionCreateData&
+          nssfEventSubscriptionCreateData,
+      const Pistache::Optional<Pistache::Http::Header::Raw>& contentEncoding,
+      Pistache::Http::ResponseWriter& response) = 0;
 };
 
-} // namespace api
-} // namespace nssf_server
-} // namespace oai
+}  // namespace api
+}  // namespace nssf_server
+}  // namespace oai
 
 #endif /* SubscriptionsCollectionApi_H_ */

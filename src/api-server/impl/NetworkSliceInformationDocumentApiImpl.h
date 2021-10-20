@@ -51,33 +51,33 @@ using namespace nssf;
 
 class NetworkSliceInformationDocumentApiImpl
     : public oai::nssf_server::api::NetworkSliceInformationDocumentApi {
-public:
+ public:
   NetworkSliceInformationDocumentApiImpl(
-      std::shared_ptr<Pistache::Rest::Router>, nssf_app *nssf_app_inst,
+      std::shared_ptr<Pistache::Rest::Router>, nssf_app* nssf_app_inst,
       std::string address);
   ~NetworkSliceInformationDocumentApiImpl() {}
 
-  void
-  n_s_selection_get(const Pistache::Optional<NFType> &nfType,
-                    const Pistache::Optional<std::string> &nfId,
-                    const Pistache::Optional<SliceInfoForRegistration>
-                        &sliceInfoRequestForRegistration,
-                    const Pistache::Optional<SliceInfoForPDUSession>
-                        &sliceInfoRequestForPduSession,
-                    const Pistache::Optional<SliceInfoForUEConfigurationUpdate>
-                        &sliceInfoRequestForUeCu,
-                    const Pistache::Optional<PlmnId> &homePlmnId,
-                    const Pistache::Optional<Tai> &tai,
-                    const Pistache::Optional<std::string> &supportedFeatures,
-                    Pistache::Http::ResponseWriter &response);
+  void n_s_selection_get(
+      const Pistache::Optional<NFType>& nfType,
+      const Pistache::Optional<std::string>& nfId,
+      const Pistache::Optional<SliceInfoForRegistration>&
+          sliceInfoRequestForRegistration,
+      const Pistache::Optional<SliceInfoForPDUSession>&
+          sliceInfoRequestForPduSession,
+      const Pistache::Optional<SliceInfoForUEConfigurationUpdate>&
+          sliceInfoRequestForUeCu,
+      const Pistache::Optional<PlmnId>& homePlmnId,
+      const Pistache::Optional<Tai>& tai,
+      const Pistache::Optional<std::string>& supportedFeatures,
+      Pistache::Http::ResponseWriter& response);
 
-private:
-  nssf_app *m_nssf_app;
+ private:
+  nssf_app* m_nssf_app;
   std::string m_address;
 };
 
-} // namespace api
-} // namespace nssf_server
-} // namespace oai
+}  // namespace api
+}  // namespace nssf_server
+}  // namespace oai
 
 #endif

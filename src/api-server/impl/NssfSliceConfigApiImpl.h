@@ -46,21 +46,22 @@ using namespace nssf;
 
 class NssfSliceConfigApiImpl
     : public oai::nssf_server::api::NssfSliceConfigApi {
-public:
-  NssfSliceConfigApiImpl(std::shared_ptr<Pistache::Rest::Router>,
-                         nssf_app *nssf_app_inst, std::string address);
+ public:
+  NssfSliceConfigApiImpl(
+      std::shared_ptr<Pistache::Rest::Router>, nssf_app* nssf_app_inst,
+      std::string address);
   ~NssfSliceConfigApiImpl() {}
 
-  void nssf_slice_config_get_apis(Pistache::Http::ResponseWriter &response);
-  void nssf_slice_config_get(Pistache::Http::ResponseWriter &response);
+  void nssf_slice_config_get_apis(Pistache::Http::ResponseWriter& response);
+  void nssf_slice_config_get(Pistache::Http::ResponseWriter& response);
 
-private:
-  nssf_app *m_nssf_app;
+ private:
+  nssf_app* m_nssf_app;
   std::string m_address;
 };
 
-} // namespace api
-} // namespace nssf_server
-} // namespace oai
+}  // namespace api
+}  // namespace nssf_server
+}  // namespace oai
 
 #endif

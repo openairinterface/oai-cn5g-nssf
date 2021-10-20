@@ -27,10 +27,12 @@ using namespace oai::nssf_server::model;
 const std::string NSSAIAvailabilityStoreApi::base = "/nnssf-nssaiavailability/";
 
 NSSAIAvailabilityStoreApi::NSSAIAvailabilityStoreApi(
-    const std::shared_ptr<Pistache::Rest::Router> &rtr)
+    const std::shared_ptr<Pistache::Rest::Router>& rtr)
     : router(rtr) {}
 
-void NSSAIAvailabilityStoreApi::init() { setupRoutes(); }
+void NSSAIAvailabilityStoreApi::init() {
+  setupRoutes();
+}
 
 void NSSAIAvailabilityStoreApi::setupRoutes() {
   using namespace Pistache::Rest;
@@ -49,52 +51,51 @@ void NSSAIAvailabilityStoreApi::setupRoutes() {
 
 std::pair<Pistache::Http::Code, std::string>
 NSSAIAvailabilityStoreApi::handleParsingException(
-    const std::exception &ex) const noexcept {
+    const std::exception& ex) const noexcept {
   try {
     throw;
-  } catch (nlohmann::detail::exception &e) {
+  } catch (nlohmann::detail::exception& e) {
     return std::make_pair(Pistache::Http::Code::Bad_Request, e.what());
     // } catch (oai::nssf_server::helpers::ValidationException &e) {
     //     return std::make_pair(Pistache::Http::Code::Bad_Request, e.what());
-  } catch (std::exception &e) {
-    return std::make_pair(Pistache::Http::Code::Internal_Server_Error,
-                          e.what());
+  } catch (std::exception& e) {
+    return std::make_pair(
+        Pistache::Http::Code::Internal_Server_Error, e.what());
   }
 }
 
 std::pair<Pistache::Http::Code, std::string>
 NSSAIAvailabilityStoreApi::handleOperationException(
-    const std::exception &ex) const noexcept {
+    const std::exception& ex) const noexcept {
   return std::make_pair(Pistache::Http::Code::Internal_Server_Error, ex.what());
 }
 
 void NSSAIAvailabilityStoreApi::n_ssai_availability_options_handler(
-    const Pistache::Rest::Request &, Pistache::Http::ResponseWriter response) {
+    const Pistache::Rest::Request&, Pistache::Http::ResponseWriter response) {
   try {
-
     try {
       this->n_ssai_availability_options(response);
-    } catch (Pistache::Http::HttpError &e) {
+    } catch (Pistache::Http::HttpError& e) {
       response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
       return;
-    } catch (std::exception &e) {
+    } catch (std::exception& e) {
       const std::pair<Pistache::Http::Code, std::string> errorInfo =
           this->handleOperationException(e);
       response.send(errorInfo.first, errorInfo.second);
       return;
     }
 
-  } catch (std::exception &e) {
+  } catch (std::exception& e) {
     response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
   }
 }
 
 void NSSAIAvailabilityStoreApi::nssai_availability_store_api_default_handler(
-    const Pistache::Rest::Request &, Pistache::Http::ResponseWriter response) {
-  response.send(Pistache::Http::Code::Not_Found,
-                "The requested method does not exist");
+    const Pistache::Rest::Request&, Pistache::Http::ResponseWriter response) {
+  response.send(
+      Pistache::Http::Code::Not_Found, "The requested method does not exist");
 }
 
-} // namespace api
-} // namespace nssf_server
-} // namespace oai
+}  // namespace api
+}  // namespace nssf_server
+}  // namespace oai

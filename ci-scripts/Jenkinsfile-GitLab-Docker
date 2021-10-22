@@ -352,7 +352,7 @@ pipeline {
           script {
             try {
               // DEPLOY NSSF - QUERY TO NSSF USING CURL - UNDEPLOY NSSF
-              sh 'python3 ./ci-scripts/sanityCheckDeployment.py --ip 192.168.70.134 --port 80 --http_version 1 --apiv v1 --nssf_tag develop'
+              sh 'python3 ./ci-scripts/sanityCheckDeployment.py --ip 192.168.70.134 --port 80 --http_version 1 --apiv v1 --nssf_tag ' + nssf_tag
             } catch (Exception e) {
               echo "Sanity Check Deployment FAILED"
               currentBuild.result = 'FAILURE'

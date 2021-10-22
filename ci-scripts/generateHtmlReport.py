@@ -25,6 +25,7 @@ import os
 import re
 import sys
 import subprocess
+import yaml
 
 class HtmlReport():
 	def __init__(self):
@@ -59,6 +60,9 @@ class HtmlReport():
 		self.copyConfToolsToTargetImage()
 		self.imageSizeRow()
 		self.buildSummaryFooter()
+
+		self.testSummaryHeader()
+		self.testSummaryFooter()
 
 		self.generateFooter()
 		self.file.close()
@@ -831,9 +835,119 @@ class HtmlReport():
 
 	def testSummaryHeader(self):
 		self.file.write('  <h2>Test Summary</h2>\n')
-		self.file.write('  <div class="alert alert-warning">\n')
-		self.file.write('	  <strong>Not performed yet. <span class="glyphicon glyphicon-warning-sign"></span></strong>\n')
+		cwd = os.getcwd()
+		if os.path.isfile(cwd + '/archives/deployment_status.log'):
+			cmd = 'egrep -c "DEPLOYMENT: OK" archives/deployment_status.log || true'
+			status = False
+			ret = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, encoding='utf-8')
+			if ret.stdout is not None:
+				status = True
+			if status:
+				self.file.write('  <div class="alert alert-success">\n')
+				self.file.write('	  <strong>Successful Sanity Check Deployment! <span class="glyphicon glyphicon-warning-sign"></span></strong>\n')
+				self.file.write('  </div>\n')
+			else:
+				self.file.write('  <div class="alert alert-danger">\n')
+				self.file.write('	  <strong>Failed Sanity Check Deployment! <span class="glyphicon glyphicon-warning-sign"></span></strong>\n')
+				self.file.write('  </div>\n')
+		else:
+			self.file.write('  <div class="alert alert-warning">\n')
+			self.file.write('	  <strong>Not performed. <span class="glyphicon glyphicon-warning-sign"></span></strong>\n')
+			self.file.write('  </div>\n')
+		self.file.write('  <br>\n')
+		self.file.write('  <button data-toggle="collapse" data-target="#deployment-details">More details on Deployment</button>\n')
+		self.file.write('  <br>\n')
+		self.file.write('  <div id="deployment-details" class="collapse">\n')
+		self.file.write('  <br>\n')
+		self.file.write('  <table class="table-bordered" width = "80%" align = "center" border = 1>\n')
+		self.file.write('     <tr bgcolor = "#33CCFF" >\n')
+		self.file.write('       <th>Container Name</th>\n')
+		self.file.write('       <th>Used Image Tag</th>\n')
+		self.file.write('       <th>Image Creation Date</th>\n')
+		self.file.write('       <th>Used Image Size</th>\n')
+		self.file.write('     </tr>\n')
+		self.addImageRow('oai_nssf')
+		self.file.write('  </table>\n')
+
+		if os.path.isfile(cwd + '/archives/sanity_check_result.yaml'):
+			with open(cwd + '/archives/sanity_check_result.yaml') as f:
+				data = yaml.full_load(f)
+			self.file.write('  <br>\n')
+			self.file.write('  <table class="table-bordered" width = "90%" align = "center" border = 1>\n')
+			self.file.write('     <tr bgcolor = "#33CCFF" >\n')
+			self.file.write('       <th style="text-align:center" colspan = "3">NS Selection Unit Test</th>\n')
+			self.file.write('     </tr>\n')
+			self.file.write('     <tr bgcolor = "#33CCFF" >\n')
+			self.file.write('       <th>Test Name</th>\n')
+			self.file.write('       <th>Test Status</th>\n')
+			self.file.write('       <th>Test Details</th>\n')
+			self.file.write('     </tr>\n')
+			for version in data:
+				if version is '1':
+					self.file.write(self.addSectionRow('HTTP1'))
+					for eachrow in data[version]:
+						self.file.write(self.addDetailsRow(eachrow['name'], eachrow['status'], eachrow['test_description']))
+				if version is '2':
+					self.file.write(self.addSectionRow('HTTP2'))
+					for eachrow in data[version]:
+						self.file.write(self.addDetailsRow(eachrow['name'], eachrow['status'], eachrow['test_description']))
+			self.file.write('  </table>\n')
+
 		self.file.write('  </div>\n')
+
+	def addSectionRow(self, sectionName):
+		sectionRow = ''
+		sectionRow += '     <tr bgcolor = "LightGray">\n'
+		sectionRow += '       <td align = "center" colspan = "3">' + sectionName + '</td>\n'
+		sectionRow += '     </tr>\n'
+		return sectionRow
+
+	def addDetailsRow(self, testName, status, details):
+		detailsRow = ''
+		detailsRow += '     <tr>\n'
+		detailsRow += '       <td>' + testName + '</td>\n'
+		if status:
+			detailsRow += '       <td bgcolor = "Green"><font color="white"><b>OK</b></font></td>\n'
+		else:
+			detailsRow += '       <td bgcolor = "Red"><font color="white"><b>KO</b></font></td>\n'
+		detailsRow += '       <td><pre>'+ details + '</td>\n'
+		detailsRow += '     </tr>\n'
+		return detailsRow
+
+	def addImageRow(self, imageInfoPrefix):
+		cwd = os.getcwd()
+		if imageInfoPrefix == 'oai_nssf':
+			containerName = 'cicd-oai-nssf'
+			tagPattern = 'OAI_NSSF_TAG'
+		if os.path.isfile(cwd + '/archives/' + imageInfoPrefix + '_image_info.log'):
+			usedTag = ''
+			createDate = ''
+			size = ''
+			with open(cwd + '/archives/' + imageInfoPrefix + '_image_info.log') as imageLog:
+				for line in imageLog:
+					line = line.strip()
+					result = re.search(tagPattern + ': (?P<tag>[a-zA-Z0-9\.\-\_:]+)', line)
+					if result is not None:
+						usedTag = result.group('tag')
+					result = re.search('Date = (?P<date>[a-zA-Z0-9\-\_:]+)', line)
+					if result is not None:
+						createDate = result.group('date')
+					result = re.search('Size = (?P<size>[0-9]+) bytes', line)
+					if result is not None:
+						sizeInt = int(result.group('size'))
+						if sizeInt < 1000000:
+							sizeInt = int(sizeInt / 1000)
+							size = str(sizeInt) + ' kB'
+						else:
+							sizeInt = int(sizeInt / 1000000)
+							size = str(sizeInt) + ' MB'
+			imageLog.close()
+			self.file.write('     <tr>\n')
+			self.file.write('       <td>' + containerName + '</td>\n')
+			self.file.write('       <td>' + usedTag + '</td>\n')
+			self.file.write('       <td>' + createDate + '</td>\n')
+			self.file.write('       <td>' + size + '</td>\n')
+			self.file.write('     </tr>\n')
 
 	def testSummaryFooter(self):
 		self.file.write('  <br>\n')

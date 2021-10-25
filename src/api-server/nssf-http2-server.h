@@ -47,76 +47,74 @@ using namespace nghttp2::asio_http2::server;
 using namespace oai::nssf_server::model;
 
 class nssf_http2_server {
-public:
-  nssf_http2_server(std::string addr, uint32_t port,
-                    nssf::nssf_app *nssf_app_inst)
+ public:
+  nssf_http2_server(
+      std::string addr, uint32_t port, nssf::nssf_app* nssf_app_inst)
       : m_address(addr), m_port(port), server(), m_nssf_app(nssf_app_inst) {}
   void start();
   void init(size_t thr) {}
 
   // NSSF NS Selection - Network Slice Information (Document)
   void get_slice_info_for_registration_handler(
-      const std::string &nf_type, std::string &nf_id,
-      const SliceInfoForRegistration slice_info, const Tai &tai,
-      const PlmnId &home_plmnid, const std::string &features,
-      const response &response);
+      const std::string& nf_type, std::string& nf_id,
+      const SliceInfoForRegistration slice_info, const Tai& tai,
+      const PlmnId& home_plmnid, const std::string& features,
+      const response& response);
 
   void get_slice_info_for_pdu_session_handler(
-      const std::string &nf_type, std::string &nf_id,
-      const SliceInfoForPDUSession &slice_info, const Tai &tai,
-      const PlmnId &home_plmnid, const std::string &features,
-      const response &response);
+      const std::string& nf_type, std::string& nf_id,
+      const SliceInfoForPDUSession& slice_info, const Tai& tai,
+      const PlmnId& home_plmnid, const std::string& features,
+      const response& response);
 
   void get_slice_info_for_ue_cu_handler(
-      const std::string &nf_type, std::string &nf_id,
-      const SliceInfoForUEConfigurationUpdate &slice_info, const Tai &tai,
-      const PlmnId &home_plmnid, const std::string &features,
-      const response &response);
+      const std::string& nf_type, std::string& nf_id,
+      const SliceInfoForUEConfigurationUpdate& slice_info, const Tai& tai,
+      const PlmnId& home_plmnid, const std::string& features,
+      const response& response);
 
-  void get_slice_info_default_handler(const std::string &nf_type,
-                                      std::string &nf_id, const Tai &tai,
-                                      const PlmnId &home_plmnid,
-                                      const std::string &features,
-                                      const response &response);
+  void get_slice_info_default_handler(
+      const std::string& nf_type, std::string& nf_id, const Tai& tai,
+      const PlmnId& home_plmnid, const std::string& features,
+      const response& response);
 
   // NSSF NSSAI Availability - NF Instance ID (Document)
   void create_n_ssai_availability_handler(
-      const std::string &nfId, const NssaiAvailabilityInfo &nssaiAvailInfo,
-      const response &response);
+      const std::string& nfId, const NssaiAvailabilityInfo& nssaiAvailInfo,
+      const response& response);
 
-  void
-  update_n_ssai_availability_handler(const std::string &nfId,
-                                     const std::vector<PatchItem> &patchItem,
-                                     const response &response);
+  void update_n_ssai_availability_handler(
+      const std::string& nfId, const std::vector<PatchItem>& patchItem,
+      const response& response);
 
-  void remove_n_ssai_availability_handler(const std::string &nfId,
-                                          const response &response);
+  void remove_n_ssai_availability_handler(
+      const std::string& nfId, const response& response);
 
   // NSSF NSSAI Availability - Subscription ID (Collection/Document)
   void create_subscription_n_ssai_availability_handler(
-      const NssfEventSubscriptionCreateData &subscriptionData,
-      const response &response);
+      const NssfEventSubscriptionCreateData& subscriptionData,
+      const response& response);
 
   void update_subscription_n_ssai_availability_handler(
-      const NssfEventSubscriptionCreateData &subscriptionData,
-      const response &response);
+      const NssfEventSubscriptionCreateData& subscriptionData,
+      const response& response);
 
   void remove_subscription_n_ssai_availability_handler(
-      const std::string &subscriptionId, const response &response);
+      const std::string& subscriptionId, const response& response);
 
   // NSSF Custom API to get slice config
-  void get_slice_config(const response &response);
+  void get_slice_config(const response& response);
   // void get_current_slice_config(const response &response);
-  void get_api_list(const response &response);
+  void get_api_list(const response& response);
 
   void stop();
 
-private:
+ private:
   util::uint_generator<uint32_t> m_promise_id_generator;
   std::string m_address;
   uint32_t m_port;
   http2 server;
-  nssf::nssf_app *m_nssf_app;
+  nssf::nssf_app* m_nssf_app;
 };
 
 #endif

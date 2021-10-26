@@ -75,6 +75,7 @@ RUN ldconfig
 
 WORKDIR /openair-nssf/etc
 COPY --from=oai-nssf-builder /openair-nssf/etc/nssf.conf .
+COPY --from=oai-nssf-builder /openair-nssf/etc/nssf_slice_config.json .
 
 WORKDIR /openair-nssf
 

@@ -66,7 +66,8 @@ pipeline {
       "Build U18 NSSF Image",
       "Build RHEL8 NSSF Image",
       "Static Code Analysis",
-      "Code Formatting Checker"
+      "Code Formatting Checker",
+      "Sanity Check Deployment"
     ])
 
   }
@@ -350,12 +351,14 @@ pipeline {
       steps {
         lock(params.SanityCheckDockerContainers) {
           script {
-            try {
-              // DEPLOY NSSF - QUERY TO NSSF USING CURL - UNDEPLOY NSSF
-              sh 'python3 ./ci-scripts/sanityCheckDeployment.py --ip 192.168.70.134 --port 80 --http_version 1 --apiv v1 --nssf_tag ' + nssf_tag
-            } catch (Exception e) {
-              echo "Sanity Check Deployment FAILED"
-              currentBuild.result = 'FAILURE'
+            gitlabCommitStatus(name: "Sanity Check Deployment") {
+              try {
+                // DEPLOY NSSF - QUERY TO NSSF USING CURL - UNDEPLOY NSSF
+                sh 'python3 ./ci-scripts/sanityCheckDeployment.py --ip 192.168.70.134 --port 80 --http_version 1 --apiv v1 --nssf_tag ' + nssf_tag
+              } catch (Exception e) {
+                echo "Sanity Check Deployment FAILED"
+                currentBuild.result = 'FAILURE'
+              }
             }
           }
         }

@@ -6,6 +6,10 @@ CONFIG_DIR="/openair-nssf/etc"
 
 for c in ${CONFIG_DIR}/*.conf; do
     # grep variable names (format: ${VAR}) from template to be rendered
+    if ! grep -oP '@[a-zA-Z0-9_]+@' ${c}; then
+        echo "Configuration is already set"
+        exec "$@"
+    fi
     VARS=$(grep -oP '@[a-zA-Z0-9_]+@' ${c} | sort | uniq | xargs)
     echo "Now setting these variables '${VARS}'"
 

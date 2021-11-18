@@ -67,7 +67,8 @@ pipeline {
       "Build RHEL8 NSSF Image",
       "Static Code Analysis",
       "Code Formatting Checker",
-      "Sanity Check Deployment"
+      "Sanity Check Deployment",
+      "Test with DsTester on Docker environment"
     ])
 
   }
@@ -358,6 +359,40 @@ pipeline {
               } catch (Exception e) {
                 echo "Sanity Check Deployment FAILED"
                 currentBuild.result = 'FAILURE'
+              }
+            }
+          }
+        }
+      }
+    }
+    stage('Testing whole 5g Core Network Functions') {
+      parallel {
+        stage ('Testing in CN-5G-FED Docker environment') {
+          steps {
+            script {
+              gitlabCommitStatus(name: "Test with DsTester on Docker environment") {
+                localStatus = build job: params.CN5G_FED_PipelineName,
+                  parameters: [
+                    string(name: 'NSSF_TAG', value: String.valueOf(nssf_tag)),
+                    string(name: 'NSSF_BRANCH', value: String.valueOf(nssf_branch))
+                  ], propagate: false
+                localResult = localStatus.getResult()
+
+                if (localStatus.resultIsBetterOrEqualTo('SUCCESS')) {
+                  echo "Docker Federation Test Job is OK"
+                } else {
+                  echo "Docker Federation Test Job is KO"
+                  sh "ci-scripts/fail.sh"
+                }
+              }
+            }
+          }
+          post {
+            always {
+              script {
+                copyArtifacts(projectName: params.CN5G_FED_PipelineName,
+                              filter: '*_results_oai_cn5g*.html',
+                              selector: lastCompleted())
               }
             }
           }

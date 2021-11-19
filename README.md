@@ -60,7 +60,20 @@ The OpenAirInterface CN NSSF software is composed of the following parts:
 
 <pre>
 openair-cn5g-nssf
+├── build:         Directory containing build scripts.
 ├── ci-scripts:    Directory containing the script files for CI framework.
-└── src:           Source files of NSSF.
-    ├── common:    Common header files
+├── docker:        Directory containing the docker files to build images.
+├── docs:          Directory containing feature set documentation
+├── etc:           Directory containing configuration file templates
+├── scripts
+└── src:           Directory containing the source files of NSSF
+    ├── api-server
+    │   ├── api
+    │   ├── impl
+    │   └── model
+    ├── common
+    │   ├── msg
+    │   └── utils
+    ├── nssf_app
+    └── oai_nssf
 </pre>

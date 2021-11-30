@@ -1,6 +1,6 @@
 # RELEASE NOTES: #
 
-## vX.X.X -- YYY 2021 ##
+## v1.3.0 -- December 2021 ##
 
-* Initial release
+* Initial Public Release
 

@@ -31,12 +31,14 @@
 FROM oai-nssf-base:latest as oai-nssf-builder
 
 WORKDIR /openair-nssf/
+# Copying source code
 COPY . /openair-nssf
 RUN cp -Rf /openair-nssf-ext-ref /openair-nssf/build/ext
 
 # Building NSSF
 WORKDIR /openair-nssf/build/scripts
-RUN ./build_nssf --clean --Verbose --build-type Release --jobs
+RUN ./build_nssf --clean --Verbose --build-type Release --jobs && \
+    mv /openair-nssf/build/nssf/build/nssf /openair-nssf/build/nssf/build/oai_nssf
 
 #---------------------------------------------------------------------
 # TARGET IMAGE
@@ -53,33 +55,41 @@ RUN apt-get update && \
       tzdata \
       bc \
       tshark \
-      perl \
+      openssl \
       libasan4 \
-      libnghttp2-14 \
-      libhogweed4 \
-      libconfig++9v5 \
-      libcurl4-gnutls-dev \
-  && rm -rf /var/lib/apt/lists/*
+ && rm -rf /var/lib/apt/lists/*
 
 # Copying executable and generated libraries
 WORKDIR /openair-nssf/bin
-COPY --from=oai-nssf-builder /openair-nssf/build/nssf/build/nssf oai_nssf
-COPY --from=oai-nssf-builder /openair-nssf/scripts/entrypoint.sh .
+COPY --from=oai-nssf-builder \
+    /openair-nssf/build/nssf/build/oai_nssf \
+    /openair-nssf/scripts/entrypoint.sh \
+    ./
 
-COPY --from=oai-nssf-builder /usr/local/lib/libpistache.so /usr/local/lib/
-COPY --from=oai-nssf-builder /usr/lib/x86_64-linux-gnu/libnettle.so.6 /usr/local/lib/
-COPY --from=oai-nssf-builder /usr/lib/libboost_system.so.1.67.0 /usr/local/lib/
-COPY --from=oai-nssf-builder /usr/local/lib/libnghttp2_asio.so.1 /usr/local/lib/
+WORKDIR /usr/local/lib/
+COPY --from=oai-nssf-builder \
+    /usr/lib/libboost_system.so.1.67.0 \
+    /usr/local/lib/libpistache.so \
+    /usr/local/lib/libnghttp2_asio.so.1 \
+    /usr/lib/x86_64-linux-gnu/libcurl-gnutls.so.4 \
+    /usr/lib/x86_64-linux-gnu/librtmp.so.1 \
+    /usr/lib/x86_64-linux-gnu/libpsl.so.5 \
+    /usr/lib/x86_64-linux-gnu/libconfig++.so.9 \
+    ./
 
 RUN ldconfig
 
+# Copying template configuration files
+# The configuration folder will be flat
 WORKDIR /openair-nssf/etc
-COPY --from=oai-nssf-builder /openair-nssf/etc/nssf.conf .
-COPY --from=oai-nssf-builder /openair-nssf/etc/nssf_slice_config.json .
+COPY --from=oai-nssf-builder \
+    /openair-nssf/etc/nssf.conf \
+    /openair-nssf/etc/nssf_slice_config.json \
+    ./
 
 WORKDIR /openair-nssf
 
-EXPOSE 80/tcp
+EXPOSE 80/tcp 8080/tcp
 
 ENTRYPOINT ["/bin/bash","/openair-nssf/bin/entrypoint.sh"]
-CMD ["/openair-nssf/bin/oai_nssf", "-c" , "/openair-nssf/etc/nssf.conf", "-o"]
+CMD ["/openair-nssf/bin/oai_nssf", "-c", "/openair-nssf/etc/nssf.conf", "-o"]

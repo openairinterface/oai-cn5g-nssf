@@ -37,14 +37,14 @@ COPY tmp/entitlement/*.pem /etc/pki/entitlement
 
 RUN rm -f /etc/rhsm-host && \
     yum repolist --disablerepo=* && \
-    subscription-manager repos --enable codeready-builder-for-rhel-8-x86_64-rpms && \   
+    subscription-manager repos --enable codeready-builder-for-rhel-8-x86_64-rpms && \
     yum update -y && \
     yum install -y \
         psmisc \
         git \
-    diffutils \
-    file && \
-    rm -rf /var/lib/apt/lists/* 
+        diffutils \
+        file \
+ && rm -rf /var/lib/apt/lists/*
 
 # Some GIT configuration command quite useful
 RUN /bin/bash -c "if [[ -v NEEDED_GIT_PROXY ]]; then git config --global http.proxy $NEEDED_GIT_PROXY; fi"
@@ -57,10 +57,10 @@ COPY . /openair-nssf
 
 # Installing and Building NSSF
 WORKDIR /openair-nssf/build/scripts
-RUN ./build_nssf --install-deps --force
-RUN ./build_nssf --clean --Verbose --build-type Release --jobs
-
-RUN rm /etc/pki/entitlement/*pem
+RUN ./build_nssf --install-deps --force && \
+    rm /etc/pki/entitlement/*pem
+RUN ./build_nssf --clean --Verbose --build-type Release --jobs && \
+    mv /openair-nssf/build/nssf/build/nssf /openair-nssf/build/nssf/build/oai_nssf
 
 #---------------------------------------------------------------------
 # TARGET IMAGE
@@ -78,26 +78,30 @@ RUN yum update -y && \
 
 # Copying executable and generated libraries
 WORKDIR /openair-nssf/bin
-COPY --from=oai-nssf-builder /openair-nssf/build/nssf/build/nssf oai_nssf
+COPY --from=oai-nssf-builder \
+    /openair-nssf/build/nssf/build/oai_nssf \
+    /openair-nssf/scripts/entrypoint.sh \
+    ./
 
-COPY --from=oai-nssf-builder /usr/local/lib64/libpistache.so.0 /usr/lib64/
-COPY --from=oai-nssf-builder /usr/local/lib/libnghttp2_asio.so /usr/lib64/
-COPY --from=oai-nssf-builder /usr/lib64/libconfig++.so.9 /usr/lib64/
-COPY --from=oai-nssf-builder /usr/lib64/libboost_system.so.1.66.0 /usr/lib64/
-COPY --from=oai-nssf-builder /usr/lib64/libboost_thread.so.1.66.0 /usr/lib64/
-COPY --from=oai-nssf-builder /usr/lib64/libboost_chrono.so.1.66.0 /usr/lib64/
-COPY --from=oai-nssf-builder /usr/local/lib/libnghttp2_asio.so.1 /usr/lib64/
+COPY --from=oai-nssf-builder \
+    /usr/local/lib64/libpistache.so.0 \
+    /usr/local/lib/libnghttp2_asio.so \
+    /usr/lib64/libconfig++.so.9 \
+    /usr/lib64/libboost_system.so.1.66.0 \
+    /usr/lib64/libboost_thread.so.1.66.0 \
+    /usr/lib64/libboost_chrono.so.1.66.0 \
+    /usr/local/lib/libnghttp2_asio.so.1 \
+    /usr/lib64/
 
-COPY --from=oai-nssf-builder /openair-nssf/scripts/entrypoint.sh entrypoint.sh
-
-# debug
-RUN ldconfig -v
+RUN ldconfig
 
 # Copying template configuration files
 # The configuration folder will be flat
 WORKDIR /openair-nssf/etc
-COPY --from=oai-nssf-builder /openair-nssf/etc/nssf.conf .
-COPY --from=oai-nssf-builder /openair-nssf/etc/nssf_slice_config.json .
+COPY --from=oai-nssf-builder \
+    /openair-nssf/etc/nssf.conf \
+    /openair-nssf/etc/nssf_slice_config.json \
+    ./
 
 WORKDIR /openair-nssf
 

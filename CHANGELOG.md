@@ -1,6 +1,7 @@
 # RELEASE NOTES: #
 
-## vX.X.X -- YYY 2021 ##
+## v1.3.0 -- January 2022 ##
 
-* Initial release
+* Initial Public Release
+* Docker Optimization
 

@@ -39,6 +39,7 @@
 #include <stdint.h>
 #include <string>
 #include <unistd.h>
+#include <yaml-cpp/yaml.h>
 
 namespace nssf {
 
@@ -102,6 +103,10 @@ class nssf_config {
  private:
   int load_interface(const libconfig::Setting& if_cfg, interface_cfg_t& cfg);
 
+  static const bool Parse_NsiInfo(const YAML::Node& conf, nssf_nsi_info_t& cfg);
+
+  static const bool Parse_TaInfo(const YAML::Node& conf, nssf_ta_info_t& cfg);
+
   static const bool ParseNsiInfo(
       const nlohmann::json& conf, nssf_nsi_info_t& cfg);
 
@@ -148,7 +153,7 @@ class nssf_config {
   int execute();
   void display();
 
-  static bool ParseJson();
+  static bool parseConfig();
   static bool ValidateTA(Tai tai, std::vector<Snssai> rejected_snssai);
   static bool ValidateTA(const Tai& tai);
   static bool ValidateNSI(

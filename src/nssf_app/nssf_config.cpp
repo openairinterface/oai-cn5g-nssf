@@ -253,104 +253,89 @@ bool nssf_config::ValidateTA(const Tai& tai) {
   Logger::nssf_app().info("");
   return false;
 }
+
 //------------------------------------------------------------------------------
-const bool nssf_config::ParseTaInfo(
-    const nlohmann::json& conf, nssf_ta_info_t& cfg) {
-  if (!conf.is_array()) {
-    Logger::nssf_app().error(
-        "Error parsing json value: nsiInfoList is not array");
-    return false;
-  }
+const bool nssf_config::Parse_NsiInfo(
+    const YAML::Node& conf, nssf_nsi_info_t& cfg) {
   static std::mutex mutex;
-  for (auto it : conf) {
-    ta_info_t ta_info;
-    PlmnId plmn_id;
-    nlohmann::json tai   = it["tai"];
-    nlohmann::json nssai = it["supportedSnssaiList"];
-
-    // Set Tai
-    plmn_id.setMcc(tai["plmnId"]["mcc"]);
-    plmn_id.setMnc(tai["plmnId"]["mnc"]);
-    ta_info.tai.setPlmnId(plmn_id);
-    ta_info.tai.setTac(tai["tac"]);
-
-    // Set Supported Snssai List
-    // if (!nssai.is_array()) {
-    //   Logger::nssf_app().error(
-    //       "Error parsing json value: supportedSnssaiList is not array");
-    //   return false;
-    // } else {
-    //   //ToDo
-    // }
-    cfg.taInfoList.push_back(ta_info);
-  }
-  return true;
-}
-
-//------------------------------------------------------------------------------
-const bool nssf_config::ParseNsiInfo(
-    const nlohmann::json& conf, nssf_nsi_info_t& cfg) {
-  if (!conf.is_array()) {
-    Logger::nssf_app().error(
-        "Error parsing json value: nsiInfoList is not array");
-    return false;
-  }
-  static std::mutex mutex;
-  for (auto it : conf) {
-    nsi_info_t nsi_info;
-    nlohmann::json snssai = it["snssai"];
-    nlohmann::json nsi    = it["nsiInformationList"];
-
-    // Set S-NSSAI
-    nsi_info.snssai.setSst(snssai["sst"]);
-    if (!snssai["sd"].empty()) nsi_info.snssai.setSd(snssai["sd"]);
-
-    // Set NSI Info List
-    nsi_info.nsiInfo.setNrfId(nsi["nrfId"]);
-    nsi_info.nsiInfo.setNsiId(nsi["nsiId"]);
-
-    std::lock_guard<std::mutex> lock(mutex);
-    cfg.nsiInfoList.push_back(nsi_info);
-  }
-  return true;
-}
-
-//------------------------------------------------------------------------------
-bool nssf_config::ParseJson() {
-  nlohmann::json data = {};
   try {
-    std::ifstream ifs(slice_config_file.c_str());
-    data = nlohmann::json::parse(ifs);
-  } catch (nlohmann::detail::exception& e) {
-    std::cout << "The json config file specified does not exists" << std::endl;
-    return false;
-  }
+    for (YAML::const_iterator it = conf.begin(); it != conf.end(); ++it) {
+      nsi_info_t nsi_info;
+      const YAML::Node& nsiInfo = *it;
 
-  nssf_slice_config = data["configuration"];
-  try {
-    if (!nssf_slice_config.empty()) {
-      nlohmann::json& nsi_info = nssf_slice_config["nsiInfoList"];
-      if (!nsi_info.empty()) {
-        if (!ParseNsiInfo(nsi_info, nssf_nsi_info)) {
-          Logger::nssf_app().error("Error parsing json section: nsiInfoList");
-          return false;
-        }
-      }
-      nlohmann::json& ta_info = nssf_slice_config["taInfoList"];
-      if (!ta_info.empty()) {
-        if (!ParseTaInfo(ta_info, nssf_ta_info)) {
-          Logger::nssf_app().error("Error parsing json section: taInfoList");
-          return false;
-        }
-      }
-      return true;
+      // nsiInformationList
+      nsi_info.nsiInfo.setNrfId(
+          nsiInfo["nsiInformationList"]["nrfId"].as<string>());
+      if (nsiInfo["nsiInformationList"]["nsiId"])
+        nsi_info.nsiInfo.setNsiId(
+            nsiInfo["nsiInformationList"]["nsiId"].as<string>());
+
+      // snssai
+      nsi_info.snssai.setSst(nsiInfo["snssai"]["sst"].as<int32_t>());
+      if (nsiInfo["snssai"]["sd"])
+        nsi_info.snssai.setSd(nsiInfo["snssai"]["sd"].as<string>());
+
+      std::lock_guard<std::mutex> lock(mutex);
+      cfg.nsiInfoList.push_back(nsi_info);
     }
-  } catch (nlohmann::detail::exception& e) {
-    Logger::nssf_sbi().warn(
-        "Can not parse the json data (error: %s)!", e.what());
+  } catch (std::exception& e) {
+    Logger::nssf_app().error("Eror parsing NsiInfo");
     return false;
   }
-  return false;
+  return true;
+}
+//------------------------------------------------------------------------------
+const bool nssf_config::Parse_TaInfo(
+    const YAML::Node& conf, nssf_ta_info_t& cfg) {
+  static std::mutex mutex;
+  try {
+    for (YAML::const_iterator it = conf.begin(); it != conf.end(); ++it) {
+      ta_info_t ta_info;
+      PlmnId plmn_id;
+      const YAML::Node& taInfo = *it;
+
+      // Set Tai
+      plmn_id.setMcc(taInfo["tai"]["plmnId"]["mcc"].as<string>());
+      plmn_id.setMnc(taInfo["tai"]["plmnId"]["mnc"].as<string>());
+      ta_info.tai.setPlmnId(plmn_id);
+      ta_info.tai.setTac(taInfo["tai"]["tac"].as<string>());
+
+      // Set Supported Snssai List
+      cfg.taInfoList.push_back(ta_info);
+    }
+  } catch (std::exception& e) {
+    Logger::nssf_app().error("Eror parsing TaInfo");
+    return false;
+  }
+  return true;
+}
+
+//------------------------------------------------------------------------------
+bool nssf_config::parseConfig() {
+  YAML::Node config = {};
+  try {
+    config = YAML::LoadFile(slice_config_file.c_str());
+  } catch (nlohmann::detail::exception& e) {
+    std::cout << "The slice config file specified does not exists" << std::endl;
+    return false;
+  }
+
+  // Parse nsiInfoList
+  if (config["configuration"]["nsiInfoList"]) {
+    Parse_NsiInfo(config["configuration"]["nsiInfoList"], nssf_nsi_info);
+  } else {
+    Logger::nssf_app().error("Error parsing section : nsiInfoList");
+    return false;
+  }
+
+  // Parse taInfoList
+  if (config["configuration"]["taInfoList"]) {
+    Parse_TaInfo(config["configuration"]["taInfoList"], nssf_ta_info);
+  } else {
+    Logger::nssf_app().error("Error parsing section : taInfoList");
+    return false;
+  }
+  return true;
 }
 
 //------------------------------------------------------------------------------

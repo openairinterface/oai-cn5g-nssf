@@ -135,8 +135,8 @@ int main(int argc, char** argv) {
   nssf_cfg.load(Options::getlibconfigConfig());
   nssf_cfg.display();
 
-  if (!nssf_cfg.ParseJson()) {
-    std::cout << "nssf_cfg::ParseJson() failed" << std::endl;
+  if (!nssf_cfg.parseConfig()) {
+    std::cout << "nssf_cfg::parseConfig() failed" << std::endl;
     return 1;
   }
 

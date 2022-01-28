@@ -30,7 +30,7 @@
 #define FILE_nssf_config_HPP_SEEN
 
 #include "3gpp_29.510.h"
-#include "NetworkSliceInformationDocumentApiImpl.h"
+#include "logger.hpp"
 #include <libconfig.h++>
 #include <mutex>
 #include <netinet/in.h>
@@ -41,7 +41,14 @@
 #include <unistd.h>
 #include <yaml-cpp/yaml.h>
 
+#include "NsiInformation.h"
+#include "PlmnId.h"
+#include "Snssai.h"
+#include "Tai.h"
+
 namespace nssf {
+
+using namespace oai::nssf_server::model;
 
 #define NSSF_CONFIG_STRING_NSSF_CONFIG "NSSF"
 #define NSSF_CONFIG_STRING_FQDN "FQDN"
@@ -148,11 +155,6 @@ public:
   void display();
 
   static bool parse_config();
-  static bool validate_ta(Tai tai, std::vector<Snssai> rejected_snssai);
-  static bool validate_ta(const Tai &tai);
-  static bool validate_nsi(const SliceInfoForPDUSession &slice_info,
-                           NsiInformation &nsi_info);
-
   static bool get_slice_config(nlohmann::json &slice_config);
   static bool get_api_list(nlohmann::json &api_list);
 };

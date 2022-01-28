@@ -19,66 +19,98 @@
  *      contact@openairinterface.org
  */
 
-/*! \file nssf_http2-server.h
+/*! \file nssf_slice_select.hpp
  \brief
  \author  Rohan Kharade
  \company Openairinterface Software Allianse
- \date 2021
+ \date Jan 2022
  \email: rohan.kharade@openairinterface.org
  */
 
-#ifndef FILE_NSSF_APP_HPP_SEEN
-#define FILE_NSSF_APP_HPP_SEEN
+#ifndef FILE_NSSF_SLICE_SELECT_HPP_SEEN
+#define FILE_NSSF_SLICE_SELECT_HPP_SEEN
 
-#include "common_root_types.h"
 #include <boost/atomic.hpp>
 #include <string>
 
 #include "3gpp_29.500.h"
-#include "nssf_slice_availability.hpp"
-#include "nssf_slice_selection.hpp"
+#include "AuthorizedNetworkSliceInfo.h"
+#include "PatchItem.h"
+#include "PlmnId.h"
+#include "ProblemDetails.h"
+#include "SliceInfoForPDUSession.h"
+#include "SliceInfoForRegistration.h"
+#include "SliceInfoForUEConfigurationUpdate.h"
+#include "Tai.h"
+#include "common_root_types.h"
 
 namespace nssf {
+
 using namespace oai::nssf_server::model;
 
-class nssf_app {
+class nssf_slice_select {
 private:
-  nssf_slice_select nssf_nss;
-  nssf_slice_avail nssf_nsa;
+  static bool validate_ta(const Tai tai, std::vector<Snssai> rejected_snssai);
+  static bool validate_ta(const Tai &tai);
+  static bool validate_nsi(const SliceInfoForPDUSession &slice_info,
+                           NsiInformation &nsi_info);
 
 public:
-  explicit nssf_app(const std::string &config_file);
-  nssf_app(nssf_app const &) = delete;
-  void operator=(nssf_app const &) = delete;
+  explicit nssf_slice_select(const std::string &config_file);
+  nssf_slice_select(nssf_slice_select const &) = delete;
+  void operator=(nssf_slice_select const &) = delete;
 
-  virtual ~nssf_app();
+  virtual ~nssf_slice_select();
+  //  Handle Network Slice Information (Document)
 
   /*
-   * Handle a Register NF Instance request
-   * @param [const std::string &] nf_instance_id: Instance ID
-   * @param [NFProfile &] nf_profile: NF profile
+   * @param [const SliceInfoForRegistration&] slice_info:
+   * SliceInfoForRegistration
+   * @param [const Tai&] tai: Tracking Area Identity
+   * @param [const PlmnId&] home_plmnid: Home plmnid
+   * @param [const std::string&] features: Supported features
    * @param [int &] http_code: HTTP code used to return to the consumer
    * @param [const uint8_t] http_version: HTTP version
    * @param [ProblemDetails &] problem_details: Store details of the error
    * @return void
    */
-
-  void handle_slice_info_for_registration(
+  bool handle_slice_info_for_registration(
       const SliceInfoForRegistration &slice_info, const Tai &tai,
       const PlmnId &home_plmnid, const std::string &features, int &http_code,
       const uint8_t http_version, const ProblemDetails &problem_details,
       AuthorizedNetworkSliceInfo &auth_slice_info);
 
-  void handle_slice_info_for_pdu_session(
+  /*
+   * @param [const SliceInfoForPDUSessionn&] slice_info: SliceInfoForPDUSession
+   * @param [const Tai&] tai: Tracking Area Identity
+   * @param [const PlmnId&] home_plmnid: Home plmnid
+   * @param [const std::string&] features: Supported features
+   * @param [int &] http_code: HTTP code used to return to the consumer
+   * @param [const uint8_t] http_version: HTTP version
+   * @param [ProblemDetails &] problem_details: Store details of the error
+   * @return void
+   */
+  bool handle_slice_info_for_pdu_session(
       const SliceInfoForPDUSession &slice_info, const Tai &tai,
       const PlmnId &home_plmnid, const std::string &features, int &http_code,
       const uint8_t http_version, const ProblemDetails &problem_details,
       AuthorizedNetworkSliceInfo &auth_slice_info);
 
-  void handle_slice_info_for_ue_cu(
+  /*
+   * @param [const SliceInfoForUEConfigurationUpdate&] slice_info:
+   * SliceInfoForUEConfigurationUpdate
+   * @param [const Tai&] tai: Tracking Area Identity
+   * @param [const PlmnId&] home_plmnid: Home plmnid
+   * @param [const std::string&] features: Supported features
+   * @param [int &] http_code: HTTP code used to return to the consumer
+   * @param [const uint8_t] http_version: HTTP version
+   * @param [ProblemDetails &] problem_details: Store details of the error
+   * @return void
+   */
+  bool handle_slice_info_for_ue_cu(
       const SliceInfoForUEConfigurationUpdate &slice_info, const Tai &tai,
       const PlmnId &home_plmnid, const std::string &features, int &http_code,
       const uint8_t http_version, const ProblemDetails &problem_details);
 };
 } // namespace nssf
-#endif /* FILE_NSSF_APP_HPP_SEEN */
+#endif /* FILE_NSSF_SLICE_SELECT_HPP_SEEN */

@@ -28,12 +28,10 @@ const std::string NetworkSliceInformationDocumentApi::base =
     "/nnssf-nsselection/";
 
 NetworkSliceInformationDocumentApi::NetworkSliceInformationDocumentApi(
-    const std::shared_ptr<Pistache::Rest::Router>& rtr)
+    const std::shared_ptr<Pistache::Rest::Router> &rtr)
     : router(rtr) {}
 
-void NetworkSliceInformationDocumentApi::init() {
-  setupRoutes();
-}
+void NetworkSliceInformationDocumentApi::init() { setupRoutes(); }
 
 void NetworkSliceInformationDocumentApi::setupRoutes() {
   using namespace Pistache::Rest;
@@ -45,35 +43,35 @@ void NetworkSliceInformationDocumentApi::setupRoutes() {
           this));
 
   // Default handler, called when a route is not found
-  router->addCustomHandler(Routes::bind(
-      &NetworkSliceInformationDocumentApi::
-          network_slice_information_document_api_default_handler,
-      this));
+  router->addCustomHandler(
+      Routes::bind(&NetworkSliceInformationDocumentApi::
+                       network_slice_information_document_api_default_handler,
+                   this));
 }
 
 std::pair<Pistache::Http::Code, std::string>
 NetworkSliceInformationDocumentApi::handleParsingException(
-    const std::exception& ex) const noexcept {
+    const std::exception &ex) const noexcept {
   try {
     throw;
-  } catch (nlohmann::detail::exception& e) {
+  } catch (nlohmann::detail::exception &e) {
     return std::make_pair(Pistache::Http::Code::Bad_Request, e.what());
     // } catch (oai::nssf_server::helpers::ValidationException &e) {
     //     return std::make_pair(Pistache::Http::Code::Bad_Request, e.what());
-  } catch (std::exception& e) {
-    return std::make_pair(
-        Pistache::Http::Code::Internal_Server_Error, e.what());
+  } catch (std::exception &e) {
+    return std::make_pair(Pistache::Http::Code::Internal_Server_Error,
+                          e.what());
   }
 }
 
 std::pair<Pistache::Http::Code, std::string>
 NetworkSliceInformationDocumentApi::handleOperationException(
-    const std::exception& ex) const noexcept {
+    const std::exception &ex) const noexcept {
   return std::make_pair(Pistache::Http::Code::Internal_Server_Error, ex.what());
 }
 
 void NetworkSliceInformationDocumentApi::n_s_selection_get_handler(
-    const Pistache::Rest::Request& request,
+    const Pistache::Rest::Request &request,
     Pistache::Http::ResponseWriter response) {
   try {
     // Getting the query params
@@ -99,18 +97,18 @@ void NetworkSliceInformationDocumentApi::n_s_selection_get_handler(
         sliceInfoRequestForRegistration;
     if (!sliceInfoRequestForRegistrationQuery.isEmpty()) {
       SliceInfoForRegistration valueQuery_instance;
-      // if(fromStringValue(sliceInfoRequestForRegistrationQuery.get(),
-      // valueQuery_instance)){
-      sliceInfoRequestForRegistration = Pistache::Some(valueQuery_instance);
-      // }
+      if (fromStringValue(sliceInfoRequestForRegistrationQuery.get(),
+                          valueQuery_instance)) {
+        sliceInfoRequestForRegistration = Pistache::Some(valueQuery_instance);
+      }
     }
     auto sliceInfoRequestForPduSessionQuery =
         request.query().get("slice-info-request-for-pdu-session");
     Pistache::Optional<SliceInfoForPDUSession> sliceInfoRequestForPduSession;
     if (!sliceInfoRequestForPduSessionQuery.isEmpty()) {
       SliceInfoForPDUSession valueQuery_instance;
-      if (fromStringValue(
-              sliceInfoRequestForPduSessionQuery.get(), valueQuery_instance)) {
+      if (fromStringValue(sliceInfoRequestForPduSessionQuery.get(),
+                          valueQuery_instance)) {
         sliceInfoRequestForPduSession = Pistache::Some(valueQuery_instance);
       }
     }
@@ -120,10 +118,14 @@ void NetworkSliceInformationDocumentApi::n_s_selection_get_handler(
         sliceInfoRequestForUeCu;
     if (!sliceInfoRequestForUeCuQuery.isEmpty()) {
       SliceInfoForUEConfigurationUpdate valueQuery_instance;
-      // if(fromStringValue(sliceInfoRequestForUeCuQuery.get(),
-      // valueQuery_instance)){
-      sliceInfoRequestForUeCu = Pistache::Some(valueQuery_instance);
-      // }
+      if (fromStringValue(sliceInfoRequestForUeCuQuery.get(),
+                          valueQuery_instance)) {
+        sliceInfoRequestForUeCu = Pistache::Some(valueQuery_instance);
+      }
+      Logger::nssf_app().error("NS Selection failure !!!");
+      response.send(Pistache::Http::Code::Not_Found,
+                    "The requested method does not exist");
+      return;
     }
     auto homePlmnIdQuery = request.query().get("home-plmn-id");
     Pistache::Optional<PlmnId> homePlmnId;
@@ -151,33 +153,33 @@ void NetworkSliceInformationDocumentApi::n_s_selection_get_handler(
     }
 
     try {
-      this->n_s_selection_get(
-          nfType, nfId, sliceInfoRequestForRegistration,
-          sliceInfoRequestForPduSession, sliceInfoRequestForUeCu, homePlmnId,
-          tai, supportedFeatures, response);
-    } catch (Pistache::Http::HttpError& e) {
+      this->n_s_selection_get(nfType, nfId, sliceInfoRequestForRegistration,
+                              sliceInfoRequestForPduSession,
+                              sliceInfoRequestForUeCu, homePlmnId, tai,
+                              supportedFeatures, response);
+    } catch (Pistache::Http::HttpError &e) {
       response.send(static_cast<Pistache::Http::Code>(e.code()), e.what());
       return;
-    } catch (std::exception& e) {
+    } catch (std::exception &e) {
       const std::pair<Pistache::Http::Code, std::string> errorInfo =
           this->handleOperationException(e);
       response.send(errorInfo.first, errorInfo.second);
       return;
     }
 
-  } catch (std::exception& e) {
+  } catch (std::exception &e) {
     response.send(Pistache::Http::Code::Internal_Server_Error, e.what());
   }
 }
 
 void NetworkSliceInformationDocumentApi::
     network_slice_information_document_api_default_handler(
-        const Pistache::Rest::Request&,
+        const Pistache::Rest::Request &,
         Pistache::Http::ResponseWriter response) {
-  response.send(
-      Pistache::Http::Code::Not_Found, "The requested method does not exist");
+  response.send(Pistache::Http::Code::Not_Found,
+                "The requested method does not exist");
 }
 
-}  // namespace api
-}  // namespace nssf_server
-}  // namespace oai
+} // namespace api
+} // namespace nssf_server
+} // namespace oai

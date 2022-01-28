@@ -37,8 +37,6 @@
 #include <boost/uuid/uuid_io.hpp>
 #include <stdexcept>
 
-#include "NetworkSliceInformationDocumentApiImpl.h"
-
 using namespace nssf;
 using namespace std;
 
@@ -51,79 +49,44 @@ void nssf_app_task(void *);
 void nssf_app::handle_slice_info_for_registration(
     const SliceInfoForRegistration &slice_info, const Tai &tai,
     const PlmnId &home_plmnid, const std::string &features, int &http_code,
-    const uint8_t http_version, const ProblemDetails &problem_details) {
-  Logger::nssf_app().info(
-      "NS Selection: Handle case - Registration (Not Supported)");
-  // ToDo
+    const uint8_t http_version, const ProblemDetails &problem_details,
+    AuthorizedNetworkSliceInfo &auth_slice_info) {
+  if (nssf_nss.handle_slice_info_for_registration(
+          slice_info, tai, home_plmnid, features, http_code, http_version,
+          problem_details, auth_slice_info)) {
+    Logger::nssf_app().info(
+        "NS Selection: Authorized Network Slice Info Returned !!!");
+    Logger::nssf_app().info(
+        "//---------------------------------------------------------");
+  } else
+    Logger::nssf_app().error("NS Selection failure !!!");
+  return;
 }
+
 //------------------------------------------------------------------------------
 void nssf_app::handle_slice_info_for_pdu_session(
     const SliceInfoForPDUSession &slice_info, const Tai &tai,
     const PlmnId &home_plmnid, const std::string &features, int &http_code,
     const uint8_t http_version, const ProblemDetails &problem_details,
     AuthorizedNetworkSliceInfo &auth_slice_info) {
-  Logger::nssf_app().info(
-      "NS Selection: Handle case - PDU Session (HTTP_VERSION %d)",
-      http_version);
-
-  // Check if UE is Roamer
-  RoamingIndication roam_ind = slice_info.getRoamingIndication();
-  RoamingIndication_anyOf::eRoamingIndication_anyOf roam_ind_enum =
-      roam_ind.getEnumValue();
-  if (int(roam_ind_enum) != ROAMING_IND_NON_ROAMING) {
-    Logger::nssf_app().warn(
-        "NS Selection: Roming/Local Breakout is not Supported yet !!!");
-    http_code = HTTP_STATUS_CODE_503_SERVICE_UNAVAILABLE;
-    Logger::nssf_app().info(
-        "//---------------------------------------------------------");
-    Logger::nssf_app().info("");
-    return;
-  }
-
-  // Check if UE's HPlmnId is Supported while UE is Roaminng
-  if (!home_plmnid.getMcc().empty()) {
-    Logger::nssf_app().debug("NS Selection: HomePlmnId is provided !!!");
-    // ToDo - Validate PlmnId from nssf config (Currently we don't support
-    // Roaming scenario)
-    http_code = HTTP_STATUS_CODE_503_SERVICE_UNAVAILABLE;
-    Logger::nssf_app().warn("NS Selection: Roming is not Supported yet. "
-                            "HomePlmnId can not be validated !!");
-    Logger::nssf_app().info(
-        "//---------------------------------------------------------");
-    Logger::nssf_app().info("");
-    return;
-  }
-
-  // Check if UE's Tai is Supported
-  if (!tai.getTac().empty()) {
-    Logger::nssf_app().debug("NS Selection: TAI is provided");
-    if (!nssf_cfg.validate_ta(tai)) {
-      http_code = HTTP_STATUS_CODE_400_BAD_REQUEST;
-      return;
-    }
-  }
-
-  // Check if Supported feature is Supported
-  if (!features.empty()) {
-    Logger::nssf_app().debug("NS Selection: features are provided");
-    // ToDo
-    // auth_slice_info.setSupportedFeatures("123abc");
-  }
-
-  // Check NSI info for given S-NSSAI is can be provided
-  NsiInformation nsi_info = {};
-  if (nssf_cfg.validate_nsi(slice_info, nsi_info)) {
-    auth_slice_info.setNsiInformation(nsi_info);
-    http_code = HTTP_STATUS_CODE_200_OK;
+  if (nssf_nss.handle_slice_info_for_pdu_session(
+          slice_info, tai, home_plmnid, features, http_code, http_version,
+          problem_details, auth_slice_info)) {
     Logger::nssf_app().info(
         "NS Selection: Authorized Network Slice Info Returned !!!");
     Logger::nssf_app().info(
         "//---------------------------------------------------------");
-    Logger::nssf_app().info("");
-    return;
-  }
-  http_code = HTTP_STATUS_CODE_400_BAD_REQUEST;
+  } else
+    Logger::nssf_app().error("NS Selection failure !!!");
   return;
+}
+
+//------------------------------------------------------------------------------
+void nssf_app::handle_slice_info_for_ue_cu(
+    const SliceInfoForUEConfigurationUpdate &slice_info, const Tai &tai,
+    const PlmnId &home_plmnid, const std::string &features, int &http_code,
+    const uint8_t http_version, const ProblemDetails &problem_details) {
+  // ToDo:
 }
 
 //------------------------------------------------------------------------------

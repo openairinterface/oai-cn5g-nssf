@@ -16,23 +16,23 @@
 
 #include "common_defs.h"
 #include "logger.hpp"
-#include "options.hpp"
-#include "pid_file.hpp"
-#include "nssf_app.hpp"
-#include "nssf_config.hpp"
 #include "nssf-api-server.h"
 #include "nssf-http2-server.h"
+#include "nssf_app.hpp"
+#include "nssf_config.hpp"
+#include "options.hpp"
+#include "pid_file.hpp"
 #include "pistache/endpoint.h"
 #include "pistache/http.h"
 #include "pistache/router.h"
 
+#include <algorithm>
 #include <boost/asio.hpp>
 #include <iostream>
-#include <algorithm>
-#include <thread>
 #include <signal.h>
 #include <stdint.h>
-#include <unistd.h>  // get_pid(), pause()
+#include <thread>
+#include <unistd.h> // get_pid(), pause()
 #include <vector>
 
 #include <boost/algorithm/string.hpp>
@@ -43,11 +43,11 @@ using namespace util;
 using namespace std;
 using namespace oai::nssf_server::api;
 
-nssf_app* nssf_app_inst = nullptr;
+nssf_app *nssf_app_inst = nullptr;
 nssf_config nssf_cfg;
 boost::asio::io_service io_service;
-NSSFApiServer* nssf_api_server_1     = nullptr;
-nssf_http2_server* nssf_api_server_2 = nullptr;
+NSSFApiServer *nssf_api_server_1 = nullptr;
+nssf_http2_server *nssf_api_server_2 = nullptr;
 
 //------------------------------------------------------------------------------
 void my_app_signal_handler(int s) {
@@ -61,7 +61,8 @@ void my_app_signal_handler(int s) {
     nssf_api_server_1 = nullptr;
   }
   std::cout << "NSSF API Server memory done." << std::endl;
-  if (nssf_app_inst) delete nssf_app_inst;
+  if (nssf_app_inst)
+    delete nssf_app_inst;
   nssf_app_inst = nullptr;
   std::cout << "NSSF APP memory done." << std::endl;
   // if (itti_inst) delete itti_inst;
@@ -74,19 +75,18 @@ void my_app_signal_handler(int s) {
 // We are doing a check to see if an existing process already runs this program.
 // We have seen that running at least twice this program in a container may lead
 // to the container host to crash.
-int my_check_redundant_process(char* exec_name) {
-  FILE* fp;
-  char* cmd = new char[200];
+int my_check_redundant_process(char *exec_name) {
+  FILE *fp;
+  char *cmd = new char[200];
   std::vector<std::string> words;
-  int result     = 0;
+  int result = 0;
   size_t retSize = 0;
 
   // Retrieving only the executable name
   boost::split(words, exec_name, boost::is_any_of("/"));
   memset(cmd, 0, 200);
-  sprintf(
-      cmd, "ps aux | grep -v grep | grep -v nohup | grep -c %s || true",
-      words[words.size() - 1].c_str());
+  sprintf(cmd, "ps aux | grep -v grep | grep -v nohup | grep -c %s || true",
+          words[words.size() - 1].c_str());
   fp = popen(cmd, "r");
 
   // clearing the buffer
@@ -105,7 +105,7 @@ int my_check_redundant_process(char* exec_name) {
   return result;
 }
 //------------------------------------------------------------------------------
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
   // Checking if another instance of nssf is running
   int nb_processes = my_check_redundant_process(argv[0]);
   if (nb_processes > 1) {
@@ -135,8 +135,8 @@ int main(int argc, char** argv) {
   nssf_cfg.load(Options::getlibconfigConfig());
   nssf_cfg.display();
 
-  if (!nssf_cfg.ParseJson()) {
-    std::cout << "nssf_cfg::ParseJson() failed" << std::endl;
+  if (!nssf_cfg.parse_config()) {
+    std::cout << "nssf_cfg::parse_config() failed" << std::endl;
     return 1;
   }
 
@@ -144,31 +144,31 @@ int main(int argc, char** argv) {
   // Currently hard-coded value. TODO: add as config option.
   string pid_file_name = get_exe_absolute_path("/var/run", nssf_cfg.instance);
   if (!is_pid_file_lock_success(pid_file_name.c_str())) {
-    Logger::nssf_app().error(
-        "Lock PID file %s failed\n", pid_file_name.c_str());
+    Logger::nssf_app().error("Lock PID file %s failed\n",
+                             pid_file_name.c_str());
     exit(-EDEADLK);
   }
 
   // NSSF Pistache API server (HTTP1)
   Pistache::Address addr(
-      std::string(inet_ntoa(*((struct in_addr*) &nssf_cfg.sbi.addr4))),
+      std::string(inet_ntoa(*((struct in_addr *)&nssf_cfg.sbi.addr4))),
       Pistache::Port(nssf_cfg.sbi.http1_port));
   nssf_api_server_1 = new NSSFApiServer(addr, nssf_app_inst);
   nssf_api_server_1->init(2);
   std::thread nssf_http1_manager(&NSSFApiServer::start, nssf_api_server_1);
 
   // NSSF NGHTTP API server (HTTP2)
-  nssf_api_server_2 = new nssf_http2_server(
-      conv::toString(nssf_cfg.sbi.addr4), nssf_cfg.sbi.http2_port,
-      nssf_app_inst);
+  nssf_api_server_2 =
+      new nssf_http2_server(conv::toString(nssf_cfg.sbi.addr4),
+                            nssf_cfg.sbi.http2_port, nssf_app_inst);
   std::thread nssf_http2_manager(&nssf_http2_server::start, nssf_api_server_2);
 
   nssf_http1_manager.join();
   nssf_http2_manager.join();
 
-  FILE* fp             = NULL;
+  FILE *fp = NULL;
   std::string filename = fmt::format("/tmp/nssf_{}.status", getpid());
-  fp                   = fopen(filename.c_str(), "w+");
+  fp = fopen(filename.c_str(), "w+");
   fprintf(fp, "STARTED\n");
   fflush(fp);
   fclose(fp);

@@ -31,7 +31,6 @@
 #include "common_defs.h"
 #include "conversions.hpp"
 #include "if.hpp"
-#include "logger.hpp"
 #include "string.hpp"
 #include <fstream>
 #include <nlohmann/json.hpp>
@@ -188,65 +187,6 @@ void nssf_config::display() {
   Logger::nssf_app().info("    http2_port .......: %u", sbi.http2_port);
   Logger::nssf_app().info("    api_version ......: %s",
                           sbi_api_version.c_str());
-}
-
-//------------------------------------------------------------------------------
-bool nssf_config::validate_nsi(const SliceInfoForPDUSession &slice_info,
-                               NsiInformation &nsi_info) {
-  Logger::nssf_app().debug("Validating S-NSSAI for NSI");
-
-  Snssai requested_snssai = slice_info.getSNssai();
-
-  for (int i = 0; i < nssf_nsi_info.nsi_info_list.size(); i++) {
-    Snssai target_snssai = nssf_nsi_info.nsi_info_list[i].snssai;
-
-    if (requested_snssai.getSst() == target_snssai.getSst()) {
-      if (requested_snssai.sdIsSet() & target_snssai.sdIsSet()) {
-        if (requested_snssai.getSd() != target_snssai.getSd())
-          return false;
-      }
-
-      nsi_info.setNrfId(nssf_nsi_info.nsi_info_list[i].nsi_info.getNrfId());
-
-      if (nssf_nsi_info.nsi_info_list[i].nsi_info.nsiIdIsSet())
-        nsi_info.setNsiId(nssf_nsi_info.nsi_info_list[i].nsi_info.getNsiId());
-
-      if (nssf_nsi_info.nsi_info_list[i].nsi_info.nrfNfMgtUriIsSet())
-        nsi_info.setNrfNfMgtUri(
-            nssf_nsi_info.nsi_info_list[i].nsi_info.getNrfNfMgtUri());
-
-      return true;
-    }
-  }
-
-  Logger::nssf_app().warn("NS Selection: S-NSSAI from SliceInfoForPDUSession "
-                          "is not authorised !!!");
-  Logger::nssf_app().info(
-      "//---------------------------------------------------------");
-  Logger::nssf_app().info("");
-  return false;
-}
-//------------------------------------------------------------------------------
-
-bool nssf_config::validate_ta(const Tai &tai) {
-  Logger::nssf_app().debug("Validating TA");
-  PlmnId requested_plmn = tai.getPlmnId();
-  std::string requested_tac = tai.getTac();
-
-  for (int i = 0; i < nssf_ta_info.ta_info_list.size(); i++) {
-    PlmnId target_plmn = nssf_ta_info.ta_info_list[i].tai.getPlmnId();
-    std::string target_tac = nssf_ta_info.ta_info_list[i].tai.getTac();
-
-    if (requested_plmn.getMcc() == target_plmn.getMcc() &&
-        requested_plmn.getMnc() == target_plmn.getMnc() &&
-        requested_tac == target_tac)
-      return true;
-  }
-  Logger::nssf_app().warn("NS Selection: TAI is not authorised !!!");
-  Logger::nssf_app().info(
-      "//---------------------------------------------------------");
-  Logger::nssf_app().info("");
-  return false;
 }
 
 //------------------------------------------------------------------------------

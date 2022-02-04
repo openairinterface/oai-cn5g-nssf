@@ -176,21 +176,32 @@ void nssf_http2_server::start() {
                   "Received request for NSSAI Availability - (HTTP_VERSION 2)");
 
               if (request.method().compare("PUT") == 0 && len > 0) {
-                nlohmann::json::parse(msg.c_str())
-                    .get_to(nssaiAvailabilityInfo);
-                this->create_n_ssai_availability_handler(
-                    nfId, nssaiAvailabilityInfo, response);
+                // Parse URI
+                SupportedNssaiAvailabilityData nssai_avail_data = {};
+                std::string qs = request.uri().raw_query;
+                Logger::nssf_sbi().debug("QueryString: %s", qs.c_str());
+                std::string nssai_data = util::get_query_param(
+                    qs, SUPPORTED_NSSAI_AVAILABILITY_DATA);
+                if (!nssai_data.empty()) {
+                  nlohmann::json::parse(nssai_data.c_str())
+                      .get_to(nssai_avail_data);
+                  Logger::nssf_sbi().info(
+                      " Query_PARAM::Supported Nssai Availability Data - %s",
+                      nssai_data.c_str());
+                  this->create_nssai_availability_handler(
+                      nfId, nssai_avail_data, response);
+                }
               }
 
               if (request.method().compare("PATCH") == 0 && len > 0) {
                 std::vector<PatchItem> patchItem;
                 nlohmann::json::parse(msg.c_str()).get_to(patchItem);
-                // this->create_n_ssai_availability_handler(nfId,
+                // this->create_nssai_availability_handler(nfId,
                 // nssaiAvailabilityInfo, response);
               }
 
               if (request.method().compare("DELETE") == 0 && len > 0) {
-                // this->create_n_ssai_availability_handler(nfId,
+                // this->create_nssai_availability_handler(nfId,
                 // nssaiAvailabilityInfo, response);
               }
             }
@@ -245,11 +256,45 @@ void nssf_http2_server::get_slice_info_for_registration_handler(
     const SliceInfoForRegistration slice_info, const Tai &tai,
     const PlmnId &home_plmnid, const std::string &features,
     const response &response) {
+  Logger::nssf_app().info("");
   Logger::nssf_sbi().info(
       "NS Selection: Got a request with slice info for Registration, "
       "Instance ID: %s",
       nf_id.c_str());
-  // ToDo
+  int http_code = 0;
+  ProblemDetails problem_details = {};
+  nlohmann::json json_data = {};
+  std::string content_type = "application/json";
+  std::string json_format;
+  AuthorizedNetworkSliceInfo auth_slice_info;
+  header_map h;
+  h.emplace("content-type", header_value{content_type});
+
+  if (nf_type.compare(NF_TYPE_AMF) == 0 || nf_type.compare(NF_TYPE_NSSF) == 0) {
+    m_nssf_app->handle_slice_info_for_registration(
+        slice_info, tai, home_plmnid, features, http_code, 2, problem_details,
+        auth_slice_info);
+    if (http_code == HTTP_STATUS_CODE_200_OK) {
+      to_json(json_data, auth_slice_info);
+
+      response.write_head(http_code, h);
+      response.end(json_data.dump().c_str());
+    } else {
+      response.write_head(http_code, h);
+      to_json(json_data, problem_details);
+      response.end(json_data.dump().c_str());
+    }
+  } else {
+    Logger::nssf_sbi().error(
+        "Invalid NF_Type (Valid NF_Type is AMF, NSSF, NWDAP, SMF)");
+    Logger::nssf_app().info(
+        "//---------------------------------------------------------");
+    Logger::nssf_app().info("");
+    http_code = HTTP_STATUS_CODE_400_BAD_REQUEST;
+    response.write_head(http_code, h);
+    to_json(json_data, problem_details);
+    response.end();
+  }
 }
 
 //------------------------------------------------------------------------------
@@ -312,7 +357,13 @@ void nssf_http2_server::get_slice_info_for_ue_cu_handler(
       "NS Selection: Got a request with slice info for UE Config Update, "
       "Instance ID: %s",
       nf_id.c_str());
-  // ToDo
+  Logger::nssf_sbi().error("Not supported");
+  Logger::nssf_app().info(
+      "//---------------------------------------------------------");
+  long http_code = HTTP_STATUS_CODE_503_SERVICE_UNAVAILABLE;
+  header_map h;
+  response.write_head(http_code, h);
+  response.end("API not implemented yet !!!");
 }
 
 //------------------------------------------------------------------------------
@@ -328,8 +379,9 @@ void nssf_http2_server::get_slice_info_default_handler(
 }
 
 //------------------------------------------------------------------------------
-void nssf_http2_server::create_n_ssai_availability_handler(
-    const std::string &nfId, const NssaiAvailabilityInfo &nssaiAvailInfo,
+void nssf_http2_server::create_nssai_availability_handler(
+    const std::string &nfId,
+    const SupportedNssaiAvailabilityData &nssaiAvailInfo,
     const response &response) {
   Logger::nssf_sbi().info("NSSAI Availability: Got a request to "
                           "Updates/replaces the NSSF with the S-NSSAIs");
@@ -350,9 +402,9 @@ void nssf_http2_server::get_slice_config(const response &response) {
   //   response.write_head(http_code, h);
   //   response.end(json_data.dump(4).c_str());
   // } else {
-  http_code = HTTP_STATUS_CODE_503_SERVICE_UNAVAILABLE;
-  response.write_head(http_code, h);
-  response.end();
+  //   http_code = HTTP_STATUS_CODE_503_SERVICE_UNAVAILABLE;
+  //   response.write_head(http_code, h);
+  //   response.end();
   // }
 }
 //------------------------------------------------------------------------------

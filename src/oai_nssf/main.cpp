@@ -123,7 +123,6 @@ int main(int argc, char **argv) {
 
   // Logger
   Logger::init("nssf", Options::getlogStdout(), Options::getlogRotFilelog());
-  Logger::nssf_app().startup("Options parsed");
 
   struct sigaction sigIntHandler;
   sigIntHandler.sa_handler = my_app_signal_handler;
@@ -133,13 +132,13 @@ int main(int argc, char **argv) {
 
   // Config
   nssf_cfg.load(Options::getlibconfigConfig());
-  nssf_cfg.display();
-
   if (!nssf_cfg.parse_config()) {
     std::cout << "nssf_cfg::parse_config() failed" << std::endl;
     return 1;
   }
-
+  Logger::nssf_app().startup("Config parsed");
+  nssf_cfg.display();
+  
   // PID file
   // Currently hard-coded value. TODO: add as config option.
   string pid_file_name = get_exe_absolute_path("/var/run", nssf_cfg.instance);

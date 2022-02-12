@@ -51,6 +51,7 @@ using namespace nssf;
 
 nssf_nsi_info_t nssf_config::nssf_nsi_info;
 nssf_ta_info_t nssf_config::nssf_ta_info;
+nssf_amf_info_t nssf_config::nssf_amf_info;
 std::string nssf_config::slice_config_file;
 // nlohmann::json nssf_config::nssf_slice_config;
 
@@ -204,6 +205,9 @@ const bool nssf_config::parse_nsi_info(const YAML::Node &conf,
       if (nsiInfo["nsiInformationList"]["nsiId"])
         nsi_info.nsi_info.setNsiId(
             nsiInfo["nsiInformationList"]["nsiId"].as<string>());
+      if (nsiInfo["nsiInformationList"]["nrfNfMgtUri"])
+        nsi_info.nsi_info.setNrfNfMgtUri(
+            nsiInfo["nsiInformationList"]["nrfNfMgtUri"].as<string>());
 
       // snssai
       nsi_info.snssai.setSst(nsiInfo["snssai"]["sst"].as<int32_t>());
@@ -244,7 +248,34 @@ const bool nssf_config::parse_ta_info(const YAML::Node &conf,
   }
   return true;
 }
+//------------------------------------------------------------------------------
+const bool nssf_config::parse_amf_info(const YAML::Node &conf,
+                                       nssf_amf_info_t &cfg) {
+  static std::mutex mutex;
+  try {
+    for (YAML::const_iterator it = conf.begin(); it != conf.end(); ++it) {
+      amf_info_t amf_info;
+      const YAML::Node &amfInfo = *it;
 
+      // amInfoList
+      amf_info.target_amf_set = amfInfo["targetAmfSet"].as<string>();
+      amf_info.nrf_amf_set = amfInfo["nrfAmfSet"].as<string>();
+      amf_info.nrf_amf_set_mgt = amfInfo["nrfAmfSetNfMgtUri"].as<string>();
+      const YAML::Node &amfList = amfInfo["amfList"];
+      for (YAML::const_iterator ita = amfList.begin(); ita != amfList.end();
+           ++ita) {
+        const YAML::Node &current_amf = *ita;
+        // amf_info.amf_list.push_back();
+      }
+
+      cfg.amf_info_list.push_back(amf_info);
+    }
+  } catch (std::exception &e) {
+    Logger::nssf_app().error("Eror parsing AMFInfo");
+    return false;
+  }
+  return true;
+}
 //------------------------------------------------------------------------------
 bool nssf_config::parse_config() {
   YAML::Node config = {};
@@ -270,6 +301,15 @@ bool nssf_config::parse_config() {
     Logger::nssf_app().error("Error parsing section : taInfoList");
     return false;
   }
+
+  // Parse amf_info_list
+  if (config["configuration"]["amfInfoList"]) {
+    parse_amf_info(config["configuration"]["amfInfoList"], nssf_amf_info);
+  } else {
+    Logger::nssf_app().error("Error parsing section : amfInfoList");
+    return false;
+  }
+
   return true;
 }
 

@@ -44,6 +44,7 @@
 #include "NsiInformation.h"
 #include "PlmnId.h"
 #include "Snssai.h"
+#include "SupportedNssaiAvailabilityData.h"
 #include "Tai.h"
 
 namespace nssf {
@@ -106,6 +107,18 @@ typedef struct nssf_ta_info_cfg_s {
   std::vector<ta_info_t> ta_info_list;
 } nssf_ta_info_t;
 
+typedef struct amf_info_s {
+  std::string target_amf_set;
+  std::string nrf_amf_set;
+  std::string nrf_amf_set_mgt;
+  std::vector<std::string> amf_list;
+  SupportedNssaiAvailabilityData nssai_data;
+} amf_info_t;
+
+typedef struct nssf_amf_info_cfg_s {
+  std::vector<amf_info_t> amf_info_list;
+} nssf_amf_info_t;
+
 class nssf_config {
 private:
   int load_interface(const libconfig::Setting &if_cfg, interface_cfg_t &cfg);
@@ -114,6 +127,9 @@ private:
                                    nssf_nsi_info_t &cfg);
 
   static const bool parse_ta_info(const YAML::Node &conf, nssf_ta_info_t &cfg);
+
+  static const bool parse_amf_info(const YAML::Node &conf,
+                                   nssf_amf_info_t &cfg);
 
 public:
   /* Reader/writer lock for this configuration */
@@ -128,6 +144,7 @@ public:
 
   static nssf_nsi_info_t nssf_nsi_info;
   static nssf_ta_info_t nssf_ta_info;
+  static nssf_amf_info_t nssf_amf_info;
 
   struct {
     bool register_nrf;

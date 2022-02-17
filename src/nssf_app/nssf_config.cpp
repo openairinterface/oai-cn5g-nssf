@@ -217,6 +217,7 @@ const bool nssf_config::parse_nsi_info(const YAML::Node &conf,
       std::lock_guard<std::mutex> lock(mutex);
       cfg.nsi_info_list.push_back(nsi_info);
     }
+    cfg.nsi_info_list.shrink_to_fit();
   } catch (std::exception &e) {
     Logger::nssf_app().error("Eror parsing NsiInfo");
     return false;
@@ -242,12 +243,67 @@ const bool nssf_config::parse_ta_info(const YAML::Node &conf,
       // Set Supported Snssai List
       cfg.ta_info_list.push_back(ta_info);
     }
+    cfg.ta_info_list.shrink_to_fit();
   } catch (std::exception &e) {
     Logger::nssf_app().error("Eror parsing TaInfo");
     return false;
   }
   return true;
 }
+
+//------------------------------------------------------------------------------
+const bool
+nssf_config::parse_nssai(const YAML::Node &conf,
+                         SupportedNssaiAvailabilityData &nssai_data) {
+  try {
+    Tai tai;
+    PlmnId plmn_id;
+    std::vector<ExtSnssai> snssai_list;
+    std::vector<Tai> tai_list;
+
+    // Parse TAI
+    tai.setTac(conf["tai"]["tac"].as<string>());
+    plmn_id.setMcc(conf["tai"]["plmnId"]["mcc"].as<string>());
+    plmn_id.setMcc(conf["tai"]["plmnId"]["mcc"].as<string>());
+    tai.setPlmnId(plmn_id);
+    nssai_data.setTai(tai);
+
+    // Parse Supported Snssai List
+    const YAML::Node &slices = conf["supportedSnssaiList"];
+    for (YAML::const_iterator it = slices.begin(); it != slices.end(); ++it) {
+      const YAML::Node &snssai = *it;
+      ExtSnssai e_snssai;
+      e_snssai.setSst(snssai["sst"].as<uint32_t>());
+      if (snssai["sd"])
+        e_snssai.setSd(snssai["sd"].as<string>());
+      snssai_list.push_back(e_snssai);
+    }
+    nssai_data.setSupportedSnssaiList(snssai_list);
+
+  } catch (std::exception &e) {
+    Logger::nssf_app().error("Eror parsing amfList");
+    return false;
+  }
+  return true;
+}
+//------------------------------------------------------------------------------
+const bool nssf_config::parse_amf_list(const YAML::Node &conf,
+                                       amf_info_t &amf_info) {
+  static std::mutex mutex;
+  try {
+    for (YAML::const_iterator ita = conf.begin(); ita != conf.end(); ++ita) {
+      const YAML::Node &amf = *ita;
+      SupportedNssaiAvailabilityData nssai_data;
+      parse_nssai(amf["supportedNssaiAvailabilityData"], nssai_data);
+      amf_info.amf_List.emplace_back(amf["nfId"].as<string>(), nssai_data);
+    }
+  } catch (std::exception &e) {
+    Logger::nssf_app().error("Eror parsing amfList");
+    return false;
+  }
+  return true;
+}
+
 //------------------------------------------------------------------------------
 const bool nssf_config::parse_amf_info(const YAML::Node &conf,
                                        nssf_amf_info_t &cfg) {
@@ -261,17 +317,12 @@ const bool nssf_config::parse_amf_info(const YAML::Node &conf,
       amf_info.target_amf_set = amfInfo["targetAmfSet"].as<string>();
       amf_info.nrf_amf_set = amfInfo["nrfAmfSet"].as<string>();
       amf_info.nrf_amf_set_mgt = amfInfo["nrfAmfSetNfMgtUri"].as<string>();
-      const YAML::Node &amfList = amfInfo["amfList"];
-      for (YAML::const_iterator ita = amfList.begin(); ita != amfList.end();
-           ++ita) {
-        const YAML::Node &current_amf = *ita;
-        // amf_info.amf_list.push_back();
-      }
-
+      if (!parse_amf_list(amfInfo["amfList"], amf_info))
+        throw std::exception();
       cfg.amf_info_list.push_back(amf_info);
     }
   } catch (std::exception &e) {
-    Logger::nssf_app().error("Eror parsing AMFInfo");
+    Logger::nssf_app().error("Eror parsing amfInfo");
     return false;
   }
   return true;

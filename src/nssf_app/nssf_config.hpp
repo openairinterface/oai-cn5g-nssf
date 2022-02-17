@@ -111,8 +111,7 @@ typedef struct amf_info_s {
   std::string target_amf_set;
   std::string nrf_amf_set;
   std::string nrf_amf_set_mgt;
-  std::vector<std::string> amf_list;
-  SupportedNssaiAvailabilityData nssai_data;
+  std::vector<std::pair<std::string, SupportedNssaiAvailabilityData>> amf_List;
 } amf_info_t;
 
 typedef struct nssf_amf_info_cfg_s {
@@ -120,6 +119,13 @@ typedef struct nssf_amf_info_cfg_s {
 } nssf_amf_info_t;
 
 class nssf_config {
+protected:
+  static const bool parse_amf_list(const YAML::Node &conf,
+                                   amf_info_t &amf_info);
+
+  static const bool parse_nssai(const YAML::Node &conf,
+                                SupportedNssaiAvailabilityData &nssai_data);
+
 private:
   int load_interface(const libconfig::Setting &if_cfg, interface_cfg_t &cfg);
 

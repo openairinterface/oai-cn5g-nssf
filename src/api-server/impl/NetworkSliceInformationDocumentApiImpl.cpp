@@ -128,6 +128,7 @@ void NetworkSliceInformationDocumentApiImpl::n_s_selection_get(
     return;
   } else {
     to_json(json_data, auth_slice_info);
+    content_type = "application/json";
     response.headers().add<Pistache::Http::Header::ContentType>(
         Pistache::Http::Mime::MediaType(content_type));
     response.send(Pistache::Http::Code(http_code), json_data.dump().c_str());

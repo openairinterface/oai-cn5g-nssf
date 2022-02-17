@@ -66,19 +66,19 @@ public:
   void handle_slice_info_for_registration(
       const SliceInfoForRegistration &slice_info, const Tai &tai,
       const PlmnId &home_plmnid, const std::string &features, int &http_code,
-      const uint8_t http_version, const ProblemDetails &problem_details,
+      const uint8_t http_version, ProblemDetails &problem_details,
       AuthorizedNetworkSliceInfo &auth_slice_info);
 
   void handle_slice_info_for_pdu_session(
       const SliceInfoForPDUSession &slice_info, const Tai &tai,
       const PlmnId &home_plmnid, const std::string &features, int &http_code,
-      const uint8_t http_version, const ProblemDetails &problem_details,
+      const uint8_t http_version, ProblemDetails &problem_details,
       AuthorizedNetworkSliceInfo &auth_slice_info);
 
   void handle_slice_info_for_ue_cu(
       const SliceInfoForUEConfigurationUpdate &slice_info, const Tai &tai,
       const PlmnId &home_plmnid, const std::string &features, int &http_code,
-      const uint8_t http_version, const ProblemDetails &problem_details);
+      const uint8_t http_version, ProblemDetails &problem_details);
 };
 } // namespace nssf
 #endif /* FILE_NSSF_APP_HPP_SEEN */

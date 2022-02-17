@@ -35,5 +35,3 @@ add_library (NSSF STATIC
   nssf_slice_selection.cpp
   nssf_slice_availability.cpp
   )
-
-  

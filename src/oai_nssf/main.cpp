@@ -138,7 +138,7 @@ int main(int argc, char **argv) {
   }
   Logger::nssf_app().startup("Config parsed");
   nssf_cfg.display();
-  
+
   // PID file
   // Currently hard-coded value. TODO: add as config option.
   string pid_file_name = get_exe_absolute_path("/var/run", nssf_cfg.instance);

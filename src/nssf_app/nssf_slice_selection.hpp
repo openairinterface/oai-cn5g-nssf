@@ -35,6 +35,7 @@
 
 #include "3gpp_29.500.h"
 #include "AuthorizedNetworkSliceInfo.h"
+#include "ExtSnssai.h"
 #include "PatchItem.h"
 #include "PlmnId.h"
 #include "ProblemDetails.h"
@@ -50,6 +51,21 @@ using namespace oai::nssf_server::model;
 
 class nssf_slice_select {
 private:
+  static bool
+  validate_rnssai_in_plmn(const SliceInfoForRegistration &slice_info,
+                          AuthorizedNetworkSliceInfo &auth_slice_info);
+  static bool
+  validate_rnssai_in_ta(const SliceInfoForRegistration &slice_info,
+                        AuthorizedNetworkSliceInfo &auth_slice_info);
+
+  static bool get_valid_amfset(const std::vector<Snssai> &req_nssai,
+                               AuthorizedNetworkSliceInfo &auth_slice_info);
+
+  static bool get_valid_amf(const std::vector<ExtSnssai> e_snssai_list,
+                            const std::vector<Snssai> r_nssai);
+  static void set_allowed_nssai(const std::vector<Snssai> nssai,
+                                AuthorizedNetworkSliceInfo &auth_slice_info);
+  static bool compare_snssai(const Snssai a, const Snssai b);
   static bool validate_ta(const Tai tai, std::vector<Snssai> rejected_snssai);
   static bool validate_ta(const Tai &tai);
   static bool validate_nsi(const SliceInfoForPDUSession &slice_info,
@@ -77,7 +93,7 @@ public:
   bool handle_slice_info_for_registration(
       const SliceInfoForRegistration &slice_info, const Tai &tai,
       const PlmnId &home_plmnid, const std::string &features, int &http_code,
-      const uint8_t http_version, const ProblemDetails &problem_details,
+      const uint8_t http_version, ProblemDetails &problem_details,
       AuthorizedNetworkSliceInfo &auth_slice_info);
 
   /*

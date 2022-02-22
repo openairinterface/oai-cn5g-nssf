@@ -49,7 +49,7 @@ void nssf_app_task(void *);
 void nssf_app::handle_slice_info_for_registration(
     const SliceInfoForRegistration &slice_info, const Tai &tai,
     const PlmnId &home_plmnid, const std::string &features, int &http_code,
-    const uint8_t http_version, const ProblemDetails &problem_details,
+    const uint8_t http_version, ProblemDetails &problem_details,
     AuthorizedNetworkSliceInfo &auth_slice_info) {
   if (nssf_nss.handle_slice_info_for_registration(
           slice_info, tai, home_plmnid, features, http_code, http_version,
@@ -58,8 +58,16 @@ void nssf_app::handle_slice_info_for_registration(
         "NS Selection: Authorized Network Slice Info Returned !!!");
     Logger::nssf_app().info(
         "//---------------------------------------------------------");
-  } else
-    Logger::nssf_app().error("NS Selection failure !!!");
+  } else {
+    if (http_code == HTTP_STATUS_CODE_403_FORBIDDEN) {
+      problem_details.setTitle("UNSUPPORTED_RESOURCE");
+      problem_details.setStatus(HTTP_STATUS_CODE_403_FORBIDDEN);
+      problem_details.setDetail(
+          "S-NSSAI in Requested NSSAI is not supported in PLMN");
+      problem_details.setCause("SNSSAI_NOT_SUPPORTED");
+      Logger::nssf_app().error("NS Selection failure !!!");
+    }
+  }
   return;
 }
 
@@ -67,7 +75,7 @@ void nssf_app::handle_slice_info_for_registration(
 void nssf_app::handle_slice_info_for_pdu_session(
     const SliceInfoForPDUSession &slice_info, const Tai &tai,
     const PlmnId &home_plmnid, const std::string &features, int &http_code,
-    const uint8_t http_version, const ProblemDetails &problem_details,
+    const uint8_t http_version, ProblemDetails &problem_details,
     AuthorizedNetworkSliceInfo &auth_slice_info) {
   if (nssf_nss.handle_slice_info_for_pdu_session(
           slice_info, tai, home_plmnid, features, http_code, http_version,
@@ -76,8 +84,16 @@ void nssf_app::handle_slice_info_for_pdu_session(
         "NS Selection: Authorized Network Slice Info Returned !!!");
     Logger::nssf_app().info(
         "//---------------------------------------------------------");
-  } else
-    Logger::nssf_app().error("NS Selection failure !!!");
+  } else {
+    if (http_code == HTTP_STATUS_CODE_403_FORBIDDEN) {
+      problem_details.setTitle("UNSUPPORTED_RESOURCE");
+      problem_details.setStatus(HTTP_STATUS_CODE_403_FORBIDDEN);
+      problem_details.setDetail(
+          "S-NSSAI in Requested NSSAI is not supported in PLMN");
+      problem_details.setCause("SNSSAI_NOT_SUPPORTED");
+      Logger::nssf_app().error("NS Selection failure !!!");
+    }
+  }
   return;
 }
 
@@ -85,7 +101,7 @@ void nssf_app::handle_slice_info_for_pdu_session(
 void nssf_app::handle_slice_info_for_ue_cu(
     const SliceInfoForUEConfigurationUpdate &slice_info, const Tai &tai,
     const PlmnId &home_plmnid, const std::string &features, int &http_code,
-    const uint8_t http_version, const ProblemDetails &problem_details) {
+    const uint8_t http_version, ProblemDetails &problem_details) {
   // ToDo:
 }
 

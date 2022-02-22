@@ -51,6 +51,7 @@ using namespace nssf;
 
 nssf_nsi_info_t nssf_config::nssf_nsi_info;
 nssf_ta_info_t nssf_config::nssf_ta_info;
+nssf_amf_info_t nssf_config::nssf_amf_info;
 std::string nssf_config::slice_config_file;
 // nlohmann::json nssf_config::nssf_slice_config;
 
@@ -204,6 +205,9 @@ const bool nssf_config::parse_nsi_info(const YAML::Node &conf,
       if (nsiInfo["nsiInformationList"]["nsiId"])
         nsi_info.nsi_info.setNsiId(
             nsiInfo["nsiInformationList"]["nsiId"].as<string>());
+      if (nsiInfo["nsiInformationList"]["nrfNfMgtUri"])
+        nsi_info.nsi_info.setNrfNfMgtUri(
+            nsiInfo["nsiInformationList"]["nrfNfMgtUri"].as<string>());
 
       // snssai
       nsi_info.snssai.setSst(nsiInfo["snssai"]["sst"].as<int32_t>());
@@ -213,6 +217,7 @@ const bool nssf_config::parse_nsi_info(const YAML::Node &conf,
       std::lock_guard<std::mutex> lock(mutex);
       cfg.nsi_info_list.push_back(nsi_info);
     }
+    cfg.nsi_info_list.shrink_to_fit();
   } catch (std::exception &e) {
     Logger::nssf_app().error("Eror parsing NsiInfo");
     return false;
@@ -238,6 +243,7 @@ const bool nssf_config::parse_ta_info(const YAML::Node &conf,
       // Set Supported Snssai List
       cfg.ta_info_list.push_back(ta_info);
     }
+    cfg.ta_info_list.shrink_to_fit();
   } catch (std::exception &e) {
     Logger::nssf_app().error("Eror parsing TaInfo");
     return false;
@@ -245,6 +251,82 @@ const bool nssf_config::parse_ta_info(const YAML::Node &conf,
   return true;
 }
 
+//------------------------------------------------------------------------------
+const bool
+nssf_config::parse_nssai(const YAML::Node &conf,
+                         SupportedNssaiAvailabilityData &nssai_data) {
+  try {
+    Tai tai;
+    PlmnId plmn_id;
+    std::vector<ExtSnssai> snssai_list;
+    std::vector<Tai> tai_list;
+
+    // Parse TAI
+    tai.setTac(conf["tai"]["tac"].as<string>());
+    plmn_id.setMcc(conf["tai"]["plmnId"]["mcc"].as<string>());
+    plmn_id.setMcc(conf["tai"]["plmnId"]["mcc"].as<string>());
+    tai.setPlmnId(plmn_id);
+    nssai_data.setTai(tai);
+
+    // Parse Supported Snssai List
+    const YAML::Node &slices = conf["supportedSnssaiList"];
+    for (YAML::const_iterator it = slices.begin(); it != slices.end(); ++it) {
+      const YAML::Node &snssai = *it;
+      ExtSnssai e_snssai;
+      e_snssai.setSst(snssai["sst"].as<uint32_t>());
+      if (snssai["sd"])
+        e_snssai.setSd(snssai["sd"].as<string>());
+      snssai_list.push_back(e_snssai);
+    }
+    nssai_data.setSupportedSnssaiList(snssai_list);
+
+  } catch (std::exception &e) {
+    Logger::nssf_app().error("Eror parsing amfList");
+    return false;
+  }
+  return true;
+}
+//------------------------------------------------------------------------------
+const bool nssf_config::parse_amf_list(const YAML::Node &conf,
+                                       amf_info_t &amf_info) {
+  static std::mutex mutex;
+  try {
+    for (YAML::const_iterator ita = conf.begin(); ita != conf.end(); ++ita) {
+      const YAML::Node &amf = *ita;
+      SupportedNssaiAvailabilityData nssai_data;
+      parse_nssai(amf["supportedNssaiAvailabilityData"], nssai_data);
+      amf_info.amf_List.emplace_back(amf["nfId"].as<string>(), nssai_data);
+    }
+  } catch (std::exception &e) {
+    Logger::nssf_app().error("Eror parsing amfList");
+    return false;
+  }
+  return true;
+}
+
+//------------------------------------------------------------------------------
+const bool nssf_config::parse_amf_info(const YAML::Node &conf,
+                                       nssf_amf_info_t &cfg) {
+  static std::mutex mutex;
+  try {
+    for (YAML::const_iterator it = conf.begin(); it != conf.end(); ++it) {
+      amf_info_t amf_info;
+      const YAML::Node &amfInfo = *it;
+
+      // amInfoList
+      amf_info.target_amf_set = amfInfo["targetAmfSet"].as<string>();
+      amf_info.nrf_amf_set = amfInfo["nrfAmfSet"].as<string>();
+      amf_info.nrf_amf_set_mgt = amfInfo["nrfAmfSetNfMgtUri"].as<string>();
+      if (!parse_amf_list(amfInfo["amfList"], amf_info))
+        throw std::exception();
+      cfg.amf_info_list.push_back(amf_info);
+    }
+  } catch (std::exception &e) {
+    Logger::nssf_app().error("Eror parsing amfInfo");
+    return false;
+  }
+  return true;
+}
 //------------------------------------------------------------------------------
 bool nssf_config::parse_config() {
   YAML::Node config = {};
@@ -270,6 +352,15 @@ bool nssf_config::parse_config() {
     Logger::nssf_app().error("Error parsing section : taInfoList");
     return false;
   }
+
+  // Parse amf_info_list
+  if (config["configuration"]["amfInfoList"]) {
+    parse_amf_info(config["configuration"]["amfInfoList"], nssf_amf_info);
+  } else {
+    Logger::nssf_app().error("Error parsing section : amfInfoList");
+    return false;
+  }
+
   return true;
 }
 

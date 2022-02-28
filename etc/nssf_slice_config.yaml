@@ -102,7 +102,7 @@ configuration:
       - sst: 135
         sd: '135'
   amfInfoList:
-    - targetAmfSet: oai5gcn.mcc208.mnc95.regionid128.setid1.3gppnetwork.org
+    - targetAmfSet: 208-95-128.01
       nrfAmfSet: http://oai-cn5g-nrf.fr:8080/nnrf-disc/v1/nf-instances'
       nrfAmfSetNfMgtUri: http://oai-cn5g-nrf.fr:8080/nnrf-nfm/v1/nf-instances
       amfList:
@@ -150,7 +150,7 @@ configuration:
                 - sst: 134
                 - sst: 135
                   sd: 135
-    - targetAmfSet: oai5gcn.mcc208.mnc95.regionid128.setid2.3gppnetwork.org
+    - targetAmfSet: 208-95-128.02
       nrfAmfSet: http://oai-cn5g-nrf.fr:8080/nnrf-disc/v1/nf-instances
       nrfAmfSetNfMgtUri: http://oai-cn5g-nrf.fr:8080/nnrf-nfm/v1/nf-instances
       amfList:

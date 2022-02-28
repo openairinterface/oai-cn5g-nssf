@@ -80,10 +80,10 @@ public:
                                       const response &response);
 
   // NSSF NSSAI Availability - NF Instance ID (Document)
-  void create_nssai_availability_handler(
-      const std::string &nfId,
-      const SupportedNssaiAvailabilityData &nssaiAvailInfo,
-      const response &response);
+  void
+  create_nssai_availability_handler(const std::string &nfId,
+                                    const NssaiAvailabilityInfo &nssaiAvailInfo,
+                                    const response &response);
 
   void
   update_n_ssai_availability_handler(const std::string &nfId,

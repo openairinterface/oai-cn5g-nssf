@@ -172,27 +172,16 @@ void nssf_http2_server::start() {
                          boost::is_any_of("/"));
             nfId = split_result[split_result.size() - 1].c_str();
             if (!nfId.empty()) {
-              Logger::nssf_sbi().debug(
-                  "Received request for NSSAI Availability - (HTTP_VERSION 2)");
-
               if (request.method().compare("PUT") == 0 && len > 0) {
                 // Parse URI
-                SupportedNssaiAvailabilityData nssai_avail_data = {};
-                std::string qs = request.uri().raw_query;
-                Logger::nssf_sbi().debug("QueryString: %s", qs.c_str());
-                std::string nssai_data = util::get_query_param(
-                    qs, SUPPORTED_NSSAI_AVAILABILITY_DATA);
-                if (!nssai_data.empty()) {
-                  nlohmann::json::parse(nssai_data.c_str())
-                      .get_to(nssai_avail_data);
-                  Logger::nssf_sbi().info(
-                      " Query_PARAM::Supported Nssai Availability Data - %s",
-                      nssai_data.c_str());
-                  this->create_nssai_availability_handler(
-                      nfId, nssai_avail_data, response);
-                }
+                NssaiAvailabilityInfo nssai_avail_data = {};
+                nlohmann::json::parse(msg.c_str()).get_to(nssai_avail_data);
+                Logger::nssf_sbi().info(
+                    "NSSAI_AVAIL::Supported NSSAI Availability Data - %s",
+                    msg.c_str());
+                this->create_nssai_availability_handler(nfId, nssai_avail_data,
+                                                        response);
               }
-
               if (request.method().compare("PATCH") == 0 && len > 0) {
                 std::vector<PatchItem> patchItem;
                 nlohmann::json::parse(msg.c_str()).get_to(patchItem);
@@ -380,12 +369,35 @@ void nssf_http2_server::get_slice_info_default_handler(
 
 //------------------------------------------------------------------------------
 void nssf_http2_server::create_nssai_availability_handler(
-    const std::string &nfId,
-    const SupportedNssaiAvailabilityData &nssaiAvailInfo,
+    const std::string &nfId, const NssaiAvailabilityInfo &nssaiAvailInfo,
     const response &response) {
   Logger::nssf_sbi().info("NSSAI Availability: Got a request to "
                           "Updates/replaces the NSSF with the S-NSSAIs");
   Logger::nssf_sbi().info("NSSAI Availability: Instance ID: %s", nfId.c_str());
+
+  int http_code = 0;
+  ProblemDetails problem_details = {};
+  nlohmann::json json_data = {};
+  header_map h;
+  AuthorizedNssaiAvailabilityInfo auth_nssai_avail_info;
+
+  m_nssf_app->handle_create_nssai_availability(nfId, nssaiAvailInfo,
+                                               auth_nssai_avail_info, http_code,
+                                               2, problem_details);
+  if (http_code == HTTP_STATUS_CODE_204_NO_CONTENT) {
+    response.write_head(http_code, h);
+    response.end();
+  } else if (http_code == HTTP_STATUS_CODE_200_OK) {
+    h.emplace("content-type", header_value{"application/json"});
+    response.write_head(http_code, h);
+    to_json(json_data, auth_nssai_avail_info);
+    response.end(json_data.dump().c_str());
+  } else {
+    h.emplace("content-type", header_value{"application/problem+json"});
+    response.write_head(http_code, h);
+    to_json(json_data, problem_details);
+    response.end(json_data.dump().c_str());
+  }
 }
 
 //------------------------------------------------------------------------------

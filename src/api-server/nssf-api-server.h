@@ -56,24 +56,24 @@
 using namespace oai::nssf_server::api;
 
 class NSSFApiServer {
- public:
-  NSSFApiServer(Pistache::Address address, nssf::nssf_app* nssf_app_inst)
+public:
+  NSSFApiServer(Pistache::Address address, nssf::nssf_app *nssf_app_inst)
       : m_httpEndpoint(std::make_shared<Pistache::Http::Endpoint>(address)) {
-    m_router  = std::make_shared<Pistache::Rest::Router>();
+    m_router = std::make_shared<Pistache::Rest::Router>();
     m_address = address.host() + ":" + (address.port()).toString();
 
     m_nfInstanceIDDocumentApiImpl =
-        std::make_shared<NFInstanceIDDocumentApiImpl>(
-            m_router, nssf_app_inst, m_address);
+        std::make_shared<NFInstanceIDDocumentApiImpl>(m_router, nssf_app_inst,
+                                                      m_address);
     m_subscriptionIDDocumentApiImpl =
-        std::make_shared<SubscriptionIDDocumentApiImpl>(
-            m_router, nssf_app_inst, m_address);
+        std::make_shared<SubscriptionIDDocumentApiImpl>(m_router, nssf_app_inst,
+                                                        m_address);
     m_subscriptionsCollectionApiImpl =
         std::make_shared<SubscriptionsCollectionApiImpl>(
             m_router, nssf_app_inst, m_address);
     m_nssaiAvailablityStoreApiImpl =
-        std::make_shared<NSSAIAvailabilityStoreApiImpl>(
-            m_router, nssf_app_inst, m_address);
+        std::make_shared<NSSAIAvailabilityStoreApiImpl>(m_router, nssf_app_inst,
+                                                        m_address);
     m_networkSliceInformationDocumentApiImpl =
         std::make_shared<NetworkSliceInformationDocumentApiImpl>(
             m_router, nssf_app_inst, m_address);
@@ -88,7 +88,7 @@ class NSSFApiServer {
   void start();
   void shutdown();
 
- private:
+private:
   std::shared_ptr<Pistache::Http::Endpoint> m_httpEndpoint;
   std::shared_ptr<Pistache::Rest::Router> m_router;
 

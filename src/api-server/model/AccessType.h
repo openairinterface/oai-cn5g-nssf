@@ -19,6 +19,7 @@
 #ifndef AccessType_H_
 #define AccessType_H_
 
+#include "AccessType_anyOf.h"
 #include <nlohmann/json.hpp>
 
 namespace oai {
@@ -29,23 +30,35 @@ namespace model {
 ///
 /// </summary>
 class AccessType {
- public:
+public:
   AccessType();
   virtual ~AccessType();
 
   void validate();
 
+  bool operator==(const AccessType &rhs) const;
+  bool operator!=(const AccessType &rhs) const;
+
   /////////////////////////////////////////////
   /// AccessType members
 
-  friend void to_json(nlohmann::json& j, const AccessType& o);
-  friend void from_json(const nlohmann::json& j, AccessType& o);
+  AccessType_anyOf getValue() const;
+  void setValue(AccessType_anyOf value);
+  AccessType_anyOf::eAccessType_anyOf getEnumValue() const;
+  void setEnumValue(AccessType_anyOf::eAccessType_anyOf value);
 
- protected:
+  friend void to_json(nlohmann::json &j, const AccessType &o);
+  friend void from_json(const nlohmann::json &j, AccessType &o);
+
+  friend void to_json(nlohmann::json &j, const AccessType_anyOf &o);
+  friend void from_json(const nlohmann::json &j, AccessType_anyOf &o);
+
+protected:
+  AccessType_anyOf m_value;
 };
 
-}  // namespace model
-}  // namespace nssf_server
-}  // namespace oai
+} // namespace model
+} // namespace nssf_server
+} // namespace oai
 
 #endif /* AccessType_H_ */

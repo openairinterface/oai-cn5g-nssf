@@ -28,6 +28,7 @@
  */
 
 #include "nssf_slice_selection.hpp"
+#include "AccessType.h"
 #include "NetworkSliceInformationDocumentApiImpl.h"
 #include "conversions.hpp"
 #include "logger.hpp"
@@ -73,6 +74,10 @@ void nssf_slice_select::set_allowed_nssai(
     allowed_snssai.setAllowedSnssai(Snssai);
     allowed_snssai_list.push_back(allowed_snssai);
   }
+  AccessType access_type;
+  access_type.setEnumValue(oai::nssf_server::model::AccessType_anyOf::
+                               eAccessType_anyOf::ACCESS_3GPP);
+  allowed_nssai.setAccessType(access_type);
   allowed_nssai.setAllowedSnssaiList(allowed_snssai_list);
   allowed_nssai_list.push_back(allowed_nssai);
   auth_slice_info.setAllowedNssaiList(allowed_nssai_list);

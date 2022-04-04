@@ -128,6 +128,14 @@ void nssf_app::handle_create_nssai_availability(
   return;
 }
 //------------------------------------------------------------------------------
+void nssf_app::handle_slice_info_for_ue_cu(
+    const SliceInfoForUEConfigurationUpdate &slice_info, const Tai &tai,
+    const PlmnId &home_plmnid, const std::string &features, int &http_code,
+    const uint8_t http_version, ProblemDetails &problem_details) {
+  // ToDo:
+}
+
+//------------------------------------------------------------------------------
 nssf_app::~nssf_app() {
   Logger::nssf_app().debug("Delete NSSF_APP instance...");
 }

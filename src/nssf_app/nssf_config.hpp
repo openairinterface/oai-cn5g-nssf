@@ -111,7 +111,9 @@ typedef struct amf_info_s {
   std::string target_amf_set;
   std::string nrf_amf_set;
   std::string nrf_amf_set_mgt;
-  std::vector<std::pair<std::string, SupportedNssaiAvailabilityData>> amf_List;
+  std::vector<
+      std::pair<std::string, std::vector<SupportedNssaiAvailabilityData>>>
+      amf_List;
 } amf_info_t;
 
 typedef struct nssf_amf_info_cfg_s {

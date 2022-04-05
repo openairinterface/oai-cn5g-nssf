@@ -79,6 +79,11 @@ public:
       const SliceInfoForUEConfigurationUpdate &slice_info, const Tai &tai,
       const PlmnId &home_plmnid, const std::string &features, int &http_code,
       const uint8_t http_version, ProblemDetails &problem_details);
+
+  void handle_create_nssai_availability(
+      const std::string &nfId, const NssaiAvailabilityInfo &nssaiAvailInfo,
+      AuthorizedNssaiAvailabilityInfo &auth_info, int &http_code,
+      const uint8_t http_version, ProblemDetails &problem_details);
 };
 } // namespace nssf
 #endif /* FILE_NSSF_APP_HPP_SEEN */

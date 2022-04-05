@@ -293,9 +293,12 @@ const bool nssf_config::parse_amf_list(const YAML::Node &conf,
   try {
     for (YAML::const_iterator ita = conf.begin(); ita != conf.end(); ++ita) {
       const YAML::Node &amf = *ita;
+      std::vector<SupportedNssaiAvailabilityData> nssai_data_list;
       SupportedNssaiAvailabilityData nssai_data;
+      // ToDo:- Parse as a list
       parse_nssai(amf["supportedNssaiAvailabilityData"], nssai_data);
-      amf_info.amf_List.emplace_back(amf["nfId"].as<string>(), nssai_data);
+      nssai_data_list.push_back(nssai_data);
+      amf_info.amf_List.emplace_back(amf["nfId"].as<string>(), nssai_data_list);
     }
   } catch (std::exception &e) {
     Logger::nssf_app().error("Eror parsing amfList");

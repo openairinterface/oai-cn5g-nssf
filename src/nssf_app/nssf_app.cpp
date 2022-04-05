@@ -104,6 +104,29 @@ void nssf_app::handle_slice_info_for_ue_cu(
     const uint8_t http_version, ProblemDetails &problem_details) {
   // ToDo:
 }
+//------------------------------------------------------------------------------
+void nssf_app::handle_create_nssai_availability(
+    const std::string &nfId, const NssaiAvailabilityInfo &nssaiAvailInfo,
+    AuthorizedNssaiAvailabilityInfo &auth_info, int &http_code,
+    const uint8_t http_version, ProblemDetails &problem_details) {
+  if (nssf_nsa.handle_create_nssai_availability(nfId, nssaiAvailInfo, auth_info,
+                                                http_code, http_version,
+                                                problem_details)) {
+    Logger::nssf_app().info(
+        "NSSAI_AVAIL: NssaiAvailabilityInfo Successfully Created/Replaced !!!");
+    Logger::nssf_app().info(
+        "//---------------------------------------------------------");
+  } else {
+    if (http_code == HTTP_STATUS_CODE_403_FORBIDDEN) {
+      problem_details.setTitle("UNSUPPORTED_RESOURCE");
+      problem_details.setStatus(HTTP_STATUS_CODE_403_FORBIDDEN);
+      problem_details.setDetail("NSSAI Availability");
+      problem_details.setCause("SNSSAI_NOT_SUPPORTED");
+      Logger::nssf_app().error("NSSAI Availability failure !!!");
+    }
+  }
+  return;
+}
 
 //------------------------------------------------------------------------------
 nssf_app::~nssf_app() {

@@ -116,9 +116,12 @@ bool nssf_slice_select::get_valid_amfset(
   std::vector<std::string> candidate_amf_list;
   for (auto amfSet : nssf_cfg.nssf_amf_info.amf_info_list) {
     for (auto amfList : amfSet.amf_List) {
-      if (get_valid_amf(amfList.second.getSupportedSnssaiList(), req_nssai)) {
-        Logger::nssf_app().debug("AMF matched :- %s", amfList.first.c_str());
-        candidate_amf_list.push_back(amfList.first);
+      for (auto ext_snssai : amfList.second) {
+        if (get_valid_amf(ext_snssai.getSupportedSnssaiList(), req_nssai)) {
+          Logger::nssf_app().debug("AMF matched :- %s", amfList.first.c_str());
+          candidate_amf_list.push_back(amfList.first);
+          break;
+        }
       }
     }
     if (!candidate_amf_list.empty()) {

@@ -62,8 +62,10 @@ COPY . /openair-nssf
 # Installing and Building NSSF
 WORKDIR /openair-nssf/build/scripts
 RUN ./build_nssf --install-deps --force && \
-    rm /etc/pki/entitlement/*pem
+    rm /etc/pki/entitlement/*pem && \
+    ldconfig
 RUN ./build_nssf --clean --Verbose --build-type Release --jobs && \
+    ldd /openair-nssf/build/nssf/build/nssf && \
     mv /openair-nssf/build/nssf/build/nssf /openair-nssf/build/nssf/build/oai_nssf
 
 #---------------------------------------------------------------------
@@ -74,11 +76,12 @@ ENV TZ=Europe/Paris
 # We install some debug tools for the moment in addition of mandatory libraries
 RUN yum update -y && \
     yum install -y --enablerepo="ubi-8-codeready-builder" \
-    psmisc \
-    procps-ng \
-    net-tools \
-    libevent && \
-    rm -rf /var/lib/apt/lists/*
+      psmisc \
+      procps-ng \
+      net-tools \
+      libevent && \
+    yum clean all -y && \
+    rm -rf /var/cache/yum /var/cache/dnf
 
 # Copying executable and generated libraries
 WORKDIR /openair-nssf/bin
@@ -98,7 +101,8 @@ COPY --from=oai-nssf-builder \
     /usr/local/lib/libnghttp2_asio.so.1 \
     /usr/lib64/
 
-RUN ldconfig
+RUN ldconfig && \
+    ldd /openair-nssf/bin/oai_nssf
 
 # Copying template configuration files
 # The configuration folder will be flat

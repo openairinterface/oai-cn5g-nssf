@@ -811,7 +811,7 @@ class HtmlReport():
 									result = re.search('oai-nssf *ci-tmp', line)
 								else:
 									result = re.search('oai-nssf *develop', line)
-							if result is not None:
+							if result is not None and not status:
 								if variant == 'docker':
 									result = re.search('ago *([0-9A-Z]+)', line)
 								else:

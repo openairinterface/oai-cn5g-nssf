@@ -44,8 +44,8 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Some GIT configuration command quite useful
-RUN /bin/bash -c "if [[ -v NEEDED_GIT_PROXY ]]; then git config --global http.proxy $NEEDED_GIT_PROXY; fi" && \
-    git config --global https.postBuffer 123289600 && \
+RUN /bin/bash -c "if [[ -v NEEDED_GIT_PROXY ]]; then git config --global http.proxy $NEEDED_GIT_PROXY; fi"
+RUN git config --global https.postBuffer 123289600 && \
     git config --global http.sslverify false
 
 # Copying source code

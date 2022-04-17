@@ -52,8 +52,8 @@ RUN rm -f /etc/rhsm-host && \
 
 # Some GIT configuration command quite useful
 RUN /bin/bash -c "if [[ -v NEEDED_GIT_PROXY ]]; then git config --global http.proxy $NEEDED_GIT_PROXY; fi"
-RUN git config --global https.postBuffer 123289600
-RUN git config --global http.sslverify false
+RUN git config --global https.postBuffer 123289600 && \
+    git config --global http.sslverify false
 
 # Copying source code
 WORKDIR /openair-nssf

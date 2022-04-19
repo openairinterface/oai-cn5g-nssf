@@ -42,14 +42,14 @@ namespace nssf {
 using namespace oai::nssf_server::model;
 
 class nssf_app {
-private:
+ private:
   nssf_slice_select nssf_nss;
   nssf_slice_avail nssf_nsa;
 
-public:
-  explicit nssf_app(const std::string &config_file);
-  nssf_app(nssf_app const &) = delete;
-  void operator=(nssf_app const &) = delete;
+ public:
+  explicit nssf_app(const std::string& config_file);
+  nssf_app(nssf_app const&) = delete;
+  void operator=(nssf_app const&) = delete;
 
   virtual ~nssf_app();
 
@@ -64,26 +64,26 @@ public:
    */
 
   void handle_slice_info_for_registration(
-      const SliceInfoForRegistration &slice_info, const Tai &tai,
-      const PlmnId &home_plmnid, const std::string &features, int &http_code,
-      const uint8_t http_version, ProblemDetails &problem_details,
-      AuthorizedNetworkSliceInfo &auth_slice_info);
+      const SliceInfoForRegistration& slice_info, const Tai& tai,
+      const PlmnId& home_plmnid, const std::string& features, int& http_code,
+      const uint8_t http_version, ProblemDetails& problem_details,
+      AuthorizedNetworkSliceInfo& auth_slice_info);
 
   void handle_slice_info_for_pdu_session(
-      const SliceInfoForPDUSession &slice_info, const Tai &tai,
-      const PlmnId &home_plmnid, const std::string &features, int &http_code,
-      const uint8_t http_version, ProblemDetails &problem_details,
-      AuthorizedNetworkSliceInfo &auth_slice_info);
+      const SliceInfoForPDUSession& slice_info, const Tai& tai,
+      const PlmnId& home_plmnid, const std::string& features, int& http_code,
+      const uint8_t http_version, ProblemDetails& problem_details,
+      AuthorizedNetworkSliceInfo& auth_slice_info);
 
   void handle_slice_info_for_ue_cu(
-      const SliceInfoForUEConfigurationUpdate &slice_info, const Tai &tai,
-      const PlmnId &home_plmnid, const std::string &features, int &http_code,
-      const uint8_t http_version, ProblemDetails &problem_details);
+      const SliceInfoForUEConfigurationUpdate& slice_info, const Tai& tai,
+      const PlmnId& home_plmnid, const std::string& features, int& http_code,
+      const uint8_t http_version, ProblemDetails& problem_details);
 
   void handle_create_nssai_availability(
-      const std::string &nfId, const NssaiAvailabilityInfo &nssaiAvailInfo,
-      AuthorizedNssaiAvailabilityInfo &auth_info, int &http_code,
-      const uint8_t http_version, ProblemDetails &problem_details);
+      const std::string& nfId, const NssaiAvailabilityInfo& nssaiAvailInfo,
+      AuthorizedNssaiAvailabilityInfo& auth_info, int& http_code,
+      const uint8_t http_version, ProblemDetails& problem_details);
 };
-} // namespace nssf
+}  // namespace nssf
 #endif /* FILE_NSSF_APP_HPP_SEEN */

@@ -50,31 +50,34 @@ namespace nssf {
 using namespace oai::nssf_server::model;
 
 class nssf_slice_select {
-private:
-  static bool
-  validate_rnssai_in_plmn(const SliceInfoForRegistration &slice_info,
-                          AuthorizedNetworkSliceInfo &auth_slice_info);
-  static bool
-  validate_rnssai_in_ta(const SliceInfoForRegistration &slice_info,
-                        AuthorizedNetworkSliceInfo &auth_slice_info);
+ private:
+  static bool validate_rnssai_in_plmn(
+      const SliceInfoForRegistration& slice_info,
+      AuthorizedNetworkSliceInfo& auth_slice_info);
+  static bool validate_rnssai_in_ta(
+      const SliceInfoForRegistration& slice_info,
+      AuthorizedNetworkSliceInfo& auth_slice_info);
 
-  static bool get_valid_amfset(const std::vector<Snssai> &req_nssai,
-                               AuthorizedNetworkSliceInfo &auth_slice_info);
+  static bool get_valid_amfset(
+      const std::vector<Snssai>& req_nssai,
+      AuthorizedNetworkSliceInfo& auth_slice_info);
 
-  static bool get_valid_amf(const std::vector<ExtSnssai> e_snssai_list,
-                            const std::vector<Snssai> r_nssai);
-  static void set_allowed_nssai(const std::vector<Snssai> nssai,
-                                AuthorizedNetworkSliceInfo &auth_slice_info);
+  static bool get_valid_amf(
+      const std::vector<ExtSnssai> e_snssai_list,
+      const std::vector<Snssai> r_nssai);
+  static void set_allowed_nssai(
+      const std::vector<Snssai> nssai,
+      AuthorizedNetworkSliceInfo& auth_slice_info);
   static bool compare_snssai(const Snssai a, const Snssai b);
   static bool validate_ta(const Tai tai, std::vector<Snssai> rejected_snssai);
-  static bool validate_ta(const Tai &tai);
-  static bool validate_nsi(const SliceInfoForPDUSession &slice_info,
-                           NsiInformation &nsi_info);
+  static bool validate_ta(const Tai& tai);
+  static bool validate_nsi(
+      const SliceInfoForPDUSession& slice_info, NsiInformation& nsi_info);
 
-public:
-  explicit nssf_slice_select(const std::string &config_file);
-  nssf_slice_select(nssf_slice_select const &) = delete;
-  void operator=(nssf_slice_select const &) = delete;
+ public:
+  explicit nssf_slice_select(const std::string& config_file);
+  nssf_slice_select(nssf_slice_select const&) = delete;
+  void operator=(nssf_slice_select const&) = delete;
 
   virtual ~nssf_slice_select();
   //  Handle Network Slice Information (Document)
@@ -91,10 +94,10 @@ public:
    * @return void
    */
   bool handle_slice_info_for_registration(
-      const SliceInfoForRegistration &slice_info, const Tai &tai,
-      const PlmnId &home_plmnid, const std::string &features, int &http_code,
-      const uint8_t http_version, ProblemDetails &problem_details,
-      AuthorizedNetworkSliceInfo &auth_slice_info);
+      const SliceInfoForRegistration& slice_info, const Tai& tai,
+      const PlmnId& home_plmnid, const std::string& features, int& http_code,
+      const uint8_t http_version, ProblemDetails& problem_details,
+      AuthorizedNetworkSliceInfo& auth_slice_info);
 
   /*
    * @param [const SliceInfoForPDUSessionn&] slice_info: SliceInfoForPDUSession
@@ -107,10 +110,10 @@ public:
    * @return void
    */
   bool handle_slice_info_for_pdu_session(
-      const SliceInfoForPDUSession &slice_info, const Tai &tai,
-      const PlmnId &home_plmnid, const std::string &features, int &http_code,
-      const uint8_t http_version, const ProblemDetails &problem_details,
-      AuthorizedNetworkSliceInfo &auth_slice_info);
+      const SliceInfoForPDUSession& slice_info, const Tai& tai,
+      const PlmnId& home_plmnid, const std::string& features, int& http_code,
+      const uint8_t http_version, const ProblemDetails& problem_details,
+      AuthorizedNetworkSliceInfo& auth_slice_info);
 
   /*
    * @param [const SliceInfoForUEConfigurationUpdate&] slice_info:
@@ -124,9 +127,9 @@ public:
    * @return void
    */
   bool handle_slice_info_for_ue_cu(
-      const SliceInfoForUEConfigurationUpdate &slice_info, const Tai &tai,
-      const PlmnId &home_plmnid, const std::string &features, int &http_code,
-      const uint8_t http_version, const ProblemDetails &problem_details);
+      const SliceInfoForUEConfigurationUpdate& slice_info, const Tai& tai,
+      const PlmnId& home_plmnid, const std::string& features, int& http_code,
+      const uint8_t http_version, const ProblemDetails& problem_details);
 };
-} // namespace nssf
+}  // namespace nssf
 #endif /* FILE_NSSF_SLICE_SELECT_HPP_SEEN */

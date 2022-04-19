@@ -29,7 +29,7 @@ namespace model {
 ///
 /// </summary>
 class AccessType_anyOf {
-public:
+ public:
   AccessType_anyOf();
   virtual ~AccessType_anyOf() = default;
 
@@ -52,16 +52,16 @@ public:
   /// Validate the current data in the model. Returns false on error and writes
   /// an error message into the given stringstream.
   /// </summary>
-  bool validate(std::stringstream &msg) const;
+  bool validate(std::stringstream& msg) const;
 
   /// <summary>
   /// Helper overload for validate. Used when one model stores another model and
   /// calls it's validate. Not meant to be called outside that case.
   /// </summary>
-  bool validate(std::stringstream &msg, const std::string &pathPrefix) const;
+  bool validate(std::stringstream& msg, const std::string& pathPrefix) const;
 
-  bool operator==(const AccessType_anyOf &rhs) const;
-  bool operator!=(const AccessType_anyOf &rhs) const;
+  bool operator==(const AccessType_anyOf& rhs) const;
+  bool operator!=(const AccessType_anyOf& rhs) const;
 
   /////////////////////////////////////////////
   /// AccessType_anyOf members
@@ -69,16 +69,16 @@ public:
   AccessType_anyOf::eAccessType_anyOf getValue() const;
   void setValue(AccessType_anyOf::eAccessType_anyOf value);
 
-  friend void to_json(nlohmann::json &j, const AccessType_anyOf &o);
-  friend void from_json(const nlohmann::json &j, AccessType_anyOf &o);
+  friend void to_json(nlohmann::json& j, const AccessType_anyOf& o);
+  friend void from_json(const nlohmann::json& j, AccessType_anyOf& o);
 
-protected:
+ protected:
   AccessType_anyOf::eAccessType_anyOf m_value =
       AccessType_anyOf::eAccessType_anyOf::INVALID_VALUE_OPENAPI_GENERATED;
 };
 
-} // namespace model
-} // namespace nssf_server
-} // namespace oai
+}  // namespace model
+}  // namespace nssf_server
+}  // namespace oai
 
 #endif /* AccessType_anyOf_H_ */

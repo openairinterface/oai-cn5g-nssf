@@ -42,15 +42,14 @@
 using namespace nssf;
 using namespace std;
 
-extern nssf_slice_select *nssf_slice_select_inst;
+extern nssf_slice_select* nssf_slice_select_inst;
 extern nssf_config nssf_cfg;
 
 //------------------------------------------------------------------------------
 bool nssf_slice_select::compare_snssai(const Snssai a, const Snssai b) {
   if (a.getSst() == b.getSst()) {
     if (a.sdIsSet() || b.sdIsSet()) {
-      if (a.getSd().compare(b.getSd()))
-        return false;
+      if (a.getSd().compare(b.getSd())) return false;
     }
     return true;
   } else
@@ -60,7 +59,7 @@ bool nssf_slice_select::compare_snssai(const Snssai a, const Snssai b) {
 //------------------------------------------------------------------------------
 void nssf_slice_select::set_allowed_nssai(
     const std::vector<Snssai> nssai,
-    AuthorizedNetworkSliceInfo &auth_slice_info) {
+    AuthorizedNetworkSliceInfo& auth_slice_info) {
   // Set Subscribed-Nssai into Allowed NSSAI list
   std::vector<AllowedNssai> allowed_nssai_list;
   std::vector<AllowedSnssai> allowed_snssai_list;
@@ -69,8 +68,7 @@ void nssf_slice_select::set_allowed_nssai(
     AllowedSnssai allowed_snssai;
     Snssai Snssai;
     Snssai.setSst(snssai.getSst());
-    if (snssai.sdIsSet())
-      Snssai.setSd(snssai.getSd());
+    if (snssai.sdIsSet()) Snssai.setSd(snssai.getSd());
     allowed_snssai.setAllowedSnssai(Snssai);
     allowed_snssai_list.push_back(allowed_snssai);
   }
@@ -86,20 +84,16 @@ void nssf_slice_select::set_allowed_nssai(
 bool nssf_slice_select::get_valid_amf(
     const std::vector<ExtSnssai> e_snssai_list,
     const std::vector<Snssai> r_nssai) {
-
   std::vector<Snssai> rejected_snssai;
   for (auto r_snssai : r_nssai) {
     bool amf_matched = false;
     for (auto e_snssai : e_snssai_list) {
       Snssai e_nssai_tmp;
       e_nssai_tmp.setSst(e_snssai.getSst());
-      if (e_snssai.sdIsSet())
-        e_nssai_tmp.setSd(e_snssai.getSd());
-      if (compare_snssai(r_snssai, e_nssai_tmp))
-        amf_matched = true;
+      if (e_snssai.sdIsSet()) e_nssai_tmp.setSd(e_snssai.getSd());
+      if (compare_snssai(r_snssai, e_nssai_tmp)) amf_matched = true;
     }
-    if (!amf_matched)
-      rejected_snssai.push_back(r_snssai);
+    if (!amf_matched) rejected_snssai.push_back(r_snssai);
   }
 
   if (rejected_snssai.size() > 0)
@@ -109,8 +103,8 @@ bool nssf_slice_select::get_valid_amf(
 }
 //------------------------------------------------------------------------------
 bool nssf_slice_select::get_valid_amfset(
-    const std::vector<Snssai> &req_nssai,
-    AuthorizedNetworkSliceInfo &auth_slice_info) {
+    const std::vector<Snssai>& req_nssai,
+    AuthorizedNetworkSliceInfo& auth_slice_info) {
   Logger::nssf_app().debug("Validating AMFSet");
 
   std::vector<std::string> candidate_amf_list;
@@ -136,15 +130,15 @@ bool nssf_slice_select::get_valid_amfset(
 }
 //------------------------------------------------------------------------------
 bool nssf_slice_select::validate_rnssai_in_ta(
-    const SliceInfoForRegistration &slice_info,
-    AuthorizedNetworkSliceInfo &auth_slice_info) {
+    const SliceInfoForRegistration& slice_info,
+    AuthorizedNetworkSliceInfo& auth_slice_info) {
   // ToDo
   return true;
 }
 //------------------------------------------------------------------------------
 bool nssf_slice_select::validate_rnssai_in_plmn(
-    const SliceInfoForRegistration &slice_info,
-    AuthorizedNetworkSliceInfo &auth_slice_info) {
+    const SliceInfoForRegistration& slice_info,
+    AuthorizedNetworkSliceInfo& auth_slice_info) {
   std::vector<Snssai> rejected_snssai;
   std::vector<Snssai> matched_snssai;
 
@@ -172,8 +166,8 @@ bool nssf_slice_select::validate_rnssai_in_plmn(
   return true;
 }
 //------------------------------------------------------------------------------
-bool nssf_slice_select::validate_nsi(const SliceInfoForPDUSession &slice_info,
-                                     NsiInformation &nsi_info) {
+bool nssf_slice_select::validate_nsi(
+    const SliceInfoForPDUSession& slice_info, NsiInformation& nsi_info) {
   Logger::nssf_app().debug("Validating S-NSSAI for NSI");
 
   Snssai requested_snssai = slice_info.getSNssai();
@@ -189,17 +183,18 @@ bool nssf_slice_select::validate_nsi(const SliceInfoForPDUSession &slice_info,
     }
   }
 
-  Logger::nssf_app().warn("NS Selection: S-NSSAI from SliceInfoForPDUSession "
-                          "is not authorised !!!");
+  Logger::nssf_app().warn(
+      "NS Selection: S-NSSAI from SliceInfoForPDUSession "
+      "is not authorised !!!");
   Logger::nssf_app().info(
       "//---------------------------------------------------------");
   Logger::nssf_app().info("");
   return false;
 }
 //------------------------------------------------------------------------------
-bool nssf_slice_select::validate_ta(const Tai &tai) {
+bool nssf_slice_select::validate_ta(const Tai& tai) {
   // Logger::nssf_app().debug("Validating TA");
-  PlmnId requested_plmn = tai.getPlmnId();
+  PlmnId requested_plmn     = tai.getPlmnId();
   std::string requested_tac = tai.getTac();
 
   for (auto ta_info_item : nssf_cfg.nssf_ta_info.ta_info_list) {
@@ -217,10 +212,10 @@ bool nssf_slice_select::validate_ta(const Tai &tai) {
 
 //------------------------------------------------------------------------------
 bool nssf_slice_select::handle_slice_info_for_registration(
-    const SliceInfoForRegistration &slice_info, const Tai &tai,
-    const PlmnId &home_plmnid, const std::string &features, int &http_code,
-    const uint8_t http_version, ProblemDetails &problem_details,
-    AuthorizedNetworkSliceInfo &auth_slice_info) {
+    const SliceInfoForRegistration& slice_info, const Tai& tai,
+    const PlmnId& home_plmnid, const std::string& features, int& http_code,
+    const uint8_t http_version, ProblemDetails& problem_details,
+    AuthorizedNetworkSliceInfo& auth_slice_info) {
   Logger::nssf_app().info(
       "NS Selection: Handle case - Registration (HTTP_VERSION %d)",
       http_version);
@@ -236,7 +231,7 @@ bool nssf_slice_select::handle_slice_info_for_registration(
     // to the NSSF that the NSSF shall return the VPLMN specific mapped SNSSAI
     // values for the S-NSSAI values in the subscribedNssai IE.
     if (slice_info.sNssaiForMappingIsSet())
-      ; // Ignore for now
+      ;  // Ignore for now
     http_code = HTTP_STATUS_CODE_503_SERVICE_UNAVAILABLE;
     Logger::nssf_app().warn(
         "NS Selection: EPS to 5GS Mobility Registration Procedure is not "
@@ -273,8 +268,9 @@ bool nssf_slice_select::handle_slice_info_for_registration(
     // ToDo - Validate PlmnId from nssf config (Currently we don't support
     // Roaming scenario)
     http_code = HTTP_STATUS_CODE_503_SERVICE_UNAVAILABLE;
-    Logger::nssf_app().warn("NS Selection: Roming is not Supported yet. "
-                            "HomePlmnId can not be validated !!");
+    Logger::nssf_app().warn(
+        "NS Selection: Roming is not Supported yet. "
+        "HomePlmnId can not be validated !!");
     Logger::nssf_app().info(
         "//---------------------------------------------------------");
     Logger::nssf_app().info("");
@@ -306,8 +302,7 @@ bool nssf_slice_select::handle_slice_info_for_registration(
         // operator configuration may also determine the Configured NSSAI
         return false;
       // Step 4.2. Validate if Requested S-NSSAI is supported in TA
-      if (!validate_rnssai_in_ta(slice_info, auth_slice_info))
-        return false;
+      if (!validate_rnssai_in_ta(slice_info, auth_slice_info)) return false;
       // Step 4.3. Get candidate AMF List for Requested S-NSSAI
       if (!get_valid_amfset(slice_info.getRequestedNssai(), auth_slice_info))
         return false;
@@ -322,10 +317,10 @@ bool nssf_slice_select::handle_slice_info_for_registration(
 }
 //------------------------------------------------------------------------------
 bool nssf_slice_select::handle_slice_info_for_pdu_session(
-    const SliceInfoForPDUSession &slice_info, const Tai &tai,
-    const PlmnId &home_plmnid, const std::string &features, int &http_code,
-    const uint8_t http_version, const ProblemDetails &problem_details,
-    AuthorizedNetworkSliceInfo &auth_slice_info) {
+    const SliceInfoForPDUSession& slice_info, const Tai& tai,
+    const PlmnId& home_plmnid, const std::string& features, int& http_code,
+    const uint8_t http_version, const ProblemDetails& problem_details,
+    AuthorizedNetworkSliceInfo& auth_slice_info) {
   Logger::nssf_app().info(
       "NS Selection: Handle case - PDU Session (HTTP_VERSION %d)",
       http_version);
@@ -350,8 +345,9 @@ bool nssf_slice_select::handle_slice_info_for_pdu_session(
     // ToDo - Validate PlmnId from nssf config (Currently we don't support
     // Roaming scenario)
     http_code = HTTP_STATUS_CODE_503_SERVICE_UNAVAILABLE;
-    Logger::nssf_app().warn("NS Selection: Roming is not Supported yet. "
-                            "HomePlmnId can not be validated !!");
+    Logger::nssf_app().warn(
+        "NS Selection: Roming is not Supported yet. "
+        "HomePlmnId can not be validated !!");
     Logger::nssf_app().info(
         "//---------------------------------------------------------");
     Logger::nssf_app().info("");

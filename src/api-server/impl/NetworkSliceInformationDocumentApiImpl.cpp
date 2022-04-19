@@ -31,24 +31,25 @@ using namespace oai::nssf_server::model;
 extern nssf::nssf_config nssf_cfg;
 
 NetworkSliceInformationDocumentApiImpl::NetworkSliceInformationDocumentApiImpl(
-    std::shared_ptr<Pistache::Rest::Router> rtr, nssf_app *nssf_app_inst,
+    std::shared_ptr<Pistache::Rest::Router> rtr, nssf_app* nssf_app_inst,
     std::string address)
-    : NetworkSliceInformationDocumentApi(rtr), m_nssf_app(nssf_app_inst),
+    : NetworkSliceInformationDocumentApi(rtr),
+      m_nssf_app(nssf_app_inst),
       m_address(address) {}
 
 void NetworkSliceInformationDocumentApiImpl::n_s_selection_get(
-    const Pistache::Optional<NFType> &nfType,
-    const Pistache::Optional<std::string> &nfId,
-    const Pistache::Optional<SliceInfoForRegistration>
-        &sliceInfoRequestForRegistration,
-    const Pistache::Optional<SliceInfoForPDUSession>
-        &sliceInfoRequestForPduSession,
-    const Pistache::Optional<SliceInfoForUEConfigurationUpdate>
-        &sliceInfoRequestForUeCu,
-    const Pistache::Optional<PlmnId> &homePlmnId,
-    const Pistache::Optional<Tai> &tai,
-    const Pistache::Optional<std::string> &supportedFeatures,
-    Pistache::Http::ResponseWriter &response) {
+    const Pistache::Optional<NFType>& nfType,
+    const Pistache::Optional<std::string>& nfId,
+    const Pistache::Optional<SliceInfoForRegistration>&
+        sliceInfoRequestForRegistration,
+    const Pistache::Optional<SliceInfoForPDUSession>&
+        sliceInfoRequestForPduSession,
+    const Pistache::Optional<SliceInfoForUEConfigurationUpdate>&
+        sliceInfoRequestForUeCu,
+    const Pistache::Optional<PlmnId>& homePlmnId,
+    const Pistache::Optional<Tai>& tai,
+    const Pistache::Optional<std::string>& supportedFeatures,
+    Pistache::Http::ResponseWriter& response) {
   int http_code = 0;
 
   std::string nf_id = {};
@@ -70,14 +71,12 @@ void NetworkSliceInformationDocumentApiImpl::n_s_selection_get(
   }
 
   Tai tai_ = {};
-  if (!tai.isEmpty())
-    tai_ = tai.get();
+  if (!tai.isEmpty()) tai_ = tai.get();
 
   PlmnId homePlmnId_ = {};
-  if (!homePlmnId.isEmpty())
-    homePlmnId_ = homePlmnId.get();
+  if (!homePlmnId.isEmpty()) homePlmnId_ = homePlmnId.get();
 
-  SliceInfoForPDUSession sliceInfoRequestForPduSession_ = {};
+  SliceInfoForPDUSession sliceInfoRequestForPduSession_     = {};
   SliceInfoForRegistration sliceInfoRequestForRegistration_ = {};
   if (!sliceInfoRequestForPduSession.isEmpty())
     sliceInfoRequestForPduSession_ = sliceInfoRequestForPduSession.get();
@@ -90,8 +89,8 @@ void NetworkSliceInformationDocumentApiImpl::n_s_selection_get(
     supportedFeatures_ = supportedFeatures.get();
 
   ProblemDetails problem_details = {};
-  nlohmann::json json_data = {};
-  std::string content_type = "application/json";
+  nlohmann::json json_data       = {};
+  std::string content_type       = "application/json";
   std::string json_format;
   AuthorizedNetworkSliceInfo auth_slice_info;
 
@@ -136,6 +135,6 @@ void NetworkSliceInformationDocumentApiImpl::n_s_selection_get(
 }
 // ToDo - UE Registration and UE Config Update
 
-} // namespace api
-} // namespace nssf_server
-} // namespace oai
+}  // namespace api
+}  // namespace nssf_server
+}  // namespace oai

@@ -30,14 +30,14 @@ namespace model {
 ///
 /// </summary>
 class AccessType {
-public:
+ public:
   AccessType();
   virtual ~AccessType();
 
   void validate();
 
-  bool operator==(const AccessType &rhs) const;
-  bool operator!=(const AccessType &rhs) const;
+  bool operator==(const AccessType& rhs) const;
+  bool operator!=(const AccessType& rhs) const;
 
   /////////////////////////////////////////////
   /// AccessType members
@@ -47,18 +47,18 @@ public:
   AccessType_anyOf::eAccessType_anyOf getEnumValue() const;
   void setEnumValue(AccessType_anyOf::eAccessType_anyOf value);
 
-  friend void to_json(nlohmann::json &j, const AccessType &o);
-  friend void from_json(const nlohmann::json &j, AccessType &o);
+  friend void to_json(nlohmann::json& j, const AccessType& o);
+  friend void from_json(const nlohmann::json& j, AccessType& o);
 
-  friend void to_json(nlohmann::json &j, const AccessType_anyOf &o);
-  friend void from_json(const nlohmann::json &j, AccessType_anyOf &o);
+  friend void to_json(nlohmann::json& j, const AccessType_anyOf& o);
+  friend void from_json(const nlohmann::json& j, AccessType_anyOf& o);
 
-protected:
+ protected:
   AccessType_anyOf m_value;
 };
 
-} // namespace model
-} // namespace nssf_server
-} // namespace oai
+}  // namespace model
+}  // namespace nssf_server
+}  // namespace oai
 
 #endif /* AccessType_H_ */

@@ -121,25 +121,25 @@ typedef struct nssf_amf_info_cfg_s {
 } nssf_amf_info_t;
 
 class nssf_config {
-protected:
-  static const bool parse_amf_list(const YAML::Node &conf,
-                                   amf_info_t &amf_info);
+ protected:
+  static const bool parse_amf_list(
+      const YAML::Node& conf, amf_info_t& amf_info);
 
-  static const bool parse_nssai(const YAML::Node &conf,
-                                SupportedNssaiAvailabilityData &nssai_data);
+  static const bool parse_nssai(
+      const YAML::Node& conf, SupportedNssaiAvailabilityData& nssai_data);
 
-private:
-  int load_interface(const libconfig::Setting &if_cfg, interface_cfg_t &cfg);
+ private:
+  int load_interface(const libconfig::Setting& if_cfg, interface_cfg_t& cfg);
 
-  static const bool parse_nsi_info(const YAML::Node &conf,
-                                   nssf_nsi_info_t &cfg);
+  static const bool parse_nsi_info(
+      const YAML::Node& conf, nssf_nsi_info_t& cfg);
 
-  static const bool parse_ta_info(const YAML::Node &conf, nssf_ta_info_t &cfg);
+  static const bool parse_ta_info(const YAML::Node& conf, nssf_ta_info_t& cfg);
 
-  static const bool parse_amf_info(const YAML::Node &conf,
-                                   nssf_amf_info_t &cfg);
+  static const bool parse_amf_info(
+      const YAML::Node& conf, nssf_amf_info_t& cfg);
 
-public:
+ public:
   /* Reader/writer lock for this configuration */
   std::mutex m_rw_lock;
   std::string pid_dir;
@@ -175,14 +175,14 @@ public:
 
   void lock() { m_rw_lock.lock(); };
   void unlock() { m_rw_lock.unlock(); };
-  int load(const std::string &config_file);
+  int load(const std::string& config_file);
   int execute();
   void display();
 
   static bool parse_config();
-  static bool get_slice_config(nlohmann::json &slice_config);
-  static bool get_api_list(nlohmann::json &api_list);
+  static bool get_slice_config(nlohmann::json& slice_config);
+  static bool get_api_list(nlohmann::json& api_list);
 };
-} // namespace nssf
+}  // namespace nssf
 
 #endif /* FILE_nssf_config_HPP_SEEN */

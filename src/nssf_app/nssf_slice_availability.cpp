@@ -40,11 +40,11 @@
 using namespace nssf;
 using namespace std;
 
-extern nssf_slice_avail *nssf_slice_avail_inst;
+extern nssf_slice_avail* nssf_slice_avail_inst;
 extern nssf_config nssf_cfg;
 //------------------------------------------------------------------------------
-bool nssf_slice_avail::amf_set_present(const std::string &target_amf_set,
-                                       amf_info_t &amf_info) {
+bool nssf_slice_avail::amf_set_present(
+    const std::string& target_amf_set, amf_info_t& amf_info) {
   for (auto amf_info_it : nssf_cfg.nssf_amf_info.amf_info_list) {
     if (!amf_info_it.target_amf_set.compare(target_amf_set)) {
       amf_info = amf_info_it;
@@ -55,9 +55,9 @@ bool nssf_slice_avail::amf_set_present(const std::string &target_amf_set,
 }
 //------------------------------------------------------------------------------
 bool nssf_slice_avail::handle_create_nssai_availability(
-    const std::string &nfId, const NssaiAvailabilityInfo &nssaiAvailInfo,
-    AuthorizedNssaiAvailabilityInfo &auth_info, int &http_code,
-    const uint8_t http_version, const ProblemDetails &problem_details) {
+    const std::string& nfId, const NssaiAvailabilityInfo& nssaiAvailInfo,
+    AuthorizedNssaiAvailabilityInfo& auth_info, int& http_code,
+    const uint8_t http_version, const ProblemDetails& problem_details) {
   if (nssaiAvailInfo.amfSetIdIsSet()) {
     std::string amf_set = nssaiAvailInfo.getAmfSetId();
 
@@ -67,17 +67,17 @@ bool nssf_slice_avail::handle_create_nssai_availability(
     if (!amf_set.empty()) {
       amf_info_t amf_info;
       if (amf_set_present(amf_set, amf_info)) {
-        Logger::nssf_app().debug("target_amf_set matched -> %s",
-                                 amf_info.target_amf_set.c_str());
+        Logger::nssf_app().debug(
+            "target_amf_set matched -> %s", amf_info.target_amf_set.c_str());
         bool update_done = false;
         for (auto amf : amf_info.amf_List) {
           if (!amf.first.compare(nfId)) {
             Logger::nssf_app().info(
                 "Replacing nssaiAvailInfo for existing AMF");
             amf.second.clear();
-            amf.second = nssaiAvailInfo.getSupportedNssaiAvailabilityData();
+            amf.second  = nssaiAvailInfo.getSupportedNssaiAvailabilityData();
             update_done = true;
-            http_code = HTTP_STATUS_CODE_204_NO_CONTENT;
+            http_code   = HTTP_STATUS_CODE_204_NO_CONTENT;
             break;
           }
         }
@@ -105,38 +105,38 @@ bool nssf_slice_avail::handle_create_nssai_availability(
 }
 //------------------------------------------------------------------------------
 bool nssf_slice_avail::handle_update_nssai_availability(
-    const std::string &nfId, const std::vector<PatchItem> &patchItem,
-    int &http_code, const uint8_t http_version,
-    const ProblemDetails &problem_details) {
+    const std::string& nfId, const std::vector<PatchItem>& patchItem,
+    int& http_code, const uint8_t http_version,
+    const ProblemDetails& problem_details) {
   // ToDo
   return false;
 }
 //------------------------------------------------------------------------------
 bool nssf_slice_avail::handle_remove_nssai_availability(
-    const std::string &nfId, int &http_code, const uint8_t http_version,
-    const ProblemDetails &problem_details) {
+    const std::string& nfId, int& http_code, const uint8_t http_version,
+    const ProblemDetails& problem_details) {
   // ToDo
   return false;
 }
 //------------------------------------------------------------------------------
 // Handle NSSF NSSAI Availability - Subscription ID (Collection/Document)
 bool nssf_slice_avail::handle_create_subscription_nssai_availability(
-    const NssfEventSubscriptionCreateData &subscriptionData, int &http_code,
-    const uint8_t http_version, const ProblemDetails &problem_details) {
+    const NssfEventSubscriptionCreateData& subscriptionData, int& http_code,
+    const uint8_t http_version, const ProblemDetails& problem_details) {
   // ToDo
   return false;
 }
 //------------------------------------------------------------------------------
 bool nssf_slice_avail::handle_update_subscription_nssai_availability(
-    const NssfEventSubscriptionCreateData &subscriptionData, int &http_code,
-    const uint8_t http_version, const ProblemDetails &problem_details) {
+    const NssfEventSubscriptionCreateData& subscriptionData, int& http_code,
+    const uint8_t http_version, const ProblemDetails& problem_details) {
   // ToDo
   return false;
 }
 //------------------------------------------------------------------------------
 bool nssf_slice_avail::handle_remove_subscription_nssai_availability(
-    const std::string &subscriptionId, int &http_code,
-    const uint8_t http_version, const ProblemDetails &problem_details) {
+    const std::string& subscriptionId, int& http_code,
+    const uint8_t http_version, const ProblemDetails& problem_details) {
   // ToDo
   return false;
 }

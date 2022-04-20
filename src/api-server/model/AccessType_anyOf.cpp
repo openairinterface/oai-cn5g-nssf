@@ -30,12 +30,12 @@ void AccessType_anyOf::validate() const {
   // }
 }
 
-bool AccessType_anyOf::validate(std::stringstream &msg) const {
+bool AccessType_anyOf::validate(std::stringstream& msg) const {
   return validate(msg, "");
 }
 
-bool AccessType_anyOf::validate(std::stringstream &msg,
-                                const std::string &pathPrefix) const {
+bool AccessType_anyOf::validate(
+    std::stringstream& msg, const std::string& pathPrefix) const {
   bool success = true;
   const std::string _pathPrefix =
       pathPrefix.empty() ? "AccessType_anyOf" : pathPrefix;
@@ -49,33 +49,33 @@ bool AccessType_anyOf::validate(std::stringstream &msg,
   return success;
 }
 
-bool AccessType_anyOf::operator==(const AccessType_anyOf &rhs) const {
+bool AccessType_anyOf::operator==(const AccessType_anyOf& rhs) const {
   return getValue() == rhs.getValue()
 
       ;
 }
 
-bool AccessType_anyOf::operator!=(const AccessType_anyOf &rhs) const {
+bool AccessType_anyOf::operator!=(const AccessType_anyOf& rhs) const {
   return !(*this == rhs);
 }
 
-void to_json(nlohmann::json &j, const AccessType_anyOf &o) {
+void to_json(nlohmann::json& j, const AccessType_anyOf& o) {
   j = nlohmann::json();
 
   switch (o.getValue()) {
-  case AccessType_anyOf::eAccessType_anyOf::INVALID_VALUE_OPENAPI_GENERATED:
-    j = "INVALID_VALUE_OPENAPI_GENERATED";
-    break;
-  case AccessType_anyOf::eAccessType_anyOf::ACCESS_3GPP:
-    j = "3GPP_ACCESS";
-    break;
-  case AccessType_anyOf::eAccessType_anyOf::ACCESS_NON_3GPP:
-    j = "NON_3GPP_ACCESS";
-    break;
+    case AccessType_anyOf::eAccessType_anyOf::INVALID_VALUE_OPENAPI_GENERATED:
+      j = "INVALID_VALUE_OPENAPI_GENERATED";
+      break;
+    case AccessType_anyOf::eAccessType_anyOf::ACCESS_3GPP:
+      j = "3GPP_ACCESS";
+      break;
+    case AccessType_anyOf::eAccessType_anyOf::ACCESS_NON_3GPP:
+      j = "NON_3GPP_ACCESS";
+      break;
   }
 }
 
-void from_json(const nlohmann::json &j, AccessType_anyOf &o) {
+void from_json(const nlohmann::json& j, AccessType_anyOf& o) {
   auto s = j.get<std::string>();
   if (s == "3GPP_ACCESS") {
     o.setValue(AccessType_anyOf::eAccessType_anyOf::ACCESS_3GPP);
@@ -97,6 +97,6 @@ void AccessType_anyOf::setValue(AccessType_anyOf::eAccessType_anyOf value) {
   m_value = value;
 }
 
-} // namespace model
-} // namespace nssf_server
-} // namespace oai
+}  // namespace model
+}  // namespace nssf_server
+}  // namespace oai

@@ -17,33 +17,37 @@ namespace oai {
 namespace nssf_server {
 namespace helpers {
 
-std::string toStringValue(const std::string &value) {
+std::string toStringValue(const std::string& value) {
   return std::string(value);
 }
 
-std::string toStringValue(const int32_t &value) {
+std::string toStringValue(const int32_t& value) {
   return std::to_string(value);
 }
 
-std::string toStringValue(const int64_t &value) {
+std::string toStringValue(const int64_t& value) {
   return std::to_string(value);
 }
 
-std::string toStringValue(const bool &value) {
+std::string toStringValue(const bool& value) {
   return value ? std::string("true") : std::string("false");
 }
 
-std::string toStringValue(const float &value) { return std::to_string(value); }
+std::string toStringValue(const float& value) {
+  return std::to_string(value);
+}
 
-std::string toStringValue(const double &value) { return std::to_string(value); }
+std::string toStringValue(const double& value) {
+  return std::to_string(value);
+}
 
-bool fromStringValue(const std::string &inStr, std::string &value) {
+bool fromStringValue(const std::string& inStr, std::string& value) {
   value = std::string(inStr);
   return true;
 }
 
-bool fromStringValue(const std::string &inStr,
-                     oai::nssf_server::model::NFType &value) {
+bool fromStringValue(
+    const std::string& inStr, oai::nssf_server::model::NFType& value) {
   Logger::nssf_sbi().info(" Query_PARAM::NF_TYPE - %s", inStr.c_str());
 
   if (inStr.compare("AMF") == 0)
@@ -67,153 +71,155 @@ bool fromStringValue(const std::string &inStr,
   return true;
 }
 
-bool fromStringValue(const std::string &inStr, int32_t &value) {
+bool fromStringValue(const std::string& inStr, int32_t& value) {
   try {
     value = std::stoi(inStr);
-  } catch (const std::invalid_argument &) {
+  } catch (const std::invalid_argument&) {
     return false;
   }
   return true;
 }
 
-bool fromStringValue(const std::string &inStr, int64_t &value) {
+bool fromStringValue(const std::string& inStr, int64_t& value) {
   try {
     value = std::stol(inStr);
-  } catch (const std::invalid_argument &) {
+  } catch (const std::invalid_argument&) {
     return false;
   }
   return true;
 }
 
-bool fromStringValue(const std::string &inStr, bool &value) {
-  bool result = true;
-  inStr == "true" ? value = true
-                  : inStr == "false" ? value = false : result = false;
+bool fromStringValue(const std::string& inStr, bool& value) {
+  bool result                                = true;
+  inStr == "true" ? value                    = true :
+                    inStr == "false" ? value = false : result = false;
   return result;
 }
 
-bool fromStringValue(const std::string &inStr, float &value) {
+bool fromStringValue(const std::string& inStr, float& value) {
   try {
     value = std::stof(inStr);
-  } catch (const std::invalid_argument &) {
+  } catch (const std::invalid_argument&) {
     return false;
   }
   return true;
 }
 
-bool fromStringValue(const std::string &inStr, double &value) {
+bool fromStringValue(const std::string& inStr, double& value) {
   try {
     value = std::stod(inStr);
-  } catch (const std::invalid_argument &) {
+  } catch (const std::invalid_argument&) {
     return false;
   }
   return true;
 }
 
-bool fromStringValue(const std::string &inStr,
-                     oai::nssf_server::model::ServiceName &value) {
+bool fromStringValue(
+    const std::string& inStr, oai::nssf_server::model::ServiceName& value) {
   // TODO
   return true;
 }
 
-bool fromStringValue(const std::string &inStr,
-                     oai::nssf_server::model::PlmnId &value) {
+bool fromStringValue(
+    const std::string& inStr, oai::nssf_server::model::PlmnId& value) {
   Logger::nssf_sbi().info(" Query_PARAM::HOME_PLMN_ID - %s", inStr.c_str());
   nlohmann::json::parse(inStr.c_str()).get_to(value);
   return true;
 }
 
-bool fromStringValue(const std::string &inStr,
-                     oai::nssf_server::model::SliceInfoForPDUSession &value) {
-  Logger::nssf_sbi().info(" Query_PARAM::SLICE_INFO_PDU_SESSION - %s",
-                          inStr.c_str());
-  nlohmann::json::parse(inStr.c_str()).get_to(value);
-  return true;
-}
-
-bool fromStringValue(const std::string &inStr,
-                     oai::nssf_server::model::SliceInfoForRegistration &value) {
-  Logger::nssf_sbi().info(" Query_PARAM::SLICE_INFO_RESGISTRATION - %s",
-                          inStr.c_str());
+bool fromStringValue(
+    const std::string& inStr,
+    oai::nssf_server::model::SliceInfoForPDUSession& value) {
+  Logger::nssf_sbi().info(
+      " Query_PARAM::SLICE_INFO_PDU_SESSION - %s", inStr.c_str());
   nlohmann::json::parse(inStr.c_str()).get_to(value);
   return true;
 }
 
 bool fromStringValue(
-    const std::string &inStr,
-    oai::nssf_server::model::SliceInfoForUEConfigurationUpdate &value) {
+    const std::string& inStr,
+    oai::nssf_server::model::SliceInfoForRegistration& value) {
+  Logger::nssf_sbi().info(
+      " Query_PARAM::SLICE_INFO_RESGISTRATION - %s", inStr.c_str());
+  nlohmann::json::parse(inStr.c_str()).get_to(value);
+  return true;
+}
+
+bool fromStringValue(
+    const std::string& inStr,
+    oai::nssf_server::model::SliceInfoForUEConfigurationUpdate& value) {
   Logger::nssf_sbi().info(" Query_PARAM::SLICE_INFO_UE_CU - %s", inStr.c_str());
   nlohmann::json::parse(inStr.c_str()).get_to(value);
   return true;
 }
 
-bool fromStringValue(const std::string &inStr,
-                     oai::nssf_server::model::Snssai &value) {
+bool fromStringValue(
+    const std::string& inStr, oai::nssf_server::model::Snssai& value) {
   // TODO
   return true;
 }
 
-bool fromStringValue(const std::string &inStr,
-                     oai::nssf_server::model::PlmnSnssai &value) {
+bool fromStringValue(
+    const std::string& inStr, oai::nssf_server::model::PlmnSnssai& value) {
   // TODO
   return true;
 }
 
-bool fromStringValue(const std::string &inStr,
-                     oai::nssf_server::model::PduSessionType &value) {
+bool fromStringValue(
+    const std::string& inStr, oai::nssf_server::model::PduSessionType& value) {
   // TODO
   return true;
 }
 
-bool fromStringValue(const std::string &inStr,
-                     oai::nssf_server::model::EventId &value) {
+bool fromStringValue(
+    const std::string& inStr, oai::nssf_server::model::EventId& value) {
   // TODO
   return true;
 }
-bool fromStringValue(const std::string &inStr,
-                     oai::nssf_server::model::NwdafEvent &value) {
+bool fromStringValue(
+    const std::string& inStr, oai::nssf_server::model::NwdafEvent& value) {
   // TODO
   return true;
 }
-bool fromStringValue(const std::string &inStr,
-                     oai::nssf_server::model::AccessType &value) {
+bool fromStringValue(
+    const std::string& inStr, oai::nssf_server::model::AccessType& value) {
   // TODO
   return true;
 }
-bool fromStringValue(const std::string &inStr,
-                     oai::nssf_server::model::ComplexQuery &value) {
+bool fromStringValue(
+    const std::string& inStr, oai::nssf_server::model::ComplexQuery& value) {
   // TODO
   return true;
 }
-bool fromStringValue(const std::string &inStr,
-                     oai::nssf_server::model::AtsssCapability &value) {
+bool fromStringValue(
+    const std::string& inStr, oai::nssf_server::model::AtsssCapability& value) {
   // TODO
   return true;
 }
 
-bool fromStringValue(const std::string &inStr,
-                     oai::nssf_server::model::Tai &value) {
+bool fromStringValue(
+    const std::string& inStr, oai::nssf_server::model::Tai& value) {
   Logger::nssf_sbi().info(" Query_PARAM::TAI - %s", inStr.c_str());
   nlohmann::json::parse(inStr.c_str()).get_to(value);
   return true;
 }
 
-bool fromStringValue(const std::string &inStr,
-                     oai::nssf_server::model::Guami &value) {
+bool fromStringValue(
+    const std::string& inStr, oai::nssf_server::model::Guami& value) {
   // TODO
   return true;
 }
 
-bool fromStringValue(const std::string &inStr,
-                     oai::nssf_server::model::Ipv6Prefix &value) {
+bool fromStringValue(
+    const std::string& inStr, oai::nssf_server::model::Ipv6Prefix& value) {
   // TODO
   return true;
 }
-bool fromStringValue(const std::string &inStr,
-                     oai::nssf_server::model::DataSetId &value) {
+bool fromStringValue(
+    const std::string& inStr, oai::nssf_server::model::DataSetId& value) {
   // TODO
   return true;
 }
-} // namespace helpers
-} // namespace nssf_server
-} // namespace oai
+}  // namespace helpers
+}  // namespace nssf_server
+}  // namespace oai

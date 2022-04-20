@@ -64,10 +64,12 @@ std::string nssf_config::slice_config_file;
 #include <unistd.h>
 
 //------------------------------------------------------------------------------
-int nssf_config::execute() { return RETURNok; }
+int nssf_config::execute() {
+  return RETURNok;
+}
 
 //------------------------------------------------------------------------------
-int nssf_config::load_interface(const Setting &if_cfg, interface_cfg_t &cfg) {
+int nssf_config::load_interface(const Setting& if_cfg, interface_cfg_t& cfg) {
   if_cfg.lookupValue(NSSF_CONFIG_STRING_INTERFACE_NAME, cfg.if_name);
   util::trim(cfg.if_name);
   if (not boost::iequals(cfg.if_name, "none")) {
@@ -75,23 +77,23 @@ int nssf_config::load_interface(const Setting &if_cfg, interface_cfg_t &cfg) {
     if_cfg.lookupValue(NSSF_CONFIG_STRING_IPV4_ADDRESS, address);
     util::trim(address);
     if (boost::iequals(address, "read")) {
-      if (get_inet_addr_infos_from_iface(cfg.if_name, cfg.addr4, cfg.network4,
-                                         cfg.mtu)) {
+      if (get_inet_addr_infos_from_iface(
+              cfg.if_name, cfg.addr4, cfg.network4, cfg.mtu)) {
         Logger::nssf_app().error(
             "Could not read %s network interface configuration", cfg.if_name);
         return RETURNerror;
       }
     } else {
       std::vector<std::string> words;
-      boost::split(words, address, boost::is_any_of("/"),
-                   boost::token_compress_on);
+      boost::split(
+          words, address, boost::is_any_of("/"), boost::token_compress_on);
       if (words.size() != 2) {
-        Logger::nssf_app().error("Bad value " NSSF_CONFIG_STRING_IPV4_ADDRESS
-                                 " = %s in config file",
-                                 address.c_str());
+        Logger::nssf_app().error(
+            "Bad value " NSSF_CONFIG_STRING_IPV4_ADDRESS " = %s in config file",
+            address.c_str());
         return RETURNerror;
       }
-      unsigned char buf_in_addr[sizeof(struct in6_addr)]; // you never know...
+      unsigned char buf_in_addr[sizeof(struct in6_addr)];  // you never know...
       if (inet_pton(AF_INET, util::trim(words.at(0)).c_str(), buf_in_addr) ==
           1) {
         memcpy(&cfg.addr4, buf_in_addr, sizeof(struct in_addr));
@@ -102,9 +104,9 @@ int nssf_config::load_interface(const Setting &if_cfg, interface_cfg_t &cfg) {
             util::trim(words.at(0)).c_str());
         return RETURNerror;
       }
-      cfg.network4.s_addr =
-          htons(ntohs(cfg.addr4.s_addr) &
-                0xFFFFFFFF << (32 - std::stoi(util::trim(words.at(1)))));
+      cfg.network4.s_addr = htons(
+          ntohs(cfg.addr4.s_addr) &
+          0xFFFFFFFF << (32 - std::stoi(util::trim(words.at(1)))));
     }
     if_cfg.lookupValue(NSSF_CONFIG_STRING_SBI_PORT_HTTP1, cfg.http1_port);
     if_cfg.lookupValue(NSSF_CONFIG_STRING_SBI_PORT_HTTP2, cfg.http2_port);
@@ -113,7 +115,7 @@ int nssf_config::load_interface(const Setting &if_cfg, interface_cfg_t &cfg) {
 }
 
 //------------------------------------------------------------------------------
-int nssf_config::load(const string &config_file) {
+int nssf_config::load(const string& config_file) {
   Config cfg;
   unsigned char buf_in_addr[sizeof(struct in_addr) + 1];
   unsigned char buf_in6_addr[sizeof(struct in6_addr) + 1];
@@ -121,51 +123,54 @@ int nssf_config::load(const string &config_file) {
   // Read the file. If there is an error, report it and exit.
   try {
     cfg.readFile(config_file.c_str());
-  } catch (const FileIOException &fioex) {
-    Logger::nssf_app().error("I/O error while reading file %s - %s",
-                             config_file.c_str(), fioex.what());
+  } catch (const FileIOException& fioex) {
+    Logger::nssf_app().error(
+        "I/O error while reading file %s - %s", config_file.c_str(),
+        fioex.what());
     throw;
-  } catch (const ParseException &pex) {
-    Logger::nssf_app().error("Parse error at %s:%d - %s", pex.getFile(),
-                             pex.getLine(), pex.getError());
+  } catch (const ParseException& pex) {
+    Logger::nssf_app().error(
+        "Parse error at %s:%d - %s", pex.getFile(), pex.getLine(),
+        pex.getError());
     throw;
   }
 
-  const Setting &root = cfg.getRoot();
+  const Setting& root = cfg.getRoot();
 
   try {
-    const Setting &nssf_cfg = root[NSSF_CONFIG_STRING_NSSF_CONFIG];
-  } catch (const SettingNotFoundException &nfex) {
+    const Setting& nssf_cfg = root[NSSF_CONFIG_STRING_NSSF_CONFIG];
+  } catch (const SettingNotFoundException& nfex) {
     Logger::nssf_app().error("%s : %s", nfex.what(), nfex.getPath());
     return RETURNerror;
   }
 
-  const Setting &nssf_cfg = root[NSSF_CONFIG_STRING_NSSF_CONFIG];
+  const Setting& nssf_cfg = root[NSSF_CONFIG_STRING_NSSF_CONFIG];
 
   try {
-    nssf_cfg.lookupValue(NSSF_CONFIG_STRING_NSSF_SLICE_CONFIG,
-                         slice_config_file);
-  } catch (const SettingNotFoundException &nfex) {
-    Logger::nssf_app().info("%s : %s, No slice_config_file configured",
-                            nfex.what(), nfex.getPath());
+    nssf_cfg.lookupValue(
+        NSSF_CONFIG_STRING_NSSF_SLICE_CONFIG, slice_config_file);
+  } catch (const SettingNotFoundException& nfex) {
+    Logger::nssf_app().info(
+        "%s : %s, No slice_config_file configured", nfex.what(),
+        nfex.getPath());
   }
 
   try {
     nssf_cfg.lookupValue(NSSF_CONFIG_STRING_FQDN, fqdn);
     util::trim(fqdn);
-  } catch (const SettingNotFoundException &nfex) {
-    Logger::nssf_app().info("%s : %s, No FQDN configured", nfex.what(),
-                            nfex.getPath());
+  } catch (const SettingNotFoundException& nfex) {
+    Logger::nssf_app().info(
+        "%s : %s, No FQDN configured", nfex.what(), nfex.getPath());
   }
 
   try {
-    const Setting &nw_if_cfg = nssf_cfg[NSSF_CONFIG_STRING_INTERFACES];
+    const Setting& nw_if_cfg = nssf_cfg[NSSF_CONFIG_STRING_INTERFACES];
 
-    const Setting &sbi_cfg = nw_if_cfg[NSSF_CONFIG_STRING_SBI_INTERFACE];
+    const Setting& sbi_cfg = nw_if_cfg[NSSF_CONFIG_STRING_SBI_INTERFACE];
     load_interface(sbi_cfg, sbi);
 
     sbi_cfg.lookupValue(NSSF_CONFIG_STRING_SBI_API_VERSION, sbi_api_version);
-  } catch (const SettingNotFoundException &nfex) {
+  } catch (const SettingNotFoundException& nfex) {
     Logger::nssf_app().error("%s : %s", nfex.what(), nfex.getPath());
     return RETURNerror;
   }
@@ -174,30 +179,30 @@ int nssf_config::load(const string &config_file) {
 
 //------------------------------------------------------------------------------
 void nssf_config::display() {
-  Logger::nssf_app().info("==== OPENAIRINTERFACE %s v%s ====", PACKAGE_NAME,
-                          PACKAGE_VERSION);
+  Logger::nssf_app().info(
+      "==== OPENAIRINTERFACE %s v%s ====", PACKAGE_NAME, PACKAGE_VERSION);
   Logger::nssf_app().info("Configuration:");
   Logger::nssf_app().info("- FQDN ..................: %s", fqdn.c_str());
   Logger::nssf_app().info("- SBI:");
   Logger::nssf_app().info("    iface ............: %s", sbi.if_name.c_str());
   Logger::nssf_app().info("    ipv4.addr ........: %s", inet_ntoa(sbi.addr4));
-  Logger::nssf_app().info("    ipv4.mask ........: %s",
-                          inet_ntoa(sbi.network4));
+  Logger::nssf_app().info(
+      "    ipv4.mask ........: %s", inet_ntoa(sbi.network4));
   Logger::nssf_app().info("    mtu ..............: %d", sbi.mtu);
   Logger::nssf_app().info("    http1_port .......: %u", sbi.http1_port);
   Logger::nssf_app().info("    http2_port .......: %u", sbi.http2_port);
-  Logger::nssf_app().info("    api_version ......: %s",
-                          sbi_api_version.c_str());
+  Logger::nssf_app().info(
+      "    api_version ......: %s", sbi_api_version.c_str());
 }
 
 //------------------------------------------------------------------------------
-const bool nssf_config::parse_nsi_info(const YAML::Node &conf,
-                                       nssf_nsi_info_t &cfg) {
+const bool nssf_config::parse_nsi_info(
+    const YAML::Node& conf, nssf_nsi_info_t& cfg) {
   static std::mutex mutex;
   try {
     for (YAML::const_iterator it = conf.begin(); it != conf.end(); ++it) {
       nsi_info_t nsi_info;
-      const YAML::Node &nsiInfo = *it;
+      const YAML::Node& nsiInfo = *it;
 
       // nsiInformationList
       nsi_info.nsi_info.setNrfId(
@@ -218,21 +223,21 @@ const bool nssf_config::parse_nsi_info(const YAML::Node &conf,
       cfg.nsi_info_list.push_back(nsi_info);
     }
     cfg.nsi_info_list.shrink_to_fit();
-  } catch (std::exception &e) {
+  } catch (std::exception& e) {
     Logger::nssf_app().error("Eror parsing NsiInfo");
     return false;
   }
   return true;
 }
 //------------------------------------------------------------------------------
-const bool nssf_config::parse_ta_info(const YAML::Node &conf,
-                                      nssf_ta_info_t &cfg) {
+const bool nssf_config::parse_ta_info(
+    const YAML::Node& conf, nssf_ta_info_t& cfg) {
   static std::mutex mutex;
   try {
     for (YAML::const_iterator it = conf.begin(); it != conf.end(); ++it) {
       ta_info_t ta_info;
       PlmnId plmn_id;
-      const YAML::Node &taInfo = *it;
+      const YAML::Node& taInfo = *it;
 
       // Set Tai
       plmn_id.setMcc(taInfo["tai"]["plmnId"]["mcc"].as<string>());
@@ -244,7 +249,7 @@ const bool nssf_config::parse_ta_info(const YAML::Node &conf,
       cfg.ta_info_list.push_back(ta_info);
     }
     cfg.ta_info_list.shrink_to_fit();
-  } catch (std::exception &e) {
+  } catch (std::exception& e) {
     Logger::nssf_app().error("Eror parsing TaInfo");
     return false;
   }
@@ -252,9 +257,8 @@ const bool nssf_config::parse_ta_info(const YAML::Node &conf,
 }
 
 //------------------------------------------------------------------------------
-const bool
-nssf_config::parse_nssai(const YAML::Node &conf,
-                         SupportedNssaiAvailabilityData &nssai_data) {
+const bool nssf_config::parse_nssai(
+    const YAML::Node& conf, SupportedNssaiAvailabilityData& nssai_data) {
   try {
     Tai tai;
     PlmnId plmn_id;
@@ -269,30 +273,29 @@ nssf_config::parse_nssai(const YAML::Node &conf,
     nssai_data.setTai(tai);
 
     // Parse Supported Snssai List
-    const YAML::Node &slices = conf["supportedSnssaiList"];
+    const YAML::Node& slices = conf["supportedSnssaiList"];
     for (YAML::const_iterator it = slices.begin(); it != slices.end(); ++it) {
-      const YAML::Node &snssai = *it;
+      const YAML::Node& snssai = *it;
       ExtSnssai e_snssai;
       e_snssai.setSst(snssai["sst"].as<uint32_t>());
-      if (snssai["sd"])
-        e_snssai.setSd(snssai["sd"].as<string>());
+      if (snssai["sd"]) e_snssai.setSd(snssai["sd"].as<string>());
       snssai_list.push_back(e_snssai);
     }
     nssai_data.setSupportedSnssaiList(snssai_list);
 
-  } catch (std::exception &e) {
+  } catch (std::exception& e) {
     Logger::nssf_app().error("Eror parsing amfList");
     return false;
   }
   return true;
 }
 //------------------------------------------------------------------------------
-const bool nssf_config::parse_amf_list(const YAML::Node &conf,
-                                       amf_info_t &amf_info) {
+const bool nssf_config::parse_amf_list(
+    const YAML::Node& conf, amf_info_t& amf_info) {
   static std::mutex mutex;
   try {
     for (YAML::const_iterator ita = conf.begin(); ita != conf.end(); ++ita) {
-      const YAML::Node &amf = *ita;
+      const YAML::Node& amf = *ita;
       std::vector<SupportedNssaiAvailabilityData> nssai_data_list;
       SupportedNssaiAvailabilityData nssai_data;
       // ToDo:- Parse as a list
@@ -300,7 +303,7 @@ const bool nssf_config::parse_amf_list(const YAML::Node &conf,
       nssai_data_list.push_back(nssai_data);
       amf_info.amf_List.emplace_back(amf["nfId"].as<string>(), nssai_data_list);
     }
-  } catch (std::exception &e) {
+  } catch (std::exception& e) {
     Logger::nssf_app().error("Eror parsing amfList");
     return false;
   }
@@ -308,23 +311,22 @@ const bool nssf_config::parse_amf_list(const YAML::Node &conf,
 }
 
 //------------------------------------------------------------------------------
-const bool nssf_config::parse_amf_info(const YAML::Node &conf,
-                                       nssf_amf_info_t &cfg) {
+const bool nssf_config::parse_amf_info(
+    const YAML::Node& conf, nssf_amf_info_t& cfg) {
   static std::mutex mutex;
   try {
     for (YAML::const_iterator it = conf.begin(); it != conf.end(); ++it) {
       amf_info_t amf_info;
-      const YAML::Node &amfInfo = *it;
+      const YAML::Node& amfInfo = *it;
 
       // amInfoList
-      amf_info.target_amf_set = amfInfo["targetAmfSet"].as<string>();
-      amf_info.nrf_amf_set = amfInfo["nrfAmfSet"].as<string>();
+      amf_info.target_amf_set  = amfInfo["targetAmfSet"].as<string>();
+      amf_info.nrf_amf_set     = amfInfo["nrfAmfSet"].as<string>();
       amf_info.nrf_amf_set_mgt = amfInfo["nrfAmfSetNfMgtUri"].as<string>();
-      if (!parse_amf_list(amfInfo["amfList"], amf_info))
-        throw std::exception();
+      if (!parse_amf_list(amfInfo["amfList"], amf_info)) throw std::exception();
       cfg.amf_info_list.push_back(amf_info);
     }
-  } catch (std::exception &e) {
+  } catch (std::exception& e) {
     Logger::nssf_app().error("Eror parsing amfInfo");
     return false;
   }
@@ -335,7 +337,7 @@ bool nssf_config::parse_config() {
   YAML::Node config = {};
   try {
     config = YAML::LoadFile(slice_config_file.c_str());
-  } catch (nlohmann::detail::exception &e) {
+  } catch (nlohmann::detail::exception& e) {
     std::cout << "The slice config file specified does not exists" << std::endl;
     return false;
   }
@@ -374,7 +376,7 @@ bool nssf_config::parse_config() {
 // }
 
 //------------------------------------------------------------------------------
-bool nssf_config::get_api_list(nlohmann::json &api_list) {
+bool nssf_config::get_api_list(nlohmann::json& api_list) {
   api_list["OAI-NSSF"] = {
       {"Organisation", "Openairinterface Software Aliance"},
       {"Description", "OAI-NSSF initial Release"},

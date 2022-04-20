@@ -40,17 +40,17 @@
 using namespace nssf;
 using namespace std;
 
-extern nssf_app *nssf_app_inst;
+extern nssf_app* nssf_app_inst;
 extern nssf_config nssf_cfg;
 
-void nssf_app_task(void *);
+void nssf_app_task(void*);
 
 //------------------------------------------------------------------------------
 void nssf_app::handle_slice_info_for_registration(
-    const SliceInfoForRegistration &slice_info, const Tai &tai,
-    const PlmnId &home_plmnid, const std::string &features, int &http_code,
-    const uint8_t http_version, ProblemDetails &problem_details,
-    AuthorizedNetworkSliceInfo &auth_slice_info) {
+    const SliceInfoForRegistration& slice_info, const Tai& tai,
+    const PlmnId& home_plmnid, const std::string& features, int& http_code,
+    const uint8_t http_version, ProblemDetails& problem_details,
+    AuthorizedNetworkSliceInfo& auth_slice_info) {
   if (nssf_nss.handle_slice_info_for_registration(
           slice_info, tai, home_plmnid, features, http_code, http_version,
           problem_details, auth_slice_info)) {
@@ -73,10 +73,10 @@ void nssf_app::handle_slice_info_for_registration(
 
 //------------------------------------------------------------------------------
 void nssf_app::handle_slice_info_for_pdu_session(
-    const SliceInfoForPDUSession &slice_info, const Tai &tai,
-    const PlmnId &home_plmnid, const std::string &features, int &http_code,
-    const uint8_t http_version, ProblemDetails &problem_details,
-    AuthorizedNetworkSliceInfo &auth_slice_info) {
+    const SliceInfoForPDUSession& slice_info, const Tai& tai,
+    const PlmnId& home_plmnid, const std::string& features, int& http_code,
+    const uint8_t http_version, ProblemDetails& problem_details,
+    AuthorizedNetworkSliceInfo& auth_slice_info) {
   if (nssf_nss.handle_slice_info_for_pdu_session(
           slice_info, tai, home_plmnid, features, http_code, http_version,
           problem_details, auth_slice_info)) {
@@ -99,19 +99,19 @@ void nssf_app::handle_slice_info_for_pdu_session(
 
 //------------------------------------------------------------------------------
 void nssf_app::handle_slice_info_for_ue_cu(
-    const SliceInfoForUEConfigurationUpdate &slice_info, const Tai &tai,
-    const PlmnId &home_plmnid, const std::string &features, int &http_code,
-    const uint8_t http_version, ProblemDetails &problem_details) {
+    const SliceInfoForUEConfigurationUpdate& slice_info, const Tai& tai,
+    const PlmnId& home_plmnid, const std::string& features, int& http_code,
+    const uint8_t http_version, ProblemDetails& problem_details) {
   // ToDo:
 }
 //------------------------------------------------------------------------------
 void nssf_app::handle_create_nssai_availability(
-    const std::string &nfId, const NssaiAvailabilityInfo &nssaiAvailInfo,
-    AuthorizedNssaiAvailabilityInfo &auth_info, int &http_code,
-    const uint8_t http_version, ProblemDetails &problem_details) {
-  if (nssf_nsa.handle_create_nssai_availability(nfId, nssaiAvailInfo, auth_info,
-                                                http_code, http_version,
-                                                problem_details)) {
+    const std::string& nfId, const NssaiAvailabilityInfo& nssaiAvailInfo,
+    AuthorizedNssaiAvailabilityInfo& auth_info, int& http_code,
+    const uint8_t http_version, ProblemDetails& problem_details) {
+  if (nssf_nsa.handle_create_nssai_availability(
+          nfId, nssaiAvailInfo, auth_info, http_code, http_version,
+          problem_details)) {
     Logger::nssf_app().info(
         "NSSAI_AVAIL: NssaiAvailabilityInfo Successfully Created/Replaced !!!");
     Logger::nssf_app().info(

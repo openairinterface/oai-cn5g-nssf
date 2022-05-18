@@ -47,8 +47,36 @@ void NFInstanceIDDocumentApiImpl::n_ssai_availability_put(
     const Pistache::Optional<Pistache::Http::Header::Raw>& contentEncoding,
     const Pistache::Optional<Pistache::Http::Header::Raw>& acceptEncoding,
     Pistache::Http::ResponseWriter& response) {
-  response.send(
-      Pistache::Http::Code::Service_Unavailable, "API NOT IMPLEMENTED\n");
+  Logger::nssf_sbi().info(
+      "NSSAI Availability: Got a request to "
+      "Updates/replaces the NSSF with the S-NSSAIs");
+  Logger::nssf_sbi().info("NSSAI Availability: Instance ID: %s", nfId.c_str());
+
+  int http_code                  = 0;
+  ProblemDetails problem_details = {};
+  nlohmann::json json_data       = {};
+  std::string content_type       = "application/json";
+  AuthorizedNssaiAvailabilityInfo auth_nssai_avail_info;
+
+  m_nssf_app->handle_create_nssai_availability(
+      nfId, nssaiAvailabilityInfo, auth_nssai_avail_info, http_code, 1,
+      problem_details);
+
+  if (http_code != HTTP_STATUS_CODE_200_OK) {
+    to_json(json_data, problem_details);
+    content_type = "application/problem+json";
+    // content type
+    response.headers().add<Pistache::Http::Header::ContentType>(
+        Pistache::Http::Mime::MediaType(content_type));
+    response.send(Pistache::Http::Code(http_code), json_data.dump().c_str());
+    return;
+  } else {
+    to_json(json_data, auth_nssai_avail_info);
+    content_type = "application/json";
+    response.headers().add<Pistache::Http::Header::ContentType>(
+        Pistache::Http::Mime::MediaType(content_type));
+    response.send(Pistache::Http::Code(http_code), json_data.dump().c_str());
+  }
 }
 
 }  // namespace api

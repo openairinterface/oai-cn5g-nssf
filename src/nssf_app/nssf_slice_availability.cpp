@@ -60,7 +60,10 @@ bool nssf_slice_avail::handle_create_nssai_availability(
     const uint8_t http_version, const ProblemDetails& problem_details) {
   if (nssaiAvailInfo.amfSetIdIsSet()) {
     std::string amf_set = nssaiAvailInfo.getAmfSetId();
-
+    Logger::nssf_app().info(
+        "NS Availability: Create NSSAIs availability info for AMF "
+        "(HTTP_VERSION %d)",
+        http_version);
     // ToDo:- Check if SupportedSnssaiList & Tai in valid in plmn
 
     // Check if target_amf_set is present in nssf slice config

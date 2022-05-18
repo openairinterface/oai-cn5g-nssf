@@ -42,11 +42,11 @@ void NFInstanceIDDocumentApi::setupRoutes() {
       Routes::bind(
           &NFInstanceIDDocumentApi::n_ssai_availability_delete_handler, this));
   Routes::Patch(
-      *router, base + "/nssai-availability/:nfId",
+      *router, base + nssf_cfg.sbi_api_version + "/nssai-availability/:nfId",
       Routes::bind(
           &NFInstanceIDDocumentApi::n_ssai_availability_patch_handler, this));
   Routes::Put(
-      *router, base + "/nssai-availability/:nfId",
+      *router, base + nssf_cfg.sbi_api_version + "/nssai-availability/:nfId",
       Routes::bind(
           &NFInstanceIDDocumentApi::n_ssai_availability_put_handler, this));
 

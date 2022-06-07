@@ -48,7 +48,8 @@ extern nssf_config nssf_cfg;
 //------------------------------------------------------------------------------
 bool nssf_slice_select::compare_snssai(const Snssai a, const Snssai b) {
   if (a.getSst() == b.getSst()) {
-    if (a.sdIsSet() || b.sdIsSet()) {
+    if ((a.sdIsSet() || b.sdIsSet()) and
+        (a.getSst() >= SST_MAX_STANDARDIZED_VALUE)) {
       if (a.getSd().compare(b.getSd())) return false;
     }
     return true;

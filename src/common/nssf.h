@@ -25,6 +25,8 @@
 #include "3gpp_29.571.h"
 #include <nlohmann/json.hpp>
 
+const uint8_t SST_MAX_STANDARDIZED_VALUE = 127;
+
 // SMF + AMF + 3GPP TS 29.571 (Common data)
 enum class http_response_codes_e {
   HTTP_RESPONSE_CODE_OK                     = 200,

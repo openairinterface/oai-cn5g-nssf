@@ -25,6 +25,8 @@
 #include "3gpp_29.571.h"
 #include <nlohmann/json.hpp>
 
+const uint8_t SST_MAX_STANDARDIZED_VALUE = 127;
+
 // SMF + AMF + 3GPP TS 29.571 (Common data)
 enum class http_response_codes_e {
   HTTP_RESPONSE_CODE_OK                     = 200,
@@ -57,6 +59,7 @@ enum class http_response_codes_e {
 #define ROAMING_IND_HOME_ROUTED_ROAMING (3)
 
 // NF TYPES
+#define NF_TYPE_NWDAP "NWDAP"
 #define NF_TYPE_SMF "SMF"
 #define NF_TYPE_NSSF "NSSF"
 #define NF_TYPE_AMF "AMF"
@@ -86,6 +89,7 @@ enum class http_response_codes_e {
 #define HOME_PLMN_ID "home-plmn-id"
 #define TAI "tai"
 #define SUPPORTED_FEATURES "supported-features"
+#define SUPPORTED_NSSAI_AVAILABILITY_DATA "supportedNssaiAvailabilityData"
 
 #define SLICE_INFO_REGISTRATION "slice-info-request-for-registration"
 #define SLICE_INFO_PDU_SESSION "slice-info-request-for-pdu-session"

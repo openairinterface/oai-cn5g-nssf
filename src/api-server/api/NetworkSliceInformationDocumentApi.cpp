@@ -99,10 +99,11 @@ void NetworkSliceInformationDocumentApi::n_s_selection_get_handler(
         sliceInfoRequestForRegistration;
     if (!sliceInfoRequestForRegistrationQuery.isEmpty()) {
       SliceInfoForRegistration valueQuery_instance;
-      // if(fromStringValue(sliceInfoRequestForRegistrationQuery.get(),
-      // valueQuery_instance)){
-      sliceInfoRequestForRegistration = Pistache::Some(valueQuery_instance);
-      // }
+      if (fromStringValue(
+              sliceInfoRequestForRegistrationQuery.get(),
+              valueQuery_instance)) {
+        sliceInfoRequestForRegistration = Pistache::Some(valueQuery_instance);
+      }
     }
     auto sliceInfoRequestForPduSessionQuery =
         request.query().get("slice-info-request-for-pdu-session");
@@ -120,10 +121,15 @@ void NetworkSliceInformationDocumentApi::n_s_selection_get_handler(
         sliceInfoRequestForUeCu;
     if (!sliceInfoRequestForUeCuQuery.isEmpty()) {
       SliceInfoForUEConfigurationUpdate valueQuery_instance;
-      // if(fromStringValue(sliceInfoRequestForUeCuQuery.get(),
-      // valueQuery_instance)){
-      sliceInfoRequestForUeCu = Pistache::Some(valueQuery_instance);
-      // }
+      if (fromStringValue(
+              sliceInfoRequestForUeCuQuery.get(), valueQuery_instance)) {
+        sliceInfoRequestForUeCu = Pistache::Some(valueQuery_instance);
+      }
+      Logger::nssf_app().error("NS Selection failure !!!");
+      response.send(
+          Pistache::Http::Code::Not_Found,
+          "The requested method does not exist");
+      return;
     }
     auto homePlmnIdQuery = request.query().get("home-plmn-id");
     Pistache::Optional<PlmnId> homePlmnId;

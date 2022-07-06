@@ -33,6 +33,8 @@
 #include "PlmnSnssai.h"
 #include "ServiceName.h"
 #include "SliceInfoForPDUSession.h"
+#include "SliceInfoForRegistration.h"
+#include "SliceInfoForUEConfigurationUpdate.h"
 #include "Snssai.h"
 #include "Tai.h"
 #include <ctime>
@@ -83,7 +85,13 @@ bool fromStringValue(
     const std::string& inStr, oai::nssf_server::model::PlmnId& value);
 bool fromStringValue(
     const std::string& inStr,
+    oai::nssf_server::model::SliceInfoForRegistration& value);
+bool fromStringValue(
+    const std::string& inStr,
     oai::nssf_server::model::SliceInfoForPDUSession& value);
+bool fromStringValue(
+    const std::string& inStr,
+    oai::nssf_server::model::SliceInfoForUEConfigurationUpdate& value);
 bool fromStringValue(
     const std::string& inStr, oai::nssf_server::model::Snssai& value);
 bool fromStringValue(

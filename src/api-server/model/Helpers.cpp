@@ -137,6 +137,23 @@ bool fromStringValue(
 }
 
 bool fromStringValue(
+    const std::string& inStr,
+    oai::nssf_server::model::SliceInfoForRegistration& value) {
+  Logger::nssf_sbi().info(
+      " Query_PARAM::SLICE_INFO_RESGISTRATION - %s", inStr.c_str());
+  nlohmann::json::parse(inStr.c_str()).get_to(value);
+  return true;
+}
+
+bool fromStringValue(
+    const std::string& inStr,
+    oai::nssf_server::model::SliceInfoForUEConfigurationUpdate& value) {
+  Logger::nssf_sbi().info(" Query_PARAM::SLICE_INFO_UE_CU - %s", inStr.c_str());
+  nlohmann::json::parse(inStr.c_str()).get_to(value);
+  return true;
+}
+
+bool fromStringValue(
     const std::string& inStr, oai::nssf_server::model::Snssai& value) {
   // TODO
   return true;

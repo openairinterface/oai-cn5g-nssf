@@ -44,8 +44,8 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Some GIT configuration command quite useful
-RUN /bin/bash -c "if [[ -v NEEDED_GIT_PROXY ]]; then git config --global http.proxy $NEEDED_GIT_PROXY; fi" && \
-    git config --global https.postBuffer 123289600 && \
+RUN /bin/bash -c "if [[ -v NEEDED_GIT_PROXY ]]; then git config --global http.proxy $NEEDED_GIT_PROXY; fi"
+RUN git config --global https.postBuffer 123289600 && \
     git config --global http.sslverify false
 
 # Copying source code
@@ -56,6 +56,7 @@ COPY . /openair-nssf
 WORKDIR /openair-nssf/build/scripts
 RUN ./build_nssf --install-deps --force
 RUN ./build_nssf --clean --Verbose --build-type Release --jobs && \
+    ldd /openair-nssf/build/nssf/build/nssf && \
     mv /openair-nssf/build/nssf/build/nssf /openair-nssf/build/nssf/build/oai_nssf
 
 #---------------------------------------------------------------------
@@ -72,7 +73,6 @@ RUN apt-get update && \
       net-tools \
       tzdata \
       bc \
-      tshark \
       openssl \
       libasan4 \
  && rm -rf /var/lib/apt/lists/*
@@ -88,21 +88,24 @@ WORKDIR /usr/local/lib/
 COPY --from=oai-nssf-builder \
     /usr/lib/libboost_system.so.1.67.0 \
     /usr/local/lib/libpistache.so \
+    /usr/local/lib/libnghttp2.so.14 \
     /usr/local/lib/libnghttp2_asio.so.1 \
+    /usr/local/lib/libyaml-cpp.so.0.7 \
     /usr/lib/x86_64-linux-gnu/libcurl-gnutls.so.4 \
     /usr/lib/x86_64-linux-gnu/librtmp.so.1 \
     /usr/lib/x86_64-linux-gnu/libpsl.so.5 \
     /usr/lib/x86_64-linux-gnu/libconfig++.so.9 \
     ./
 
-RUN ldconfig
+RUN ldconfig && \
+    ldd /openair-nssf/bin/oai_nssf
 
 # Copying template configuration files
 # The configuration folder will be flat
 WORKDIR /openair-nssf/etc
 COPY --from=oai-nssf-builder \
     /openair-nssf/etc/nssf.conf \
-    /openair-nssf/etc/nssf_slice_config.json \
+    /openair-nssf/etc/nssf_slice_config.yaml \
     ./
 
 WORKDIR /openair-nssf

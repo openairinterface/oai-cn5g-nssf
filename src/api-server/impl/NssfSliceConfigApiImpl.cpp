@@ -53,17 +53,18 @@ void NssfSliceConfigApiImpl::nssf_slice_config_get(
   nlohmann::json json_data = {};
   std::string content_type = "application/json";
 
-  if (nssf_cfg.get_slice_config(json_data)) {
-    http_code = HTTP_STATUS_CODE_200_OK;
-    response.headers().add<Pistache::Http::Header::ContentType>(
-        Pistache::Http::Mime::MediaType(content_type));
-    response.send(Pistache::Http::Code(http_code), json_data.dump(4).c_str());
-  } else {
-    http_code = HTTP_STATUS_CODE_503_SERVICE_UNAVAILABLE;
-    response.headers().add<Pistache::Http::Header::ContentType>(
-        Pistache::Http::Mime::MediaType(content_type));
-    response.send(Pistache::Http::Code(http_code));
-  }
+  // if (nssf_cfg.get_slice_config(json_data)) {
+  //   http_code = HTTP_STATUS_CODE_200_OK;
+  //   response.headers().add<Pistache::Http::Header::ContentType>(
+  //       Pistache::Http::Mime::MediaType(content_type));
+  //   response.send(Pistache::Http::Code(http_code),
+  //   json_data.dump(4).c_str());
+  // } else {
+  http_code = HTTP_STATUS_CODE_503_SERVICE_UNAVAILABLE;
+  response.headers().add<Pistache::Http::Header::ContentType>(
+      Pistache::Http::Mime::MediaType(content_type));
+  response.send(Pistache::Http::Code(http_code));
+  // }
 }
 //---------------------------------------------------------------------
 

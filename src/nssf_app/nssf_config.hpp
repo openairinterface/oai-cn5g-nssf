@@ -30,7 +30,7 @@
 #define FILE_nssf_config_HPP_SEEN
 
 #include "3gpp_29.510.h"
-#include "NetworkSliceInformationDocumentApiImpl.h"
+#include "logger.hpp"
 #include <libconfig.h++>
 #include <mutex>
 #include <netinet/in.h>
@@ -39,8 +39,17 @@
 #include <stdint.h>
 #include <string>
 #include <unistd.h>
+#include <yaml-cpp/yaml.h>
+
+#include "NsiInformation.h"
+#include "PlmnId.h"
+#include "Snssai.h"
+#include "SupportedNssaiAvailabilityData.h"
+#include "Tai.h"
 
 namespace nssf {
+
+using namespace oai::nssf_server::model;
 
 #define NSSF_CONFIG_STRING_NSSF_CONFIG "NSSF"
 #define NSSF_CONFIG_STRING_FQDN "FQDN"
@@ -82,11 +91,11 @@ typedef struct interface_cfg_s {
 
 typedef struct nsi_info_s {
   Snssai snssai;
-  NsiInformation nsiInfo;
+  NsiInformation nsi_info;
 } nsi_info_t;
 
 typedef struct nssf_nsi_info_cfg_s {
-  std::vector<nsi_info_t> nsiInfoList;
+  std::vector<nsi_info_t> nsi_info_list;
 } nssf_nsi_info_t;
 
 typedef struct ta_info_s {
@@ -95,19 +104,40 @@ typedef struct ta_info_s {
 } ta_info_t;
 
 typedef struct nssf_ta_info_cfg_s {
-  std::vector<ta_info_t> taInfoList;
+  std::vector<ta_info_t> ta_info_list;
 } nssf_ta_info_t;
 
+typedef struct amf_info_s {
+  std::string target_amf_set;
+  std::string nrf_amf_set;
+  std::string nrf_amf_set_mgt;
+  std::vector<
+      std::pair<std::string, std::vector<SupportedNssaiAvailabilityData>>>
+      amf_List;
+} amf_info_t;
+
+typedef struct nssf_amf_info_cfg_s {
+  std::vector<amf_info_t> amf_info_list;
+} nssf_amf_info_t;
+
 class nssf_config {
+ protected:
+  static const bool parse_amf_list(
+      const YAML::Node& conf, amf_info_t& amf_info);
+
+  static const bool parse_nssai(
+      const YAML::Node& conf, SupportedNssaiAvailabilityData& nssai_data);
+
  private:
   int load_interface(const libconfig::Setting& if_cfg, interface_cfg_t& cfg);
 
-  static const bool ParseNsiInfo(
-      const nlohmann::json& conf, nssf_nsi_info_t& cfg);
+  static const bool parse_nsi_info(
+      const YAML::Node& conf, nssf_nsi_info_t& cfg);
 
-  static const bool ParseTaInfo(
-      const nlohmann::json& conf, nssf_ta_info_t& cfg);
-  static nlohmann::json nssf_slice_config;
+  static const bool parse_ta_info(const YAML::Node& conf, nssf_ta_info_t& cfg);
+
+  static const bool parse_amf_info(
+      const YAML::Node& conf, nssf_amf_info_t& cfg);
 
  public:
   /* Reader/writer lock for this configuration */
@@ -122,6 +152,7 @@ class nssf_config {
 
   static nssf_nsi_info_t nssf_nsi_info;
   static nssf_ta_info_t nssf_ta_info;
+  static nssf_amf_info_t nssf_amf_info;
 
   struct {
     bool register_nrf;
@@ -148,12 +179,7 @@ class nssf_config {
   int execute();
   void display();
 
-  static bool ParseJson();
-  static bool ValidateTA(Tai tai, std::vector<Snssai> rejected_snssai);
-  static bool ValidateTA(const Tai& tai);
-  static bool ValidateNSI(
-      const SliceInfoForPDUSession& slice_info, NsiInformation& nsi_info);
-
+  static bool parse_config();
   static bool get_slice_config(nlohmann::json& slice_config);
   static bool get_api_list(nlohmann::json& api_list);
 };

@@ -16,22 +16,22 @@
 
 #include "common_defs.h"
 #include "logger.hpp"
-#include "options.hpp"
-#include "pid_file.hpp"
-#include "nssf_app.hpp"
-#include "nssf_config.hpp"
 #include "nssf-api-server.h"
 #include "nssf-http2-server.h"
+#include "nssf_app.hpp"
+#include "nssf_config.hpp"
+#include "options.hpp"
+#include "pid_file.hpp"
 #include "pistache/endpoint.h"
 #include "pistache/http.h"
 #include "pistache/router.h"
 
+#include <algorithm>
 #include <boost/asio.hpp>
 #include <iostream>
-#include <algorithm>
-#include <thread>
 #include <signal.h>
 #include <stdint.h>
+#include <thread>
 #include <unistd.h>  // get_pid(), pause()
 #include <vector>
 
@@ -123,7 +123,6 @@ int main(int argc, char** argv) {
 
   // Logger
   Logger::init("nssf", Options::getlogStdout(), Options::getlogRotFilelog());
-  Logger::nssf_app().startup("Options parsed");
 
   struct sigaction sigIntHandler;
   sigIntHandler.sa_handler = my_app_signal_handler;
@@ -133,12 +132,12 @@ int main(int argc, char** argv) {
 
   // Config
   nssf_cfg.load(Options::getlibconfigConfig());
-  nssf_cfg.display();
-
-  if (!nssf_cfg.ParseJson()) {
-    std::cout << "nssf_cfg::ParseJson() failed" << std::endl;
+  if (!nssf_cfg.parse_config()) {
+    std::cout << "nssf_cfg::parse_config() failed" << std::endl;
     return 1;
   }
+  Logger::nssf_app().startup("Config parsed");
+  nssf_cfg.display();
 
   // PID file
   // Currently hard-coded value. TODO: add as config option.

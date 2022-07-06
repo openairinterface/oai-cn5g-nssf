@@ -79,7 +79,7 @@ class nssf_http2_server {
       const response& response);
 
   // NSSF NSSAI Availability - NF Instance ID (Document)
-  void create_n_ssai_availability_handler(
+  void create_nssai_availability_handler(
       const std::string& nfId, const NssaiAvailabilityInfo& nssaiAvailInfo,
       const response& response);
 

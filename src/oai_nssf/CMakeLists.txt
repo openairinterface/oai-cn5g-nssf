@@ -294,5 +294,5 @@ ENDIF(STATIC_LINKING)
 
 # folly glog dl double-conversion for FB folly library
 target_link_libraries (nssf ${ASAN}  -Wl,--start-group CN_UTILS NSSF NSSF_API 3GPP_COMMON_TYPES ${CRYPTO_LIBRARIES} -lnghttp2_asio -lboost_system -lboost_thread -lssl -lcrypto  dl -Wl,--end-group
-pthread m rt config++  event boost_system pistache curl)
+pthread m rt config++  event boost_system pistache curl -lyaml-cpp )
 

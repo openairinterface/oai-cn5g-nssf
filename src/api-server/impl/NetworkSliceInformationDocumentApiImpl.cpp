@@ -76,9 +76,13 @@ void NetworkSliceInformationDocumentApiImpl::n_s_selection_get(
   PlmnId homePlmnId_ = {};
   if (!homePlmnId.isEmpty()) homePlmnId_ = homePlmnId.get();
 
-  SliceInfoForPDUSession sliceInfoRequestForPduSession_ = {};
+  SliceInfoForPDUSession sliceInfoRequestForPduSession_     = {};
+  SliceInfoForRegistration sliceInfoRequestForRegistration_ = {};
   if (!sliceInfoRequestForPduSession.isEmpty())
     sliceInfoRequestForPduSession_ = sliceInfoRequestForPduSession.get();
+
+  if (!sliceInfoRequestForRegistration.isEmpty())
+    sliceInfoRequestForRegistration_ = sliceInfoRequestForRegistration.get();
 
   std::string supportedFeatures_ = {};
   if (!supportedFeatures.isEmpty())
@@ -100,21 +104,33 @@ void NetworkSliceInformationDocumentApiImpl::n_s_selection_get(
     m_nssf_app->handle_slice_info_for_pdu_session(
         sliceInfoRequestForPduSession_, tai_, homePlmnId_, supportedFeatures_,
         http_code, 1, problem_details, auth_slice_info);
+  }
+  if (!sliceInfoRequestForRegistration.isEmpty()) {
+    Logger::nssf_sbi().info("");
+    Logger::nssf_sbi().info(
+        "NS Selection: Got a request with slice info for Registration, "
+        "Instance ID: %s",
+        nf_id.c_str());
 
-    if (http_code != HTTP_STATUS_CODE_200_OK) {
-      to_json(json_data, problem_details);
-      content_type = "application/problem+json";
-      // content type
-      response.headers().add<Pistache::Http::Header::ContentType>(
-          Pistache::Http::Mime::MediaType(content_type));
-      response.send(Pistache::Http::Code(http_code), json_data.dump().c_str());
-      return;
-    } else {
-      to_json(json_data, auth_slice_info);
-      response.headers().add<Pistache::Http::Header::ContentType>(
-          Pistache::Http::Mime::MediaType(content_type));
-      response.send(Pistache::Http::Code(http_code), json_data.dump().c_str());
-    }
+    m_nssf_app->handle_slice_info_for_registration(
+        sliceInfoRequestForRegistration_, tai_, homePlmnId_, supportedFeatures_,
+        http_code, 1, problem_details, auth_slice_info);
+  }
+
+  if (http_code != HTTP_STATUS_CODE_200_OK) {
+    to_json(json_data, problem_details);
+    content_type = "application/problem+json";
+    // content type
+    response.headers().add<Pistache::Http::Header::ContentType>(
+        Pistache::Http::Mime::MediaType(content_type));
+    response.send(Pistache::Http::Code(http_code), json_data.dump().c_str());
+    return;
+  } else {
+    to_json(json_data, auth_slice_info);
+    content_type = "application/json";
+    response.headers().add<Pistache::Http::Header::ContentType>(
+        Pistache::Http::Mime::MediaType(content_type));
+    response.send(Pistache::Http::Code(http_code), json_data.dump().c_str());
   }
 }
 // ToDo - UE Registration and UE Config Update

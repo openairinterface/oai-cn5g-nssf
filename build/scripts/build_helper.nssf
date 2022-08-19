@@ -516,8 +516,8 @@ check_install_nssf_deps() {
         ;;
     esac
   elif [[ "$OS_BASEDISTRO" == "fedora" ]]; then
-    # testing this library but not sure about it.
-    $SUDO $INSTALLER install $OPTION libyaml libyaml-devel
+    install_libyaml_cpp_from_git $1 $2
+    ret=$?;[[ $ret -ne 0 ]] && return $ret
   fi
 
   $SUDO ldconfig

@@ -516,8 +516,7 @@ check_install_nssf_deps() {
         ;;
     esac
   elif [[ "$OS_BASEDISTRO" == "fedora" ]]; then
-    install_libyaml_cpp_from_git $1 $2
-    ret=$?;[[ $ret -ne 0 ]] && return $ret
+    $SUDO $INSTALLER install $OPTION yaml-cpp yaml-cpp-devel
   fi
 
   $SUDO ldconfig

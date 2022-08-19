@@ -28,6 +28,7 @@
 #---------------------------------------------------------------------
 # BUILDER IMAGE
 #---------------------------------------------------------------------
+ARG BASE_IMAGE=ubuntu:bionic
 FROM oai-nssf-base:latest as oai-nssf-builder
 
 WORKDIR /openair-nssf/

@@ -21,7 +21,7 @@
 #---------------------------------------------------------------------
 #
 # Dockerfile for the Open-Air-Interface NSSF service
-#   Valid for RHEL 8.2
+#   Valid for UBI 8.6 | RHEL 8.6
 #
 #---------------------------------------------------------------------
 
@@ -65,15 +65,28 @@ RUN ./build_nssf --install-deps --force && \
     ldconfig
 RUN ./build_nssf --clean --Verbose --build-type Release --jobs && \
     ldd /openair-nssf/build/nssf/build/nssf && \
-    mv /openair-nssf/build/nssf/build/nssf /openair-nssf/build/nssf/build/oai_nssf
+    mv /openair-nssf/build/nssf/build/nssf /openair-nssf/build/nssf/build/oai_nssf && \
+    # Remove entitlements and Subscription Manager configs
+    rm -rf /etc/pki/entitlement && \
+    rm -rf /etc/rhsm
 
 #---------------------------------------------------------------------
 # TARGET IMAGE
 #---------------------------------------------------------------------
 FROM registry.access.redhat.com/ubi8/ubi-minimal:latest as oai-nssf
 ENV TZ=Europe/Paris
+
+# Copy the entitlements
+COPY ./etc-pki-entitlement /etc/pki/entitlement
+
+# Copy the subscription manager configurations
+COPY ./rhsm-conf /etc/rhsm
+COPY ./rhsm-ca /etc/rhsm/ca
+
+
 # We install some debug tools for the moment in addition of mandatory libraries
-RUN microdnf update -y && \
+RUN rm -f /etc/rhsm-host && \
+    microdnf update -y && \
     microdnf install -y \
       tzdata \
       libasan \
@@ -86,7 +99,10 @@ RUN microdnf update -y && \
       findutils \
       libconfig && \
     microdnf clean all -y && \
-    rm -rf /var/cache/yum /var/cache/dnf
+    rm -rf /var/cache/yum /var/cache/dnf && \
+    # Remove entitlements and Subscription Manager configs
+    rm -rf /etc/pki/entitlement && \
+    rm -rf /etc/rhsm
 
 # Copying executable and generated libraries
 WORKDIR /openair-nssf/bin

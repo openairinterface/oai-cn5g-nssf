@@ -31,14 +31,15 @@
 ARG BASE_IMAGE=ubuntu:bionic
 FROM oai-nssf-base:latest as oai-nssf-builder
 
+RUN rm -Rf /openair-nssf
 WORKDIR /openair-nssf/
 # Copying source code
 COPY . /openair-nssf
-RUN cp -Rf /openair-nssf-ext-ref /openair-nssf/build/ext
 
 # Building NSSF
 WORKDIR /openair-nssf/build/scripts
 RUN ldconfig && \
+    cp -Rf /openair-nssf-ext-ref /openair-nssf/build/ext && \
     ./build_nssf --clean --Verbose --build-type Release --jobs && \
     ldd /openair-nssf/build/nssf/build/nssf && \
     mv /openair-nssf/build/nssf/build/nssf /openair-nssf/build/nssf/build/oai_nssf

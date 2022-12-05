@@ -30,6 +30,8 @@
 #---------------------------------------------------------------------
 FROM registry.access.redhat.com/ubi8/ubi:latest AS oai-nssf-builder
 
+ENV IS_DOCKERFILE=1
+
 # Copy the entitlements
 COPY ./etc-pki-entitlement /etc/pki/entitlement
 

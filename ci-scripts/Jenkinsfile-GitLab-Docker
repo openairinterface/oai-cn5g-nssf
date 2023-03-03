@@ -290,6 +290,15 @@ pipeline {
           }
         }
       }
+      post {
+        always {
+          script {
+            unstash 'podmanBuildLog'
+            unstash 'cppcheckLogs'
+            unstash 'formatCheckLogs'
+          }
+        }
+      }
     }
     stage('Testing whole 5g Core Network Functions') {
       parallel {

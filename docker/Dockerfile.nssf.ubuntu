@@ -34,6 +34,7 @@ ARG BASE_IMAGE=ubuntu:bionic
 FROM $BASE_IMAGE as oai-nssf-base
 
 ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Europe/Paris
 ENV IS_DOCKERFILE=1
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get upgrade --yes && \
@@ -48,21 +49,24 @@ RUN git config --global https.postBuffer 123289600 && \
 
 # Copying source code
 WORKDIR /openair-nssf
-COPY . /openair-nssf
+COPY ./build/scripts /openair-nssf/build/scripts/
+COPY ./build/nssf/CMakeLists.txt /openair-nssf/build/nssf/CMakeLists.txt
+COPY ./build/cmake_modules /openair-nssf/cmake_modules/
 
 # Installing all the needed libraries/packages to build and run NSSF
 WORKDIR /openair-nssf/build/scripts
 RUN ./build_nssf --install-deps --force && \
-    cp -Rf /openair-nssf/build/ext /openair-nssf-ext-ref
+    ldconfig
 
 #---------------------------------------------------------------------
 # BUILDER IMAGE
 #---------------------------------------------------------------------
 FROM oai-nssf-base as oai-nssf-builder
-# Building NRF
+# Copying source code
+COPY . /openair-nssf
+# Building NSSF
 WORKDIR /openair-nssf/build/scripts
-RUN ldconfig && \
-    ./build_nssf --clean --Verbose --build-type Release --jobs && \
+RUN ./build_nssf --clean --Verbose --build-type Release --jobs && \
     ldd /openair-nssf/build/nssf/build/nssf && \
     mv /openair-nssf/build/nssf/build/nssf /openair-nssf/build/nssf/build/oai_nssf
 

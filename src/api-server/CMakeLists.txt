@@ -28,7 +28,7 @@ include_directories(${NSSF_API_SERVER_DIR}/)
 include_directories(${SRC_TOP_DIR}/nssf_app)
 include_directories(${SRC_TOP_DIR}/common)
 include_directories(${SRC_TOP_DIR}/common/utils)
-include_directories(${SRC_TOP_DIR}/../build/ext/spdlog/include)
+include_directories(${SRC_TOP_DIR}/${MOUNTED_COMMON}/logger)
 
 file(GLOB NSSF_API_SERVER_src_files
     ${NSSF_API_SERVER_DIR}/nssf-api-server.cpp

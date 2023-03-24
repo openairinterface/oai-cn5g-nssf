@@ -25,8 +25,7 @@ include_directories(${SRC_TOP_DIR}/common/utils)
 include_directories(${SRC_TOP_DIR}/itti)
 include_directories(${SRC_TOP_DIR}/nssf_app)
 include_directories(${SRC_TOP_DIR}/api-server/model)
-include_directories(${SRC_TOP_DIR}/../build/ext/spdlog/include)
-
+include_directories(${SRC_TOP_DIR}/${MOUNTED_COMMON}/logger)
 
 set(CN_UTILS_SRC STATIC
     ${CMAKE_CURRENT_SOURCE_DIR}/conversions.cpp

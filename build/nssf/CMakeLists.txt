@@ -29,6 +29,12 @@ set (OPENAIRCN_DIR   $ENV{OPENAIRCN_DIR})
 set (BUILD_TOP_DIR   ${OPENAIRCN_DIR}/build)
 set (SRC_TOP_DIR     $ENV{OPENAIRCN_DIR}/src)
 
+################################################
+# For common-src usage
+################################################
+set (  NF_TARGET                        nssf )
+set (  MOUNTED_COMMON                   common-src)
+
 include(${CMAKE_CURRENT_SOURCE_DIR}/../../src/oai_nssf/CMakeLists.txt)
 
 ADD_SUBDIRECTORY(${CMAKE_CURRENT_SOURCE_DIR}/../../src/nssf_app ${CMAKE_CURRENT_BINARY_DIR}/nssf_app)

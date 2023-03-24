@@ -46,6 +46,7 @@
 #include "Snssai.h"
 #include "SupportedNssaiAvailabilityData.h"
 #include "Tai.h"
+#include "logger.hpp"
 
 namespace nssf {
 
@@ -78,6 +79,8 @@ using namespace oai::nssf_server::model;
 #define NSSF_CONFIG_STRING_SUPPORTED_FEATURES_NRF_HTTP_VERSION "HTTP_VERSION"
 #define NSSF_CONFIG_STRING_SUPPORTED_FEATURES_HTTP_VERSION "HTTP_VERSION"
 #define NSSF_CONFIG_STRING_SUPPORTED_FEATURES_USE_FQDN "USE_FQDN"
+
+#define NSSF_CONFIG_STRING_LOG_LEVEL "LOG_LEVEL"
 
 typedef struct interface_cfg_s {
   std::string if_name;
@@ -143,6 +146,7 @@ class nssf_config {
   /* Reader/writer lock for this configuration */
   std::mutex m_rw_lock;
   std::string pid_dir;
+  spdlog::level::level_enum log_level;
   unsigned int instance;
   std::string fqdn;
   interface_cfg_t sbi;
@@ -171,6 +175,7 @@ class nssf_config {
   nssf_config() : m_rw_lock(), pid_dir(), instance(0) {
     sbi.http1_port = 9090;
     sbi.http2_port = 80;
+    log_level      = spdlog::level::debug;
   };
 
   void lock() { m_rw_lock.lock(); };

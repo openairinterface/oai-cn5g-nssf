@@ -163,6 +163,16 @@ int nssf_config::load(const string& config_file) {
         "%s : %s, No FQDN configured", nfex.what(), nfex.getPath());
   }
 
+  // Log Level
+  try {
+    std::string string_level;
+    nssf_cfg.lookupValue(NSSF_CONFIG_STRING_LOG_LEVEL, string_level);
+    log_level = spdlog::level::from_str(string_level);
+  } catch (const SettingNotFoundException& nfex) {
+    Logger::nssf_app().error(
+        "%s : %s, using defaults", nfex.what(), nfex.getPath());
+  }
+
   try {
     const Setting& nw_if_cfg = nssf_cfg[NSSF_CONFIG_STRING_INTERFACES];
 
@@ -193,6 +203,9 @@ void nssf_config::display() {
   Logger::nssf_app().info("    http2_port .......: %u", sbi.http2_port);
   Logger::nssf_app().info(
       "    api_version ......: %s", sbi_api_version.c_str());
+  Logger::nssf_app().info(
+      "- Log Level will be .......: %s",
+      spdlog::level::to_string_view(log_level));
 }
 
 //------------------------------------------------------------------------------

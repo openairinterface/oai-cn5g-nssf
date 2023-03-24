@@ -23,11 +23,11 @@ include_directories(${SRC_TOP_DIR}/common/msg)
 include_directories(${SRC_TOP_DIR}/common/utils)
 include_directories(${SRC_TOP_DIR}/itti)
 include_directories(${SRC_TOP_DIR}/nssf)
-include_directories(${SRC_TOP_DIR}/../build/ext/spdlog/include)
 include_directories(${SRC_TOP_DIR}/api-server/api)
 include_directories(${SRC_TOP_DIR}/api-server/impl)
 include_directories(${SRC_TOP_DIR}/api-server/model)
 include_directories(${SRC_TOP_DIR}/api-server/)
+include_directories(${SRC_TOP_DIR}/${MOUNTED_COMMON}/logger)
 
 add_library (NSSF STATIC
   nssf_app.cpp

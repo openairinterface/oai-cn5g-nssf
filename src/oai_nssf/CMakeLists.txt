@@ -157,15 +157,15 @@ add_definitions(-DCMAKER)
 add_definitions(-DBSTRLIB_CAN_USE_STL=1 -DBSTRLIB_CAN_USE_IOSTREAM=1 -DBSTRLIB_THROWS_EXCEPTIONS=1)
 
 # CMAKE_C_FLAGS_DEBUG: -fsanitize=address not compatible with valgrind
-set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS} -g -fstack-protector-all -DMALLOC_CHECK_=3 -DINFO_IS_ON=1 -DDEBUG_IS_ON=1 -DTRACE_IS_ON=1 -O0  -fno-omit-frame-pointer")
-set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS} -O2 -fno-omit-frame-pointer -s -DINFO_IS_ON=1")
-set(CMAKE_C_FLAGS_RELWITHDEBINFO "${CMAKE_C_FLAGS} -g  -O1 -DINFO_IS_ON=1 ")
+set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS} -g -fstack-protector-all -DMALLOC_CHECK_=3 -O0 -fno-omit-frame-pointer")
+set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS} -O2 -fno-omit-frame-pointer -s ")
+set(CMAKE_C_FLAGS_RELWITHDEBINFO "${CMAKE_C_FLAGS} -g  -O1 ")
 set(CMAKE_C_FLAGS_MINSIZEREL "${CMAKE_C_FLAGS} -Os -s")
 
 # CMAKE_CXX_FLAGS_DEBUG: -fsanitize=address not compatible with valgrind
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -std=c++17  -g -fstack-protector-all -DMALLOC_CHECK_=3 -DINFO_IS_ON=1 -DDEBUG_IS_ON=1 -DTRACE_IS_ON=1 -O0 -fno-omit-frame-pointer")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -std=c++17 -O2 -fno-omit-frame-pointer -s -DINFO_IS_ON=1")
-set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS} -std=c++17 -g -O1 -DINFO_IS_ON=1")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -std=c++17  -g -fstack-protector-all -DMALLOC_CHECK_=3 -O0 -fno-omit-frame-pointer")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -std=c++17 -O2 -fno-omit-frame-pointer -s ")
+set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS} -std=c++17 -g -O1 ")
 set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS} -std=c++17 -Os -s")
 
 
@@ -258,7 +258,6 @@ else(STATIC_LINKING)
     SET(BUILD_SHARED_LIBS ON)
 endif(STATIC_LINKING)
 
-ADD_SUBDIRECTORY(${CMAKE_CURRENT_SOURCE_DIR}/../../src/common ${CMAKE_CURRENT_BINARY_DIR}/common)
 ADD_SUBDIRECTORY(${CMAKE_CURRENT_SOURCE_DIR}/../../src/common/utils ${CMAKE_CURRENT_BINARY_DIR}/utils)
 ADD_SUBDIRECTORY(${CMAKE_CURRENT_SOURCE_DIR}/../../src/api-server ${CMAKE_CURRENT_BINARY_DIR}/api-server)
 
@@ -273,16 +272,19 @@ include_directories(${SRC_TOP_DIR}/common)
 include_directories(${SRC_TOP_DIR}/common/msg)
 include_directories(${SRC_TOP_DIR}/common/utils)
 include_directories(${SRC_TOP_DIR}/nssf)
-include_directories(${SRC_TOP_DIR}/../build/ext/spdlog/include)
 include_directories(${SRC_TOP_DIR}/api-server)
 include_directories(${SRC_TOP_DIR}/api-server/api)
 include_directories(${SRC_TOP_DIR}/api-server/impl)
 include_directories(${SRC_TOP_DIR}/api-server/model)
+include_directories(${SRC_TOP_DIR}/${MOUNTED_COMMON}/logger)
 
 add_executable(nssf
   ${SRC_TOP_DIR}/oai_nssf/main.cpp
   ${SRC_TOP_DIR}/oai_nssf/options.cpp
   )
+
+## Common modules
+include(${SRC_TOP_DIR}/${MOUNTED_COMMON}/logger/logger.cmake)
 
 IF(STATIC_LINKING)
     SET(CMAKE_EXE_LINKER_FLAGS "-static")
@@ -292,6 +294,6 @@ IF(STATIC_LINKING)
 ENDIF(STATIC_LINKING)
 
 
-target_link_libraries (nssf ${ASAN}  -Wl,--start-group CN_UTILS NSSF NSSF_API 3GPP_COMMON_TYPES ${CRYPTO_LIBRARIES} -lnghttp2_asio -lboost_system -lboost_thread -lssl -lcrypto  dl -Wl,--end-group
+target_link_libraries (nssf ${ASAN}  -Wl,--start-group CN_UTILS NSSF NSSF_API ${CRYPTO_LIBRARIES} -lnghttp2_asio -lboost_system -lboost_thread -lfmt -lspdlog -lssl -lcrypto  dl -Wl,--end-group
 pthread m rt config++  event boost_system pistache curl -lyaml-cpp )
 

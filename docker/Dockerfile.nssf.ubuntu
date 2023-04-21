@@ -50,8 +50,8 @@ RUN git config --global https.postBuffer 123289600 && \
 # Copying source code
 WORKDIR /openair-nssf
 COPY ./build/scripts /openair-nssf/build/scripts/
+COPY ./build/common-build /openair-nssf/build/common-build
 COPY ./build/nssf/CMakeLists.txt /openair-nssf/build/nssf/CMakeLists.txt
-COPY ./build/cmake_modules /openair-nssf/cmake_modules/
 
 # Installing all the needed libraries/packages to build and run NSSF
 WORKDIR /openair-nssf/build/scripts
@@ -68,7 +68,9 @@ COPY . /openair-nssf
 WORKDIR /openair-nssf/build/scripts
 RUN ./build_nssf --clean --Verbose --build-type Release --jobs && \
     ldd /openair-nssf/build/nssf/build/nssf && \
-    mv /openair-nssf/build/nssf/build/nssf /openair-nssf/build/nssf/build/oai_nssf
+    mv /openair-nssf/build/nssf/build/nssf /openair-nssf/build/nssf/build/oai_nssf && \
+    sed -i -e "s@nf-root-folder@nssf@" -e "s@nf-config-file@nssf.conf@" \
+      ../common-build/docker-scripts/entrypoint.py
 
 #---------------------------------------------------------------------
 # TARGET IMAGE
@@ -108,7 +110,7 @@ RUN apt-get update && \
 WORKDIR /openair-nssf/bin
 COPY --from=oai-nssf-builder \
     /openair-nssf/build/nssf/build/oai_nssf \
-    /openair-nssf/scripts/entrypoint.py \
+    /openair-nssf/build/common-build/docker-scripts/entrypoint.py \
     /openair-nssf/scripts/healthcheck.sh \
     ./
 

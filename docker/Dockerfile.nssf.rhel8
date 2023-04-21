@@ -64,11 +64,12 @@ COPY . /openair-nssf
 # Installing and Building NSSF
 WORKDIR /openair-nssf/build/scripts
 RUN ./build_nssf --install-deps --force && \
-    rm /etc/pki/entitlement/*pem && \
     ldconfig
 RUN ./build_nssf --clean --Verbose --build-type Release --jobs && \
     ldd /openair-nssf/build/nssf/build/nssf && \
     mv /openair-nssf/build/nssf/build/nssf /openair-nssf/build/nssf/build/oai_nssf && \
+    sed -i -e "s@nf-root-folder@nssf@" -e "s@nf-config-file@nssf.conf@" \
+      ../common-build/docker-scripts/entrypoint.py && \
     # Remove entitlements and Subscription Manager configs
     rm -rf /etc/pki/entitlement && \
     rm -rf /etc/rhsm
@@ -114,7 +115,7 @@ RUN rm -f /etc/rhsm-host && \
 WORKDIR /openair-nssf/bin
 COPY --from=oai-nssf-builder \
     /openair-nssf/build/nssf/build/oai_nssf \
-    /openair-nssf/scripts/entrypoint.py \
+    /openair-nssf/build/common-build/docker-scripts/entrypoint.py \
     /openair-nssf/scripts/healthcheck.sh \
     ./
 

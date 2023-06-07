@@ -15,7 +15,7 @@
 #include "Helpers.h"
 #include "nssf_config.hpp"
 
-extern nssf::nssf_config nssf_cfg;
+extern std::unique_ptr<oai::config::nssf::nssf_config> nssf_cfg;
 
 namespace oai {
 namespace nssf_server {
@@ -38,15 +38,21 @@ void NFInstanceIDDocumentApi::setupRoutes() {
   using namespace Pistache::Rest;
 
   Routes::Delete(
-      *router, base + nssf_cfg.sbi_api_version + "/nssai-availability/:nfId",
+      *router,
+      base + nssf_cfg->local().get_sbi().get_api_version() +
+          "/nssai-availability/:nfId",
       Routes::bind(
           &NFInstanceIDDocumentApi::n_ssai_availability_delete_handler, this));
   Routes::Patch(
-      *router, base + nssf_cfg.sbi_api_version + "/nssai-availability/:nfId",
+      *router,
+      base + nssf_cfg->local().get_sbi().get_api_version() +
+          "/nssai-availability/:nfId",
       Routes::bind(
           &NFInstanceIDDocumentApi::n_ssai_availability_patch_handler, this));
   Routes::Put(
-      *router, base + nssf_cfg.sbi_api_version + "/nssai-availability/:nfId",
+      *router,
+      base + nssf_cfg->local().get_sbi().get_api_version() +
+          "/nssai-availability/:nfId",
       Routes::bind(
           &NFInstanceIDDocumentApi::n_ssai_availability_put_handler, this));
 

@@ -43,7 +43,7 @@ using namespace nssf;
 using namespace std;
 
 extern nssf_slice_select* nssf_slice_select_inst;
-extern nssf_config nssf_cfg;
+extern std::unique_ptr<oai::config::nssf::nssf_config> nssf_cfg;
 
 //------------------------------------------------------------------------------
 bool nssf_slice_select::compare_snssai(const Snssai a, const Snssai b) {
@@ -109,7 +109,7 @@ bool nssf_slice_select::get_valid_amfset(
   Logger::nssf_app().debug("Validating AMFSet");
 
   std::vector<std::string> candidate_amf_list;
-  for (auto amfSet : nssf_cfg.nssf_amf_info.amf_info_list) {
+  for (auto amfSet : nssf_cfg->nssf_amf_info.amf_info_list) {
     for (auto amfList : amfSet.amf_List) {
       for (auto ext_snssai : amfList.second) {
         if (get_valid_amf(ext_snssai.getSupportedSnssaiList(), req_nssai)) {
@@ -173,7 +173,7 @@ bool nssf_slice_select::validate_nsi(
 
   Snssai requested_snssai = slice_info.getSNssai();
 
-  for (auto nsi_info_item : nssf_cfg.nssf_nsi_info.nsi_info_list) {
+  for (auto nsi_info_item : nssf_cfg->nssf_nsi_info.nsi_info_list) {
     if (compare_snssai(requested_snssai, nsi_info_item.snssai)) {
       nsi_info.setNrfId(nsi_info_item.nsi_info.getNrfId());
       if (nsi_info_item.nsi_info.nsiIdIsSet())
@@ -198,7 +198,7 @@ bool nssf_slice_select::validate_ta(const Tai& tai) {
   PlmnId requested_plmn     = tai.getPlmnId();
   std::string requested_tac = tai.getTac();
 
-  for (auto ta_info_item : nssf_cfg.nssf_ta_info.ta_info_list) {
+  for (auto ta_info_item : nssf_cfg->nssf_ta_info.ta_info_list) {
     if (requested_plmn.getMcc() == ta_info_item.tai.getPlmnId().getMcc() &
         requested_plmn.getMnc() == ta_info_item.tai.getPlmnId().getMnc() &
         requested_tac == ta_info_item.tai.getTac())

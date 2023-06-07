@@ -52,6 +52,7 @@
 namespace nssf {
 
 using namespace oai::nssf_server::model;
+using namespace oai::config::nssf;
 
 class nssf_slice_avail {
  private:

@@ -33,6 +33,7 @@ include(${SRC_TOP_DIR}/${MOUNTED_COMMON}/config/config.cmake)
 add_library (NSSF STATIC
   nssf_app.cpp
   nssf_config.cpp
+  nssf_config_types.cpp
   nssf_slice_selection.cpp
   nssf_slice_availability.cpp
   )

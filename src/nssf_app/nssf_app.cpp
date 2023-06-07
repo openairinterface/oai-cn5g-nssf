@@ -41,7 +41,6 @@ using namespace nssf;
 using namespace std;
 
 extern nssf_app* nssf_app_inst;
-extern nssf_config nssf_cfg;
 
 void nssf_app_task(void*);
 

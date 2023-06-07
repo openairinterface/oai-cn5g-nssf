@@ -42,9 +42,10 @@ using namespace nssf;
 using namespace util;
 using namespace std;
 using namespace oai::nssf_server::api;
+using namespace oai::config::nssf;
 
 nssf_app* nssf_app_inst = nullptr;
-nssf_config nssf_cfg;
+std::unique_ptr<nssf_config> nssf_cfg;
 boost::asio::io_service io_service;
 NSSFApiServer* nssf_api_server_1     = nullptr;
 nssf_http2_server* nssf_api_server_2 = nullptr;
@@ -84,19 +85,20 @@ int main(int argc, char** argv) {
   std::signal(SIGTERM, my_app_signal_handler);
   std::signal(SIGINT, my_app_signal_handler);
 
-  // Config
-  nssf_cfg.load(Options::getlibconfigConfig());
-  if (!nssf_cfg.parse_config()) {
-    std::cout << "nssf_cfg::parse_config() failed" << std::endl;
+  nssf_cfg = std::make_unique<nssf_config>(
+      Options::getlibconfigConfig(), Options::getlogStdout(),
+      Options::getlogRotFilelog());
+
+  if (!nssf_cfg->init()) {
+    nssf_cfg->display();
+    Logger::system().error("Reading the configuration failed. Exiting");
     return 1;
   }
-  Logger::nssf_app().startup("Config parsed");
-  nssf_cfg.display();
-  Logger::set_level(nssf_cfg.log_level);
+  nssf_cfg->display();
 
   // PID file
   // Currently hard-coded value. TODO: add as config option.
-  string pid_file_name = get_exe_absolute_path("/var/run", nssf_cfg.instance);
+  string pid_file_name = get_exe_absolute_path("/var/run", nssf_cfg->instance);
   if (!is_pid_file_lock_success(pid_file_name.c_str())) {
     Logger::nssf_app().error(
         "Lock PID file %s failed\n", pid_file_name.c_str());
@@ -105,20 +107,24 @@ int main(int argc, char** argv) {
 
   // NSSF Pistache API server (HTTP1)
   Pistache::Address addr(
-      std::string(inet_ntoa(*((struct in_addr*) &nssf_cfg.sbi.addr4))),
-      Pistache::Port(nssf_cfg.sbi.http1_port));
+      std::string(inet_ntoa(
+          *((struct in_addr*) &nssf_cfg->local().get_sbi().get_addr4()))),
+      Pistache::Port(nssf_cfg->local().get_sbi().get_port_http1()));
   nssf_api_server_1 = new NSSFApiServer(addr, nssf_app_inst);
   nssf_api_server_1->init(2);
   std::thread nssf_http1_manager(&NSSFApiServer::start, nssf_api_server_1);
 
-  // NSSF NGHTTP API server (HTTP2)
-  nssf_api_server_2 = new nssf_http2_server(
-      conv::toString(nssf_cfg.sbi.addr4), nssf_cfg.sbi.http2_port,
-      nssf_app_inst);
-  std::thread nssf_http2_manager(&nssf_http2_server::start, nssf_api_server_2);
+  if (nssf_cfg->local().get_sbi().use_http2()) {
+    // NSSF NGHTTP API server (HTTP2)
+    nssf_api_server_2 = new nssf_http2_server(
+        conv::toString(nssf_cfg->local().get_sbi().get_addr4()),
+        nssf_cfg->local().get_sbi().get_port_http2(), nssf_app_inst);
+    std::thread nssf_http2_manager(
+        &nssf_http2_server::start, nssf_api_server_2);
+    nssf_http2_manager.join();
+  }
 
   nssf_http1_manager.join();
-  nssf_http2_manager.join();
 
   FILE* fp             = NULL;
   std::string filename = fmt::format("/tmp/nssf_{}.status", getpid());

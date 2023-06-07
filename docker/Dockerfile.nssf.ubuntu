@@ -68,9 +68,7 @@ COPY . /openair-nssf
 WORKDIR /openair-nssf/build/scripts
 RUN ./build_nssf --clean --Verbose --build-type Release --jobs && \
     ldd /openair-nssf/build/nssf/build/nssf && \
-    mv /openair-nssf/build/nssf/build/nssf /openair-nssf/build/nssf/build/oai_nssf && \
-    sed -i -e "s@nf-root-folder@nssf@" -e "s@nf-config-file@nssf.conf@" \
-      ../common-build/docker-scripts/entrypoint.py
+    mv /openair-nssf/build/nssf/build/nssf /openair-nssf/build/nssf/build/oai_nssf
 
 #---------------------------------------------------------------------
 # TARGET IMAGE
@@ -93,7 +91,6 @@ RUN apt-get update && \
 # Ubuntu 20 --> libasan5
 # Ubuntu 22 --> libasan6
 #      libasan? \
-      libconfig++9v5 \
 # Ubuntu 18 --> boost62/65 -> will remove both
 # Ubuntu 20 --> boost67/71 -> will remove 67
 # Ubuntu 22 --> boost74
@@ -137,7 +134,7 @@ RUN ldconfig && \
 # The configuration folder will be flat
 WORKDIR /openair-nssf/etc
 COPY --from=oai-nssf-builder \
-    /openair-nssf/etc/nssf.conf \
+    /openair-nssf/etc/config.yaml \
     /openair-nssf/etc/nssf_slice_config.yaml \
     ./
 
@@ -150,5 +147,4 @@ HEALTHCHECK --interval=10s \
             --retries=6 \
     CMD /openair-nssf/bin/healthcheck.sh
 
-ENTRYPOINT ["python3","/openair-nssf/bin/entrypoint.py"]
-CMD ["/openair-nssf/bin/oai_nssf", "-c", "/openair-nssf/etc/nssf.conf", "-o"]
+CMD ["/openair-nssf/bin/oai_nssf", "-c", "/openair-nssf/etc/config.yaml", "-o"]

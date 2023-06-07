@@ -107,13 +107,13 @@ check_install_nssf_deps() {
         $SUDO $INSTALLER install $OPTION software-properties-common
         $SUDO add-apt-repository ppa:mhier/libboost-latest --yes
         $SUDO $INSTALLER update
-        specific_packages="libconfig++-dev libasio-dev libboost-all-dev libasan4"
+        specific_packages="libasio-dev libboost-all-dev libasan4"
         ;;
       "ubuntu20.04")
-        specific_packages="libconfig++-dev libasio-dev libboost-all-dev libasan5"
+        specific_packages="libasio-dev libboost-all-dev libasan5"
         ;;
       "ubuntu22.04")
-        specific_packages="libconfig++-dev libasio-dev libboost-all-dev libasan6"
+        specific_packages="libasio-dev libboost-all-dev libasan6"
         ;;
     esac
     # removed libspdlog-dev
@@ -133,7 +133,6 @@ check_install_nssf_deps() {
       ninja-build"
   elif [[ "$OS_BASEDISTRO" == "fedora" ]]; then
     PACKAGE_LIST="\
-      libconfig-devel \
       libgcrypt-devel \
       openssl-devel \
       libtool \
@@ -186,6 +185,8 @@ check_install_nssf_deps() {
   install_cpp_jwt_from_git $1 $2
   ret=$?;[[ $ret -ne 0 ]] && return $ret
 
+  # latest usage of yaml-cpp suggests that we should be using 0.7+ version
+  # To be sure, let's install from source all the time for the moment
   if [[ $OS_DISTRO == "ubuntu" ]]; then
     case "$(get_distribution_release)" in
       "ubuntu18.04")
@@ -193,14 +194,22 @@ check_install_nssf_deps() {
         ret=$?;[[ $ret -ne 0 ]] && return $ret
         ;;
       "ubuntu20.04")
-        $SUDO $INSTALLER install $OPTION libyaml-cpp0.6 libyaml-cpp-dev
+        # definitely, 0.6.2 as PPA installed is not enough
+        install_libyaml_cpp_from_git $1 $2
+        ret=$?;[[ $ret -ne 0 ]] && return $ret
         ;;
       "ubuntu22.04")
-        $SUDO $INSTALLER install $OPTION libyaml-cpp0.7 libyaml-cpp-dev
+        # not sure about 0.7.0
+        #$SUDO $INSTALLER install $OPTION libyaml-cpp0.7 libyaml-cpp-dev
+        install_libyaml_cpp_from_git $1 $2
+        ret=$?;[[ $ret -ne 0 ]] && return $ret
         ;;
     esac
   elif [[ "$OS_BASEDISTRO" == "fedora" ]]; then
-    $SUDO $INSTALLER install $OPTION yaml-cpp yaml-cpp-devel
+    # definitely, 0.6.2 as PPA installed is not enough
+    # $SUDO $INSTALLER install $OPTION yaml-cpp yaml-cpp-devel
+    install_libyaml_cpp_from_git $1 $2
+    ret=$?;[[ $ret -ne 0 ]] && return $ret
   fi
 
   $SUDO ldconfig

@@ -47,17 +47,18 @@ nssf_config::nssf_config(
     const string& config_path, bool log_stdout, bool log_rot_file)
     : config(config_path, NSSF_CONFIG_NAME, log_stdout, log_rot_file) {
   m_used_config_values = {LOG_LEVEL_CONFIG_NAME, REGISTER_NF_CONFIG_NAME,
-                          NF_LIST_CONFIG_NAME, NSSF_CONFIG_NAME};
+                          NF_LIST_CONFIG_NAME, NSSF_CONFIG_NAME,
+                          NF_CONFIG_HTTP_NAME};
   m_used_sbi_values    = {NSSF_CONFIG_NAME, NRF_CONFIG_NAME};
 
   auto nssf = std::make_shared<nssf_config_type>(
       NSSF_CONFIG_NAME, "oai-nssf",
-      sbi_interface("SBI", "oai-nssf", 80, 0, "v1", "eth0"),
+      sbi_interface("SBI", "oai-nssf", 80, "v1", "eth0"),
       "/openair-nssf/etc/nssf_slice_config.yaml");
 
   auto nrf = std::make_shared<nf>(
       NRF_CONFIG_NAME, "oai-nrf",
-      sbi_interface("SBI", "oai-nrf", 80, 0, "v1", ""));
+      sbi_interface("SBI", "oai-nrf", 80, "v1", ""));
 
   add_nf(NSSF_CONFIG_NAME, nssf);
   add_nf(NRF_CONFIG_NAME, nrf);

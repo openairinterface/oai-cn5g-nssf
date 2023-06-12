@@ -105,26 +105,25 @@ int main(int argc, char** argv) {
     exit(-EDEADLK);
   }
 
-  // NSSF Pistache API server (HTTP1)
-  Pistache::Address addr(
-      std::string(inet_ntoa(
-          *((struct in_addr*) &nssf_cfg->local().get_sbi().get_addr4()))),
-      Pistache::Port(nssf_cfg->local().get_sbi().get_port_http1()));
-  nssf_api_server_1 = new NSSFApiServer(addr, nssf_app_inst);
-  nssf_api_server_1->init(2);
-  std::thread nssf_http1_manager(&NSSFApiServer::start, nssf_api_server_1);
-
-  if (nssf_cfg->local().get_sbi().use_http2()) {
+  if (nssf_cfg->get_http_version() == 1) {
+    // NSSF Pistache API server (HTTP1)
+    Pistache::Address addr(
+        std::string(inet_ntoa(
+            *((struct in_addr*) &nssf_cfg->local().get_sbi().get_addr4()))),
+        Pistache::Port(nssf_cfg->local().get_sbi().get_port()));
+    nssf_api_server_1 = new NSSFApiServer(addr, nssf_app_inst);
+    nssf_api_server_1->init(2);
+    std::thread nssf_http1_manager(&NSSFApiServer::start, nssf_api_server_1);
+    nssf_http1_manager.join();
+  } else if (nssf_cfg->get_http_version() == 2) {
     // NSSF NGHTTP API server (HTTP2)
     nssf_api_server_2 = new nssf_http2_server(
         conv::toString(nssf_cfg->local().get_sbi().get_addr4()),
-        nssf_cfg->local().get_sbi().get_port_http2(), nssf_app_inst);
+        nssf_cfg->local().get_sbi().get_port(), nssf_app_inst);
     std::thread nssf_http2_manager(
         &nssf_http2_server::start, nssf_api_server_2);
     nssf_http2_manager.join();
   }
-
-  nssf_http1_manager.join();
 
   FILE* fp             = NULL;
   std::string filename = fmt::format("/tmp/nssf_{}.status", getpid());

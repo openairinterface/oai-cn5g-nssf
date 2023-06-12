@@ -21,26 +21,32 @@
 #---------------------------------------------------------------------
 #
 # Dockerfile for the Open-Air-Interface NSSF service
-#   Valid for Ubuntu-20.04 (focal),
-#             Ubuntu-22.04 (jammy)
+#   Valid for Rocky Linux 8.7+
 #
 #---------------------------------------------------------------------
 
 #---------------------------------------------------------------------
-# BASE IMAGE
+# BUILDER IMAGE
 #---------------------------------------------------------------------
-ARG BASE_IMAGE=ubuntu:focal
-FROM $BASE_IMAGE as oai-nssf-base
+FROM docker.io/rockylinux:8 AS oai-nssf-builder
 
-ENV DEBIAN_FRONTEND=noninteractive
-ENV TZ=Europe/Paris
 ENV IS_DOCKERFILE=1
-RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get upgrade --yes && \
-    DEBIAN_FRONTEND=noninteractive apt-get install --yes \
-      psmisc \
-      git \
-  && rm -rf /var/lib/apt/lists/*
+
+RUN dnf install 'dnf-command(config-manager)' -y && \
+    dnf config-manager --set-enabled powertools && \
+    dnf install epel-release -y && crb enable && \
+    dnf update -y && \
+    # here just to display the current version
+    cat /etc/os-release && \
+    dnf install -y \
+        psmisc \
+        git \
+        diffutils \
+        libasan \
+        wget \
+        file && \
+    echo "/usr/local/lib" > /etc/ld.so.conf.d/local-lib.conf && \
+    echo "/usr/local/lib64" >> /etc/ld.so.conf.d/local-lib.conf
 
 # Some GIT configuration command quite useful
 RUN git config --global https.postBuffer 123289600 && \
@@ -48,23 +54,12 @@ RUN git config --global https.postBuffer 123289600 && \
 
 # Copying source code
 WORKDIR /openair-nssf
-COPY ./build/scripts /openair-nssf/build/scripts/
-COPY ./build/common-build /openair-nssf/build/common-build
-COPY ./build/nssf/CMakeLists.txt /openair-nssf/build/nssf/CMakeLists.txt
+COPY . /openair-nssf
 
-# Installing all the needed libraries/packages to build and run NSSF
+# Installing and Building NSSF
 WORKDIR /openair-nssf/build/scripts
 RUN ./build_nssf --install-deps --force && \
     ldconfig
-
-#---------------------------------------------------------------------
-# BUILDER IMAGE
-#---------------------------------------------------------------------
-FROM oai-nssf-base as oai-nssf-builder
-# Copying source code
-COPY . /openair-nssf
-# Building NSSF
-WORKDIR /openair-nssf/build/scripts
 RUN ./build_nssf --clean --Verbose --build-type Release --jobs && \
     ldd /openair-nssf/build/nssf/build/nssf && \
     mv /openair-nssf/build/nssf/build/nssf /openair-nssf/build/nssf/build/oai_nssf && \
@@ -74,34 +69,27 @@ RUN ./build_nssf --clean --Verbose --build-type Release --jobs && \
 #---------------------------------------------------------------------
 # TARGET IMAGE
 #---------------------------------------------------------------------
-FROM $BASE_IMAGE as oai-nssf
-ENV DEBIAN_FRONTEND=noninteractive
+FROM docker.io/rockylinux:8-minimal as oai-nssf
 ENV TZ=Europe/Paris
+
 # We install some debug tools for the moment in addition of mandatory libraries
-RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get upgrade --yes && \
-    DEBIAN_FRONTEND=noninteractive apt-get install --yes \
+RUN microdnf update -y && \
+    microdnf install -y \
       python3 \
-      python3-jinja2 \
+      python3-pip \
+      tzdata \
+#      libasan \
+      procps-ng \
       psmisc \
       net-tools \
-      tzdata \
-      bc \
-      openssl \
-# Ubuntu 20 --> libasan5
-# Ubuntu 22 --> libasan6
-#      libasan? \
-      libconfig++9v5 \
-# Ubuntu 20 --> boost71
-# Ubuntu 22 --> boost74
-      libboost-thread1.7?.0 \
-      libcurl4-gnutls-dev \
-      librtmp1 \
-      libpsl5 \
-# Ubuntu 20 --> libyaml-cpp 0.6
-# Ubuntu 22 --> libyaml-cpp 0.7
-      libyaml-cpp0.? \
-  && rm -rf /var/lib/apt/lists/*
+      libicu \
+      boost \
+      libevent \
+      findutils \
+      libconfig && \
+    pip3 install jinja2 && \
+    microdnf clean all -y && \
+    rm -rf /var/cache/yum /var/cache/dnf
 
 # Copying executable and generated libraries
 WORKDIR /openair-nssf/bin
@@ -111,14 +99,17 @@ COPY --from=oai-nssf-builder \
     /openair-nssf/scripts/healthcheck.sh \
     ./
 
-WORKDIR /usr/local/lib/
 COPY --from=oai-nssf-builder \
 # Copying only the packages built from source
-    /usr/local/lib/libpistache.so \
-    /usr/local/lib/libnghttp2.so.14 \
+    /usr/local/lib64/libpistache.so.0 \
+    /usr/local/lib/libnghttp2_asio.so \
     /usr/local/lib/libnghttp2_asio.so.1 \
-    /usr/local/lib/libfmt.so \
-    ./
+    /usr/local/lib64/libspdlog.so \
+    /usr/local/lib64/libfmt.so \
+# libyaml-cpp is installed via epel-8
+# and epel-8 cannot be installed on ubi-minimal
+    /lib64/libyaml-cpp.so.0.6 \
+    /usr/lib64/
 
 RUN ldconfig && \
     ldd /openair-nssf/bin/oai_nssf
@@ -133,6 +124,7 @@ COPY --from=oai-nssf-builder \
 
 WORKDIR /openair-nssf
 
+# expose ports
 EXPOSE 80/tcp 8080/tcp
 # healthcheck
 HEALTHCHECK --interval=10s \
@@ -140,5 +132,5 @@ HEALTHCHECK --interval=10s \
             --retries=6 \
     CMD /openair-nssf/bin/healthcheck.sh
 
-ENTRYPOINT ["python3","/openair-nssf/bin/entrypoint.py"]
+ENTRYPOINT ["python3", "/openair-nssf/bin/entrypoint.py"]
 CMD ["/openair-nssf/bin/oai_nssf", "-c", "/openair-nssf/etc/nssf.conf", "-o"]

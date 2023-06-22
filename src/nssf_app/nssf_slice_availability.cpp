@@ -39,13 +39,14 @@
 
 using namespace nssf;
 using namespace std;
+using namespace oai::config::nssf;
 
 extern nssf_slice_avail* nssf_slice_avail_inst;
-extern nssf_config nssf_cfg;
+extern std::unique_ptr<oai::config::nssf::nssf_config> nssf_cfg;
 //------------------------------------------------------------------------------
 bool nssf_slice_avail::amf_set_present(
     const std::string& target_amf_set, amf_info_t& amf_info) {
-  for (auto amf_info_it : nssf_cfg.nssf_amf_info.amf_info_list) {
+  for (auto amf_info_it : nssf_cfg->nssf_amf_info.amf_info_list) {
     if (!amf_info_it.target_amf_set.compare(target_amf_set)) {
       amf_info = amf_info_it;
       return true;

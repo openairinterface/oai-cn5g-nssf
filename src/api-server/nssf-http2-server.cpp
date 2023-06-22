@@ -44,7 +44,7 @@ using namespace nghttp2::asio_http2;
 using namespace nghttp2::asio_http2::server;
 using namespace oai::nssf_server::model;
 
-extern nssf::nssf_config nssf_cfg;
+extern std::unique_ptr<oai::config::nssf::nssf_config> nssf_cfg;
 
 //------------------------------------------------------------------------------
 void nssf_http2_server::start() {
@@ -57,7 +57,8 @@ void nssf_http2_server::start() {
 
   // NSSF NS Selection - Network Slice Information (Document)
   server.handle(
-      NSSF_NSS_BASE + nssf_cfg.sbi_api_version + NSSF_NS_INFO_URL,
+      NSSF_NSS_BASE + nssf_cfg->local().get_sbi().get_api_version() +
+          NSSF_NS_INFO_URL,
       [&](const request& request, const response& response) {
         request.on_data([&](const uint8_t* data, std::size_t len) {
           try {
@@ -163,7 +164,8 @@ void nssf_http2_server::start() {
 
   // NSSF NSSAI Availability - NF Instance ID (Document)
   server.handle(
-      NSSF_NSSAI_AVAILABILITY_BASE + nssf_cfg.sbi_api_version +
+      NSSF_NSSAI_AVAILABILITY_BASE +
+          nssf_cfg->local().get_sbi().get_api_version() +
           NSSF_NSSAI_AVAILABILITY_URL,
       [&](const request& request, const response& response) {
         request.on_data([&](const uint8_t* data, std::size_t len) {
@@ -209,7 +211,8 @@ void nssf_http2_server::start() {
 
   // NSSF NSSAI Availability - Subscription ID (Collection/Document)
   server.handle(
-      NSSF_NSSAI_AVAILABILITY_BASE + nssf_cfg.sbi_api_version +
+      NSSF_NSSAI_AVAILABILITY_BASE +
+          nssf_cfg->local().get_sbi().get_api_version() +
           NSSF_NSSAI_AVAILABILITY_SUBSCRIPTION_URL,
       [&](const request& request, const response& response) {
         request.on_data([&](const uint8_t* data, std::size_t len) {
@@ -431,7 +434,7 @@ void nssf_http2_server::get_api_list(const response& response) {
   std::string content_type = "application/json";
   header_map h;
   h.emplace("content-type", header_value{content_type});
-  if (nssf_cfg.get_api_list(json_data)) {
+  if (nssf_cfg->get_api_list(json_data)) {
     http_code = HTTP_STATUS_CODE_200_OK;
     response.write_head(http_code, h);
     response.end(json_data.dump(4).c_str());

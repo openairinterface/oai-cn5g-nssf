@@ -26,75 +26,21 @@
  * \email: lionel.gauthier@eurecom.fr
  */
 
-#ifndef FILE_nssf_config_HPP_SEEN
-#define FILE_nssf_config_HPP_SEEN
+#pragma once
 
-#include "3gpp_29.510.h"
-#include "logger.hpp"
-#include <libconfig.h++>
-#include <mutex>
-#include <netinet/in.h>
-#include <nlohmann/json.hpp>
-#include <stdbool.h>
-#include <stdint.h>
-#include <string>
-#include <unistd.h>
 #include <yaml-cpp/yaml.h>
 
+#include "logger.hpp"
 #include "NsiInformation.h"
-#include "PlmnId.h"
-#include "Snssai.h"
 #include "SupportedNssaiAvailabilityData.h"
 #include "Tai.h"
-#include "logger.hpp"
+#include "config.hpp"
 
-namespace nssf {
-
-using namespace oai::nssf_server::model;
-
-#define NSSF_CONFIG_STRING_NSSF_CONFIG "NSSF"
-#define NSSF_CONFIG_STRING_FQDN "FQDN"
-#define NSSF_CONFIG_STRING_NSSF_SLICE_CONFIG "NSSF_SLICE_CONFIG"
-#define NSSF_CONFIG_STRING_INTERFACES "INTERFACES"
-#define NSSF_CONFIG_STRING_INTERFACE_NAME "INTERFACE_NAME"
-#define NSSF_CONFIG_STRING_IPV4_ADDRESS "IPV4_ADDRESS"
-#define NSSF_CONFIG_STRING_SBI_PORT_HTTP1 "HTTP1_PORT"
-#define NSSF_CONFIG_STRING_SBI_PORT_HTTP2 "HTTP2_PORT"
-#define NSSF_CONFIG_STRING_SBI_INTERFACE "SBI"
-#define NSSF_CONFIG_STRING_SBI_API_VERSION "API_VERSION"
-
-#define NSSF_CONFIG_STRING_NETWORK_IPV4 "NETWORK_IPV4"
-#define NSSF_CONFIG_STRING_NETWORK_IPV6 "NETWORK_IPV6"
-#define NSSF_CONFIG_STRING_ADDRESS_PREFIX_DELIMITER "/"
-#define NSSF_CONFIG_STRING_ITTI_TASKS "ITTI_TASKS"
-#define NSSF_CONFIG_STRING_ITTI_TIMER_SCHED_PARAMS "ITTI_TIMER_SCHED_PARAMS"
-#define NSSF_CONFIG_STRING_SBI_SCHED_PARAMS "SBI_SCHED_PARAMS"
-
-#define NSSF_CONFIG_STRING_SUPPORTED_FEATURES "SUPPORTED_FEATURES"
-#define NSSF_CONFIG_STRING_SUPPORTED_FEATURES_REGISTER_NRF "REGISTER_NRF"
-#define NSSF_CONFIG_STRING_SUPPORTED_FEATURES_NRF "NRF"
-#define NSSF_CONFIG_STRING_SUPPORTED_FEATURES_NRF_IPV4_ADDRESS "IPV4_ADDRESS"
-#define NSSF_CONFIG_STRING_SUPPORTED_FEATURES_NRF_PORT "PORT"
-#define NSSF_CONFIG_STRING_SUPPORTED_FEATURES_NRF_API_VERSION "API_VERSION"
-#define NSSF_CONFIG_STRING_SUPPORTED_FEATURES_NRF_HTTP_VERSION "HTTP_VERSION"
-#define NSSF_CONFIG_STRING_SUPPORTED_FEATURES_HTTP_VERSION "HTTP_VERSION"
-#define NSSF_CONFIG_STRING_SUPPORTED_FEATURES_USE_FQDN "USE_FQDN"
-
-#define NSSF_CONFIG_STRING_LOG_LEVEL "LOG_LEVEL"
-
-typedef struct interface_cfg_s {
-  std::string if_name;
-  struct in_addr addr4;
-  struct in_addr network4;
-  struct in6_addr addr6;
-  unsigned int mtu;
-  unsigned int http1_port;
-  unsigned int http2_port;
-} interface_cfg_t;
+namespace oai::config::nssf {
 
 typedef struct nsi_info_s {
-  Snssai snssai;
-  NsiInformation nsi_info;
+  oai::nssf_server::model::Snssai snssai;
+  oai::nssf_server::model::NsiInformation nsi_info;
 } nsi_info_t;
 
 typedef struct nssf_nsi_info_cfg_s {
@@ -102,8 +48,8 @@ typedef struct nssf_nsi_info_cfg_s {
 } nssf_nsi_info_t;
 
 typedef struct ta_info_s {
-  std::vector<Snssai> supoorted_snssai;
-  Tai tai;
+  std::vector<oai::nssf_server::model::Snssai> supoorted_snssai;
+  oai::nssf_server::model::Tai tai;
 } ta_info_t;
 
 typedef struct nssf_ta_info_cfg_s {
@@ -114,8 +60,9 @@ typedef struct amf_info_s {
   std::string target_amf_set;
   std::string nrf_amf_set;
   std::string nrf_amf_set_mgt;
-  std::vector<
-      std::pair<std::string, std::vector<SupportedNssaiAvailabilityData>>>
+  std::vector<std::pair<
+      std::string,
+      std::vector<oai::nssf_server::model::SupportedNssaiAvailabilityData>>>
       amf_List;
 } amf_info_t;
 
@@ -123,71 +70,34 @@ typedef struct nssf_amf_info_cfg_s {
   std::vector<amf_info_t> amf_info_list;
 } nssf_amf_info_t;
 
-class nssf_config {
- protected:
-  static const bool parse_amf_list(
-      const YAML::Node& conf, amf_info_t& amf_info);
-
-  static const bool parse_nssai(
-      const YAML::Node& conf, SupportedNssaiAvailabilityData& nssai_data);
-
+class nssf_config : public oai::config::config {
  private:
-  int load_interface(const libconfig::Setting& if_cfg, interface_cfg_t& cfg);
+  static bool parse_amf_list(const YAML::Node& conf, amf_info_t& amf_info);
 
-  static const bool parse_nsi_info(
-      const YAML::Node& conf, nssf_nsi_info_t& cfg);
+  static bool parse_nssai(
+      const YAML::Node& conf,
+      oai::nssf_server::model::SupportedNssaiAvailabilityData& nssai_data);
 
-  static const bool parse_ta_info(const YAML::Node& conf, nssf_ta_info_t& cfg);
+  static bool parse_nsi_info(const YAML::Node& conf, nssf_nsi_info_t& cfg);
 
-  static const bool parse_amf_info(
-      const YAML::Node& conf, nssf_amf_info_t& cfg);
+  static bool parse_ta_info(const YAML::Node& conf, nssf_ta_info_t& cfg);
+
+  static bool parse_amf_info(const YAML::Node& conf, nssf_amf_info_t& cfg);
 
  public:
-  /* Reader/writer lock for this configuration */
-  std::mutex m_rw_lock;
-  std::string pid_dir;
-  spdlog::level::level_enum log_level;
-  unsigned int instance;
-  std::string fqdn;
-  interface_cfg_t sbi;
-  std::string sbi_api_version;
-
-  std::string gateway;
-
+  // Stefan: We should get rid of this instance
+  unsigned int instance = 0;
   static nssf_nsi_info_t nssf_nsi_info;
   static nssf_ta_info_t nssf_ta_info;
   static nssf_amf_info_t nssf_amf_info;
 
-  struct {
-    bool register_nrf;
-    bool use_fqdn;
-    struct {
-      struct in_addr ipv4_addr;
-      unsigned int port;
-      unsigned int http_version;
-      std::string api_version;
-      std::string fqdn;
-    } nrf_addr;
-  } nssf_features;
+  explicit nssf_config(
+      const std::string& config_path, bool log_stdout, bool log_rot_file);
 
-  static std::string slice_config_file;
-
-  nssf_config() : m_rw_lock(), pid_dir(), instance(0) {
-    sbi.http1_port = 9090;
-    sbi.http2_port = 80;
-    log_level      = spdlog::level::debug;
-  };
-
-  void lock() { m_rw_lock.lock(); };
-  void unlock() { m_rw_lock.unlock(); };
-  int load(const std::string& config_file);
-  int execute();
-  void display();
-
-  static bool parse_config();
+  bool parse_config();
   static bool get_slice_config(nlohmann::json& slice_config);
   static bool get_api_list(nlohmann::json& api_list);
-};
-}  // namespace nssf
 
-#endif /* FILE_nssf_config_HPP_SEEN */
+  bool init() override;
+};
+}  // namespace oai::config::nssf

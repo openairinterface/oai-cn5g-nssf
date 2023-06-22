@@ -69,8 +69,6 @@ RUN ./build_nssf --install-deps --force && \
 RUN ./build_nssf --clean --Verbose --build-type Release --jobs && \
     ldd /openair-nssf/build/nssf/build/nssf && \
     mv /openair-nssf/build/nssf/build/nssf /openair-nssf/build/nssf/build/oai_nssf && \
-    sed -i -e "s@nf-root-folder@nssf@" -e "s@nf-config-file@nssf.conf@" \
-      ../common-build/docker-scripts/entrypoint.py && \
     # Remove entitlements and Subscription Manager configs
     rm -rf /etc/pki/entitlement && \
     rm -rf /etc/rhsm
@@ -103,8 +101,7 @@ RUN rm -f /etc/rhsm-host && \
       libicu \
       boost \
       libevent \
-      findutils \
-      libconfig && \
+      findutils && \
     pip3 install jinja2 && \
     microdnf clean all -y && \
     rm -rf /var/cache/yum /var/cache/dnf && \
@@ -125,11 +122,9 @@ COPY --from=oai-nssf-builder \
     /usr/local/lib64/libpistache.so.0 \
     /usr/local/lib/libnghttp2_asio.so \
     /usr/local/lib/libnghttp2_asio.so.1 \
+    /usr/local/lib64/libyaml-cpp.so.0.* \
     /usr/local/lib64/libspdlog.so \
     /usr/local/lib64/libfmt.so \
-# libyaml-cpp is installed via epel-8
-# and epel-8 cannot be installed on ubi-minimal
-    /lib64/libyaml-cpp.so.0.6 \
     /usr/lib64/
 
 RUN ldconfig && \
@@ -139,7 +134,7 @@ RUN ldconfig && \
 # The configuration folder will be flat
 WORKDIR /openair-nssf/etc
 COPY --from=oai-nssf-builder \
-    /openair-nssf/etc/nssf.conf \
+    /openair-nssf/etc/config.yaml \
     /openair-nssf/etc/nssf_slice_config.yaml \
     ./
 
@@ -153,5 +148,4 @@ HEALTHCHECK --interval=10s \
             --retries=6 \
     CMD /openair-nssf/bin/healthcheck.sh
 
-ENTRYPOINT ["python3", "/openair-nssf/bin/entrypoint.py"]
-CMD ["/openair-nssf/bin/oai_nssf", "-c", "/openair-nssf/etc/nssf.conf", "-o"]
+CMD ["/openair-nssf/bin/oai_nssf", "-c", "/openair-nssf/etc/config.yaml", "-o"]

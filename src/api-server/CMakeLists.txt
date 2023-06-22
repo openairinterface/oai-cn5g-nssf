@@ -29,6 +29,7 @@ include_directories(${SRC_TOP_DIR}/nssf_app)
 include_directories(${SRC_TOP_DIR}/common)
 include_directories(${SRC_TOP_DIR}/common/utils)
 include_directories(${SRC_TOP_DIR}/${MOUNTED_COMMON}/logger)
+include(${SRC_TOP_DIR}/${MOUNTED_COMMON}/config/config.cmake)
 
 file(GLOB NSSF_API_SERVER_src_files
     ${NSSF_API_SERVER_DIR}/nssf-api-server.cpp

@@ -78,8 +78,7 @@ def perform_flattening(tag):
     cmd += ' --change "EXPOSE 80/tcp" '
     cmd += ' --change "EXPOSE 8080/tcp" '
     cmd += ' --change "HEALTHCHECK --interval=10s --timeout=15s --retries=6 CMD /openair-nssf/bin/healthcheck.sh" '
-    cmd += ' --change "CMD [\\"/openair-nssf/bin/oai_nssf\\", \\"-c\\", \\"/openair-nssf/etc/nssf.conf\\", \\"-o\\"]" '
-    cmd += ' --change "ENTRYPOINT [\\"python3\\", \\"/openair-nssf/bin/entrypoint.py\\"]" '
+    cmd += ' --change "CMD [\\"/openair-nssf/bin/oai_nssf\\", \\"-c\\", \\"/openair-nssf/etc/config.yaml\\", \\"-o\\"]" '
     cmd += ' - ' + image_prefix + tag
     print (cmd)
     subprocess.check_output(cmd, shell=True, universal_newlines=True)

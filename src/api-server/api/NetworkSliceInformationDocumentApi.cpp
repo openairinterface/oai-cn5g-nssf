@@ -15,7 +15,7 @@
 #include "Helpers.h"
 #include "nssf_config.hpp"
 
-extern nssf::nssf_config nssf_cfg;
+extern std::unique_ptr<oai::config::nssf::nssf_config> nssf_cfg;
 
 namespace oai {
 namespace nssf_server {
@@ -39,7 +39,9 @@ void NetworkSliceInformationDocumentApi::setupRoutes() {
   using namespace Pistache::Rest;
 
   Routes::Get(
-      *router, base + nssf_cfg.sbi_api_version + "/network-slice-information",
+      *router,
+      base + nssf_cfg->local().get_sbi().get_api_version() +
+          "/network-slice-information",
       Routes::bind(
           &NetworkSliceInformationDocumentApi::n_s_selection_get_handler,
           this));

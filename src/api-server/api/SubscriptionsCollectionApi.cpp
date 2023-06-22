@@ -15,7 +15,7 @@
 #include "Helpers.h"
 #include "nssf_config.hpp"
 
-extern nssf::nssf_config nssf_cfg;
+extern std::unique_ptr<oai::config::nssf::nssf_config> nssf_cfg;
 
 namespace oai {
 namespace nssf_server {
@@ -40,7 +40,8 @@ void SubscriptionsCollectionApi::setupRoutes() {
 
   Routes::Post(
       *router,
-      base + nssf_cfg.sbi_api_version + "/nssai-availability/subscriptions",
+      base + nssf_cfg->local().get_sbi().get_api_version() +
+          "/nssai-availability/subscriptions",
       Routes::bind(
           &SubscriptionsCollectionApi::n_ssai_availability_post_handler, this));
 

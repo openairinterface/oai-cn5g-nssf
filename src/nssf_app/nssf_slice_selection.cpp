@@ -41,6 +41,7 @@
 
 using namespace nssf;
 using namespace std;
+using namespace oai::model::common;
 
 extern nssf_slice_select* nssf_slice_select_inst;
 extern std::unique_ptr<oai::config::nssf::nssf_config> nssf_cfg;
@@ -74,8 +75,7 @@ void nssf_slice_select::set_allowed_nssai(
     allowed_snssai_list.push_back(allowed_snssai);
   }
   AccessType access_type;
-  access_type.setEnumValue(oai::nssf_server::model::AccessType_anyOf::
-                               eAccessType_anyOf::ACCESS_3GPP);
+  access_type.setValue(AccessType::eAccessType::_3GPP_ACCESS);
   allowed_nssai.setAccessType(access_type);
   allowed_nssai.setAllowedSnssaiList(allowed_snssai_list);
   allowed_nssai_list.push_back(allowed_nssai);

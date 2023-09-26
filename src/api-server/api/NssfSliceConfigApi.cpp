@@ -17,7 +17,7 @@ namespace oai {
 namespace nssf_server {
 namespace api {
 
-using namespace oai::nssf_server::helpers;
+using namespace oai::model::common::helpers;
 using namespace oai::nssf_server::model;
 
 const std::string NssfSliceConfigApi::base = "/";

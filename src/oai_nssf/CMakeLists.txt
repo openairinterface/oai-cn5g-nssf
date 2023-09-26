@@ -290,6 +290,7 @@ add_executable(nssf
 ## Common modules
 include(${SRC_TOP_DIR}/${MOUNTED_COMMON}/logger/logger.cmake)
 include(${SRC_TOP_DIR}/${MOUNTED_COMMON}/config/config.cmake)
+include(${BUILD_TOP_DIR}/nssf/used_models.cmake)
 
 IF(STATIC_LINKING)
     SET(CMAKE_EXE_LINKER_FLAGS "-static")

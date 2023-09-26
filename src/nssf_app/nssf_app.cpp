@@ -39,6 +39,7 @@
 
 using namespace nssf;
 using namespace std;
+using namespace oai::model::common;
 
 extern nssf_app* nssf_app_inst;
 

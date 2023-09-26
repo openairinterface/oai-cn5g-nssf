@@ -72,7 +72,7 @@ bool SliceInfoForUEConfigurationUpdate::validate(
   }
 
   if (requestedNssaiIsSet()) {
-    const std::vector<Snssai>& value   = m_RequestedNssai;
+    const std::vector<oai::model::common::Snssai>& value = m_RequestedNssai;
     const std::string currentValuePath = _pathPrefix + ".requestedNssai";
 
     if (value.size() < 1) {
@@ -82,7 +82,7 @@ bool SliceInfoForUEConfigurationUpdate::validate(
     {  // Recursive validation of array elements
       const std::string oldValuePath = currentValuePath;
       int i                          = 0;
-      for (const Snssai& value : value) {
+      for (const oai::model::common::Snssai& value : value) {
         const std::string currentValuePath =
             oldValuePath + "[" + std::to_string(i) + "]";
 
@@ -266,12 +266,12 @@ bool SliceInfoForUEConfigurationUpdate::defaultConfiguredSnssaiIndIsSet()
 void SliceInfoForUEConfigurationUpdate::unsetDefaultConfiguredSnssaiInd() {
   m_DefaultConfiguredSnssaiIndIsSet = false;
 }
-std::vector<Snssai> SliceInfoForUEConfigurationUpdate::getRequestedNssai()
-    const {
+std::vector<oai::model::common::Snssai>
+SliceInfoForUEConfigurationUpdate::getRequestedNssai() const {
   return m_RequestedNssai;
 }
 void SliceInfoForUEConfigurationUpdate::setRequestedNssai(
-    std::vector<Snssai> const& value) {
+    std::vector<oai::model::common::Snssai> const& value) {
   m_RequestedNssai      = value;
   m_RequestedNssaiIsSet = true;
 }

@@ -26,7 +26,7 @@ namespace api {
 using namespace oai::nssf_server::model;
 using namespace nssf;
 
-extern nssf::nssf_config nssf_cfg;
+extern config::nssf::nssf_config nssf_cfg;
 
 NssfSliceConfigApiImpl::NssfSliceConfigApiImpl(
     std::shared_ptr<Pistache::Rest::Router> rtr, nssf_app* nssf_app_inst,

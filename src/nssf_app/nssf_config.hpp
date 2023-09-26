@@ -39,7 +39,7 @@
 namespace oai::config::nssf {
 
 typedef struct nsi_info_s {
-  oai::nssf_server::model::Snssai snssai;
+  oai::model::common::Snssai snssai;
   oai::nssf_server::model::NsiInformation nsi_info;
 } nsi_info_t;
 
@@ -48,8 +48,8 @@ typedef struct nssf_nsi_info_cfg_s {
 } nssf_nsi_info_t;
 
 typedef struct ta_info_s {
-  std::vector<oai::nssf_server::model::Snssai> supoorted_snssai;
-  oai::nssf_server::model::Tai tai;
+  std::vector<oai::model::common::Snssai> supoorted_snssai;
+  oai::model::common::Tai tai;
 } ta_info_t;
 
 typedef struct nssf_ta_info_cfg_s {

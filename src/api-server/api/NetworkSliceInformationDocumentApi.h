@@ -42,7 +42,15 @@ namespace oai {
 namespace nssf_server {
 namespace api {
 
-using namespace oai::nssf_server::model;
+bool fromStringValueHelper(
+    const std::string& inStr,
+    oai::nssf_server::model::SliceInfoForRegistration& value);
+bool fromStringValueHelper(
+    const std::string& inStr,
+    oai::nssf_server::model::SliceInfoForPDUSession& value);
+bool fromStringValueHelper(
+    const std::string& inStr,
+    oai::nssf_server::model::SliceInfoForUEConfigurationUpdate& value);
 
 class NetworkSliceInformationDocumentApi {
  public:
@@ -105,16 +113,18 @@ class NetworkSliceInformationDocumentApi {
   /// name="supportedFeatures">Features required to be supported by the NFs in
   /// the target slice instance (optional, default to &quot;&quot;)</param>
   virtual void n_s_selection_get(
-      const Pistache::Optional<NFType>& nfType,
+      const Pistache::Optional<oai::model::common::NFType>& nfType,
       const Pistache::Optional<std::string>& nfId,
-      const Pistache::Optional<SliceInfoForRegistration>&
+      const Pistache::Optional<
+          oai::nssf_server::model::SliceInfoForRegistration>&
           sliceInfoRequestForRegistration,
-      const Pistache::Optional<SliceInfoForPDUSession>&
+      const Pistache::Optional<oai::nssf_server::model::SliceInfoForPDUSession>&
           sliceInfoRequestForPduSession,
-      const Pistache::Optional<SliceInfoForUEConfigurationUpdate>&
+      const Pistache::Optional<
+          oai::nssf_server::model::SliceInfoForUEConfigurationUpdate>&
           sliceInfoRequestForUeCu,
-      const Pistache::Optional<PlmnId>& homePlmnId,
-      const Pistache::Optional<Tai>& tai,
+      const Pistache::Optional<oai::model::common::PlmnId>& homePlmnId,
+      const Pistache::Optional<oai::model::common::Tai>& tai,
       const Pistache::Optional<std::string>& supportedFeatures,
       Pistache::Http::ResponseWriter& response) = 0;
 };

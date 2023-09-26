@@ -29,6 +29,8 @@ include_directories(${SRC_TOP_DIR}/api-server/model)
 include_directories(${SRC_TOP_DIR}/api-server/)
 include_directories(${SRC_TOP_DIR}/${MOUNTED_COMMON}/logger)
 include(${SRC_TOP_DIR}/${MOUNTED_COMMON}/config/config.cmake)
+include(${SRC_TOP_DIR}/${MOUNTED_COMMON}/model/common_model/common_model.cmake)
+include(${SRC_TOP_DIR}/${MOUNTED_COMMON}/model/nrf/nrf_model.cmake)
 
 add_library (NSSF STATIC
   nssf_app.cpp

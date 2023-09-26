@@ -46,33 +46,32 @@ namespace oai {
 namespace nssf_server {
 namespace api {
 
-using namespace oai::nssf_server::model;
-using namespace nssf;
-
 class NetworkSliceInformationDocumentApiImpl
     : public oai::nssf_server::api::NetworkSliceInformationDocumentApi {
  public:
   NetworkSliceInformationDocumentApiImpl(
-      std::shared_ptr<Pistache::Rest::Router>, nssf_app* nssf_app_inst,
+      std::shared_ptr<Pistache::Rest::Router>, nssf::nssf_app* nssf_app_inst,
       std::string address);
   ~NetworkSliceInformationDocumentApiImpl() {}
 
   void n_s_selection_get(
-      const Pistache::Optional<NFType>& nfType,
+      const Pistache::Optional<oai::model::common::NFType>& nfType,
       const Pistache::Optional<std::string>& nfId,
-      const Pistache::Optional<SliceInfoForRegistration>&
+      const Pistache::Optional<
+          oai::nssf_server::model::SliceInfoForRegistration>&
           sliceInfoRequestForRegistration,
-      const Pistache::Optional<SliceInfoForPDUSession>&
+      const Pistache::Optional<oai::nssf_server::model::SliceInfoForPDUSession>&
           sliceInfoRequestForPduSession,
-      const Pistache::Optional<SliceInfoForUEConfigurationUpdate>&
+      const Pistache::Optional<
+          oai::nssf_server::model::SliceInfoForUEConfigurationUpdate>&
           sliceInfoRequestForUeCu,
-      const Pistache::Optional<PlmnId>& homePlmnId,
-      const Pistache::Optional<Tai>& tai,
+      const Pistache::Optional<oai::model::common::PlmnId>& homePlmnId,
+      const Pistache::Optional<oai::model::common::Tai>& tai,
       const Pistache::Optional<std::string>& supportedFeatures,
       Pistache::Http::ResponseWriter& response);
 
  private:
-  nssf_app* m_nssf_app;
+  nssf::nssf_app* m_nssf_app;
   std::string m_address;
 };
 

@@ -81,10 +81,11 @@ void from_json(const nlohmann::json& j, SliceInfoForPDUSession& o) {
   }
 }
 
-Snssai SliceInfoForPDUSession::getSNssai() const {
+oai::model::common::Snssai SliceInfoForPDUSession::getSNssai() const {
   return m_SNssai;
 }
-void SliceInfoForPDUSession::setSNssai(Snssai const& value) {
+void SliceInfoForPDUSession::setSNssai(
+    oai::model::common::Snssai const& value) {
   m_SNssai = value;
 }
 RoamingIndication SliceInfoForPDUSession::getRoamingIndication() const {
@@ -94,10 +95,11 @@ void SliceInfoForPDUSession::setRoamingIndication(
     RoamingIndication const& value) {
   m_RoamingIndication = value;
 }
-Snssai SliceInfoForPDUSession::getHomeSnssai() const {
+oai::model::common::Snssai SliceInfoForPDUSession::getHomeSnssai() const {
   return m_HomeSnssai;
 }
-void SliceInfoForPDUSession::setHomeSnssai(Snssai const& value) {
+void SliceInfoForPDUSession::setHomeSnssai(
+    oai::model::common::Snssai const& value) {
   m_HomeSnssai      = value;
   m_HomeSnssaiIsSet = true;
 }

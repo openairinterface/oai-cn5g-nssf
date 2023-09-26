@@ -42,20 +42,17 @@ namespace oai {
 namespace nssf_server {
 namespace api {
 
-using namespace oai::nssf_server::model;
-using namespace nssf;
-
 class SubscriptionIDDocumentApiImpl
     : public oai::nssf_server::api::SubscriptionIDDocumentApi {
  public:
   SubscriptionIDDocumentApiImpl(
-      std::shared_ptr<Pistache::Rest::Router>, nssf_app* nssf_app_inst,
+      std::shared_ptr<Pistache::Rest::Router>, nssf::nssf_app* nssf_app_inst,
       std::string address);
   ~SubscriptionIDDocumentApiImpl() {}
 
   void n_ssai_availability_sub_modify_patch(
       const std::string& subscriptionId,
-      const std::vector<PatchItem>& patchItem,
+      const std::vector<oai::model::common::PatchItem>& patchItem,
       const Pistache::Optional<Pistache::Http::Header::Raw>& contentEncoding,
       Pistache::Http::ResponseWriter& response);
   void n_ssai_availability_unsubscribe(
@@ -63,7 +60,7 @@ class SubscriptionIDDocumentApiImpl
       Pistache::Http::ResponseWriter& response);
 
  private:
-  nssf_app* m_nssf_app;
+  nssf::nssf_app* m_nssf_app;
   std::string m_address;
 };
 

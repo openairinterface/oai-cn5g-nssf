@@ -33,8 +33,6 @@ namespace oai {
 namespace nssf_server {
 namespace api {
 
-using namespace oai::nssf_server::model;
-
 class NSSAIAvailabilityStoreApi {
  public:
   explicit NSSAIAvailabilityStoreApi(

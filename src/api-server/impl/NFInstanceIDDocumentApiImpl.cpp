@@ -19,7 +19,7 @@ namespace nssf_server {
 namespace api {
 
 // using namespace oai::nssf_server::helpers;
-using namespace oai::nssf_server::model;
+using namespace oai::model::common;
 using namespace nssf;
 
 NFInstanceIDDocumentApiImpl::NFInstanceIDDocumentApiImpl(

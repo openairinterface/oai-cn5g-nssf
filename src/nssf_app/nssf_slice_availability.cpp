@@ -40,6 +40,7 @@
 using namespace nssf;
 using namespace std;
 using namespace oai::config::nssf;
+using namespace oai::model::common;
 
 extern nssf_slice_avail* nssf_slice_avail_inst;
 extern std::unique_ptr<oai::config::nssf::nssf_config> nssf_cfg;
@@ -56,9 +57,11 @@ bool nssf_slice_avail::amf_set_present(
 }
 //------------------------------------------------------------------------------
 bool nssf_slice_avail::handle_create_nssai_availability(
-    const std::string& nfId, const NssaiAvailabilityInfo& nssaiAvailInfo,
-    AuthorizedNssaiAvailabilityInfo& auth_info, int& http_code,
-    const uint8_t http_version, const ProblemDetails& problem_details) {
+    const std::string& nfId,
+    const oai::nssf_server::model::NssaiAvailabilityInfo& nssaiAvailInfo,
+    oai::nssf_server::model::AuthorizedNssaiAvailabilityInfo& auth_info,
+    int& http_code, const uint8_t http_version,
+    const oai::model::common::ProblemDetails& problem_details) {
   if (nssaiAvailInfo.amfSetIdIsSet()) {
     std::string amf_set = nssaiAvailInfo.getAmfSetId();
     Logger::nssf_app().info(
@@ -125,15 +128,19 @@ bool nssf_slice_avail::handle_remove_nssai_availability(
 //------------------------------------------------------------------------------
 // Handle NSSF NSSAI Availability - Subscription ID (Collection/Document)
 bool nssf_slice_avail::handle_create_subscription_nssai_availability(
-    const NssfEventSubscriptionCreateData& subscriptionData, int& http_code,
-    const uint8_t http_version, const ProblemDetails& problem_details) {
+    const oai::nssf_server::model::NssfEventSubscriptionCreateData&
+        subscriptionData,
+    int& http_code, const uint8_t http_version,
+    const ProblemDetails& problem_details) {
   // ToDo
   return false;
 }
 //------------------------------------------------------------------------------
 bool nssf_slice_avail::handle_update_subscription_nssai_availability(
-    const NssfEventSubscriptionCreateData& subscriptionData, int& http_code,
-    const uint8_t http_version, const ProblemDetails& problem_details) {
+    const oai::nssf_server::model::NssfEventSubscriptionCreateData&
+        subscriptionData,
+    int& http_code, const uint8_t http_version,
+    const ProblemDetails& problem_details) {
   // ToDo
   return false;
 }

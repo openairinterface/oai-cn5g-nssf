@@ -44,8 +44,9 @@ bool SupportedNssaiAvailabilityData::validate(
       pathPrefix.empty() ? "SupportedNssaiAvailabilityData" : pathPrefix;
 
   /* SupportedSnssaiList */ {
-    const std::vector<ExtSnssai>& value = m_SupportedSnssaiList;
-    const std::string currentValuePath  = _pathPrefix + ".supportedSnssaiList";
+    const std::vector<oai::model::common::ExtSnssai>& value =
+        m_SupportedSnssaiList;
+    const std::string currentValuePath = _pathPrefix + ".supportedSnssaiList";
 
     if (value.size() < 1) {
       success = false;
@@ -54,7 +55,7 @@ bool SupportedNssaiAvailabilityData::validate(
     {  // Recursive validation of array elements
       const std::string oldValuePath = currentValuePath;
       int i                          = 0;
-      for (const ExtSnssai& value : value) {
+      for (const oai::model::common::ExtSnssai& value : value) {
         const std::string currentValuePath =
             oldValuePath + "[" + std::to_string(i) + "]";
 
@@ -68,7 +69,7 @@ bool SupportedNssaiAvailabilityData::validate(
   }
 
   if (taiListIsSet()) {
-    const std::vector<Tai>& value      = m_TaiList;
+    const std::vector<oai::model::common::Tai>& value = m_TaiList;
     const std::string currentValuePath = _pathPrefix + ".taiList";
 
     if (value.size() < 1) {
@@ -78,7 +79,7 @@ bool SupportedNssaiAvailabilityData::validate(
     {  // Recursive validation of array elements
       const std::string oldValuePath = currentValuePath;
       int i                          = 0;
-      for (const Tai& value : value) {
+      for (const oai::model::common::Tai& value : value) {
         const std::string currentValuePath =
             oldValuePath + "[" + std::to_string(i) + "]";
 
@@ -90,7 +91,7 @@ bool SupportedNssaiAvailabilityData::validate(
   }
 
   if (taiRangeListIsSet()) {
-    const std::vector<TaiRange>& value = m_TaiRangeList;
+    const std::vector<oai::model::nrf::TaiRange>& value = m_TaiRangeList;
     const std::string currentValuePath = _pathPrefix + ".taiRangeList";
 
     if (value.size() < 1) {
@@ -100,7 +101,7 @@ bool SupportedNssaiAvailabilityData::validate(
     {  // Recursive validation of array elements
       const std::string oldValuePath = currentValuePath;
       int i                          = 0;
-      for (const TaiRange& value : value) {
+      for (const oai::model::nrf::TaiRange& value : value) {
         const std::string currentValuePath =
             oldValuePath + "[" + std::to_string(i) + "]";
 
@@ -161,24 +162,27 @@ void from_json(const nlohmann::json& j, SupportedNssaiAvailabilityData& o) {
   }
 }
 
-Tai SupportedNssaiAvailabilityData::getTai() const {
+oai::model::common::Tai SupportedNssaiAvailabilityData::getTai() const {
   return m_Tai;
 }
-void SupportedNssaiAvailabilityData::setTai(Tai const& value) {
+void SupportedNssaiAvailabilityData::setTai(
+    oai::model::common::Tai const& value) {
   m_Tai = value;
 }
-std::vector<ExtSnssai> SupportedNssaiAvailabilityData::getSupportedSnssaiList()
-    const {
+std::vector<oai::model::common::ExtSnssai>
+SupportedNssaiAvailabilityData::getSupportedSnssaiList() const {
   return m_SupportedSnssaiList;
 }
 void SupportedNssaiAvailabilityData::setSupportedSnssaiList(
-    std::vector<ExtSnssai> const& value) {
+    std::vector<oai::model::common::ExtSnssai> const& value) {
   m_SupportedSnssaiList = value;
 }
-std::vector<Tai> SupportedNssaiAvailabilityData::getTaiList() const {
+std::vector<oai::model::common::Tai>
+SupportedNssaiAvailabilityData::getTaiList() const {
   return m_TaiList;
 }
-void SupportedNssaiAvailabilityData::setTaiList(std::vector<Tai> const& value) {
+void SupportedNssaiAvailabilityData::setTaiList(
+    std::vector<oai::model::common::Tai> const& value) {
   m_TaiList      = value;
   m_TaiListIsSet = true;
 }
@@ -188,11 +192,12 @@ bool SupportedNssaiAvailabilityData::taiListIsSet() const {
 void SupportedNssaiAvailabilityData::unsetTaiList() {
   m_TaiListIsSet = false;
 }
-std::vector<TaiRange> SupportedNssaiAvailabilityData::getTaiRangeList() const {
+std::vector<oai::model::nrf::TaiRange>
+SupportedNssaiAvailabilityData::getTaiRangeList() const {
   return m_TaiRangeList;
 }
 void SupportedNssaiAvailabilityData::setTaiRangeList(
-    std::vector<TaiRange> const& value) {
+    std::vector<oai::model::nrf::TaiRange> const& value) {
   m_TaiRangeList      = value;
   m_TaiRangeListIsSet = true;
 }

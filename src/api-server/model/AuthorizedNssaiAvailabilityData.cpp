@@ -20,6 +20,8 @@ namespace oai {
 namespace nssf_server {
 namespace model {
 
+using namespace oai::model::common;
+
 AuthorizedNssaiAvailabilityData::AuthorizedNssaiAvailabilityData() {
   m_RestrictedSnssaiListIsSet = false;
   m_TaiListIsSet              = false;
@@ -45,8 +47,9 @@ bool AuthorizedNssaiAvailabilityData::validate(
       pathPrefix.empty() ? "AuthorizedNssaiAvailabilityData" : pathPrefix;
 
   /* SupportedSnssaiList */ {
-    const std::vector<ExtSnssai>& value = m_SupportedSnssaiList;
-    const std::string currentValuePath  = _pathPrefix + ".supportedSnssaiList";
+    const std::vector<oai::model::common::ExtSnssai>& value =
+        m_SupportedSnssaiList;
+    const std::string currentValuePath = _pathPrefix + ".supportedSnssaiList";
 
     if (value.size() < 1) {
       success = false;
@@ -55,7 +58,7 @@ bool AuthorizedNssaiAvailabilityData::validate(
     {  // Recursive validation of array elements
       const std::string oldValuePath = currentValuePath;
       int i                          = 0;
-      for (const ExtSnssai& value : value) {
+      for (const oai::model::common::ExtSnssai& value : value) {
         const std::string currentValuePath =
             oldValuePath + "[" + std::to_string(i) + "]";
 
@@ -115,7 +118,7 @@ bool AuthorizedNssaiAvailabilityData::validate(
   }
 
   if (taiRangeListIsSet()) {
-    const std::vector<TaiRange>& value = m_TaiRangeList;
+    const std::vector<oai::model::nrf::TaiRange>& value = m_TaiRangeList;
     const std::string currentValuePath = _pathPrefix + ".taiRangeList";
 
     if (value.size() < 1) {
@@ -125,7 +128,7 @@ bool AuthorizedNssaiAvailabilityData::validate(
     {  // Recursive validation of array elements
       const std::string oldValuePath = currentValuePath;
       int i                          = 0;
-      for (const TaiRange& value : value) {
+      for (const oai::model::nrf::TaiRange& value : value) {
         const std::string currentValuePath =
             oldValuePath + "[" + std::to_string(i) + "]";
 
@@ -239,11 +242,12 @@ bool AuthorizedNssaiAvailabilityData::taiListIsSet() const {
 void AuthorizedNssaiAvailabilityData::unsetTaiList() {
   m_TaiListIsSet = false;
 }
-std::vector<TaiRange> AuthorizedNssaiAvailabilityData::getTaiRangeList() const {
+std::vector<oai::model::nrf::TaiRange>
+AuthorizedNssaiAvailabilityData::getTaiRangeList() const {
   return m_TaiRangeList;
 }
 void AuthorizedNssaiAvailabilityData::setTaiRangeList(
-    std::vector<TaiRange> const& value) {
+    std::vector<oai::model::nrf::TaiRange> const& value) {
   m_TaiRangeList      = value;
   m_TaiRangeListIsSet = true;
 }

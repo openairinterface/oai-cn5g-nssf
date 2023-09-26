@@ -50,13 +50,13 @@ bool NssfEventSubscriptionCreateData::validate(
       pathPrefix.empty() ? "NssfEventSubscriptionCreateData" : pathPrefix;
 
   /* TaiList */ {
-    const std::vector<Tai>& value      = m_TaiList;
+    const std::vector<oai::model::common::Tai>& value = m_TaiList;
     const std::string currentValuePath = _pathPrefix + ".taiList";
 
     {  // Recursive validation of array elements
       const std::string oldValuePath = currentValuePath;
       int i                          = 0;
-      for (const Tai& value : value) {
+      for (const oai::model::common::Tai& value : value) {
         const std::string currentValuePath =
             oldValuePath + "[" + std::to_string(i) + "]";
 
@@ -73,7 +73,7 @@ bool NssfEventSubscriptionCreateData::validate(
   }
 
   if (taiRangeListIsSet()) {
-    const std::vector<TaiRange>& value = m_TaiRangeList;
+    const std::vector<oai::model::nrf::TaiRange>& value = m_TaiRangeList;
     const std::string currentValuePath = _pathPrefix + ".taiRangeList";
 
     if (value.size() < 1) {
@@ -83,7 +83,7 @@ bool NssfEventSubscriptionCreateData::validate(
     {  // Recursive validation of array elements
       const std::string oldValuePath = currentValuePath;
       int i                          = 0;
-      for (const TaiRange& value : value) {
+      for (const oai::model::nrf::TaiRange& value : value) {
         const std::string currentValuePath =
             oldValuePath + "[" + std::to_string(i) + "]";
 
@@ -179,11 +179,12 @@ void NssfEventSubscriptionCreateData::setNfNssaiAvailabilityUri(
     std::string const& value) {
   m_NfNssaiAvailabilityUri = value;
 }
-std::vector<Tai> NssfEventSubscriptionCreateData::getTaiList() const {
+std::vector<oai::model::common::Tai>
+NssfEventSubscriptionCreateData::getTaiList() const {
   return m_TaiList;
 }
 void NssfEventSubscriptionCreateData::setTaiList(
-    std::vector<Tai> const& value) {
+    std::vector<oai::model::common::Tai> const& value) {
   m_TaiList = value;
 }
 NssfEventType NssfEventSubscriptionCreateData::getEvent() const {
@@ -218,11 +219,12 @@ bool NssfEventSubscriptionCreateData::amfSetIdIsSet() const {
 void NssfEventSubscriptionCreateData::unsetAmfSetId() {
   m_AmfSetIdIsSet = false;
 }
-std::vector<TaiRange> NssfEventSubscriptionCreateData::getTaiRangeList() const {
+std::vector<oai::model::nrf::TaiRange>
+NssfEventSubscriptionCreateData::getTaiRangeList() const {
   return m_TaiRangeList;
 }
 void NssfEventSubscriptionCreateData::setTaiRangeList(
-    std::vector<TaiRange> const& value) {
+    std::vector<oai::model::nrf::TaiRange> const& value) {
   m_TaiRangeList      = value;
   m_TaiRangeListIsSet = true;
 }

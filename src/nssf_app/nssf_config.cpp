@@ -37,6 +37,7 @@ using namespace std;
 using namespace oai::config::nssf;
 using namespace oai::config;
 using namespace oai::nssf_server::model;
+using namespace oai::model::common;
 
 nssf_nsi_info_t nssf_config::nssf_nsi_info;
 nssf_ta_info_t nssf_config::nssf_ta_info;

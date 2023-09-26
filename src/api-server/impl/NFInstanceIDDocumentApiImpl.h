@@ -42,33 +42,32 @@ namespace oai {
 namespace nssf_server {
 namespace api {
 
-using namespace oai::nssf_server::model;
-using namespace nssf;
-
 class NFInstanceIDDocumentApiImpl
     : public oai::nssf_server::api::NFInstanceIDDocumentApi {
  public:
   NFInstanceIDDocumentApiImpl(
-      std::shared_ptr<Pistache::Rest::Router>, nssf_app* nssf_app_inst,
+      std::shared_ptr<Pistache::Rest::Router>, nssf::nssf_app* nssf_app_inst,
       std::string address);
   ~NFInstanceIDDocumentApiImpl() {}
 
   void n_ssai_availability_delete(
       const std::string& nfId, Pistache::Http::ResponseWriter& response);
   void n_ssai_availability_patch(
-      const std::string& nfId, const std::vector<PatchItem>& patchItem,
+      const std::string& nfId,
+      const std::vector<oai::model::common::PatchItem>& patchItem,
       const Pistache::Optional<Pistache::Http::Header::Raw>& contentEncoding,
       const Pistache::Optional<Pistache::Http::Header::Raw>& acceptEncoding,
       Pistache::Http::ResponseWriter& response);
   void n_ssai_availability_put(
       const std::string& nfId,
-      const NssaiAvailabilityInfo& nssaiAvailabilityInfo,
+      const oai::nssf_server::model::NssaiAvailabilityInfo&
+          nssaiAvailabilityInfo,
       const Pistache::Optional<Pistache::Http::Header::Raw>& contentEncoding,
       const Pistache::Optional<Pistache::Http::Header::Raw>& acceptEncoding,
       Pistache::Http::ResponseWriter& response);
 
  private:
-  nssf_app* m_nssf_app;
+  nssf::nssf_app* m_nssf_app;
   std::string m_address;
 };
 

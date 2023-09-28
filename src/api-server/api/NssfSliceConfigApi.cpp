@@ -47,8 +47,8 @@ void NssfSliceConfigApi::setupRoutes() {
 }
 
 std::pair<Pistache::Http::Code, std::string>
-NssfSliceConfigApi::handleParsingException(const std::exception& ex) const
-    noexcept {
+NssfSliceConfigApi::handleParsingException(
+    const std::exception& ex) const noexcept {
   try {
     throw;
   } catch (nlohmann::detail::exception& e) {
@@ -62,8 +62,8 @@ NssfSliceConfigApi::handleParsingException(const std::exception& ex) const
 }
 
 std::pair<Pistache::Http::Code, std::string>
-NssfSliceConfigApi::handleOperationException(const std::exception& ex) const
-    noexcept {
+NssfSliceConfigApi::handleOperationException(
+    const std::exception& ex) const noexcept {
   return std::make_pair(Pistache::Http::Code::Internal_Server_Error, ex.what());
 }
 

@@ -90,9 +90,10 @@ bool fromStringValue(const std::string& inStr, int64_t& value) {
 }
 
 bool fromStringValue(const std::string& inStr, bool& value) {
-  bool result                                = true;
-  inStr == "true" ? value                    = true :
-                    inStr == "false" ? value = false : result = false;
+  bool result = true;
+  inStr == "true"  ? value   = true :
+  inStr == "false" ? value  = false :
+                     result = false;
   return result;
 }
 

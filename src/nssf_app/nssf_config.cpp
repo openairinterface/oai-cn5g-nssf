@@ -46,10 +46,10 @@ nssf_amf_info_t nssf_config::nssf_amf_info;
 nssf_config::nssf_config(
     const string& config_path, bool log_stdout, bool log_rot_file)
     : config(config_path, NSSF_CONFIG_NAME, log_stdout, log_rot_file) {
-  m_used_config_values = {LOG_LEVEL_CONFIG_NAME, REGISTER_NF_CONFIG_NAME,
-                          NF_LIST_CONFIG_NAME, NSSF_CONFIG_NAME,
-                          NF_CONFIG_HTTP_NAME};
-  m_used_sbi_values    = {NSSF_CONFIG_NAME, NRF_CONFIG_NAME};
+  m_used_config_values = {
+      LOG_LEVEL_CONFIG_NAME, REGISTER_NF_CONFIG_NAME, NF_LIST_CONFIG_NAME,
+      NSSF_CONFIG_NAME, NF_CONFIG_HTTP_NAME};
+  m_used_sbi_values = {NSSF_CONFIG_NAME, NRF_CONFIG_NAME};
 
   auto nssf = std::make_shared<nssf_config_type>(
       NSSF_CONFIG_NAME, "oai-nssf",

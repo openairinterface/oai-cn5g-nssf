@@ -63,8 +63,8 @@ void NFInstanceIDDocumentApi::setupRoutes() {
 }
 
 std::pair<Pistache::Http::Code, std::string>
-NFInstanceIDDocumentApi::handleParsingException(const std::exception& ex) const
-    noexcept {
+NFInstanceIDDocumentApi::handleParsingException(
+    const std::exception& ex) const noexcept {
   try {
     throw;
   } catch (nlohmann::detail::exception& e) {

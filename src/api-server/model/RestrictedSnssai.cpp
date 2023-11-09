@@ -45,8 +45,8 @@ bool RestrictedSnssai::validate(
       pathPrefix.empty() ? "RestrictedSnssai" : pathPrefix;
 
   /* SNssaiList */ {
-    const std::vector<ExtSnssai>& value = m_SNssaiList;
-    const std::string currentValuePath  = _pathPrefix + ".sNssaiList";
+    const std::vector<oai::model::common::ExtSnssai>& value = m_SNssaiList;
+    const std::string currentValuePath = _pathPrefix + ".sNssaiList";
 
     if (value.size() < 1) {
       success = false;
@@ -55,7 +55,7 @@ bool RestrictedSnssai::validate(
     {  // Recursive validation of array elements
       const std::string oldValuePath = currentValuePath;
       int i                          = 0;
-      for (const ExtSnssai& value : value) {
+      for (const oai::model::common::ExtSnssai& value : value) {
         const std::string currentValuePath =
             oldValuePath + "[" + std::to_string(i) + "]";
 
@@ -68,7 +68,7 @@ bool RestrictedSnssai::validate(
   }
 
   if (homePlmnIdListIsSet()) {
-    const std::vector<PlmnId>& value   = m_HomePlmnIdList;
+    const std::vector<oai::model::common::PlmnId>& value = m_HomePlmnIdList;
     const std::string currentValuePath = _pathPrefix + ".homePlmnIdList";
 
     if (value.size() < 1) {
@@ -78,7 +78,7 @@ bool RestrictedSnssai::validate(
     {  // Recursive validation of array elements
       const std::string oldValuePath = currentValuePath;
       int i                          = 0;
-      for (const PlmnId& value : value) {
+      for (const oai::model::common::PlmnId& value : value) {
         const std::string currentValuePath =
             oldValuePath + "[" + std::to_string(i) + "]";
 
@@ -138,22 +138,26 @@ void from_json(const nlohmann::json& j, RestrictedSnssai& o) {
   }
 }
 
-PlmnId RestrictedSnssai::getHomePlmnId() const {
+oai::model::common::PlmnId RestrictedSnssai::getHomePlmnId() const {
   return m_HomePlmnId;
 }
-void RestrictedSnssai::setHomePlmnId(PlmnId const& value) {
+void RestrictedSnssai::setHomePlmnId(oai::model::common::PlmnId const& value) {
   m_HomePlmnId = value;
 }
-std::vector<ExtSnssai> RestrictedSnssai::getSNssaiList() const {
+std::vector<oai::model::common::ExtSnssai> RestrictedSnssai::getSNssaiList()
+    const {
   return m_SNssaiList;
 }
-void RestrictedSnssai::setSNssaiList(std::vector<ExtSnssai> const& value) {
+void RestrictedSnssai::setSNssaiList(
+    std::vector<oai::model::common::ExtSnssai> const& value) {
   m_SNssaiList = value;
 }
-std::vector<PlmnId> RestrictedSnssai::getHomePlmnIdList() const {
+std::vector<oai::model::common::PlmnId> RestrictedSnssai::getHomePlmnIdList()
+    const {
   return m_HomePlmnIdList;
 }
-void RestrictedSnssai::setHomePlmnIdList(std::vector<PlmnId> const& value) {
+void RestrictedSnssai::setHomePlmnIdList(
+    std::vector<oai::model::common::PlmnId> const& value) {
   m_HomePlmnIdList      = value;
   m_HomePlmnIdListIsSet = true;
 }

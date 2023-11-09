@@ -93,8 +93,8 @@ class SliceInfoForUEConfigurationUpdate {
   /// <summary>
   ///
   /// </summary>
-  std::vector<Snssai> getRequestedNssai() const;
-  void setRequestedNssai(std::vector<Snssai> const& value);
+  std::vector<oai::model::common::Snssai> getRequestedNssai() const;
+  void setRequestedNssai(std::vector<oai::model::common::Snssai> const& value);
   bool requestedNssaiIsSet() const;
   void unsetRequestedNssai();
   /// <summary>
@@ -119,7 +119,7 @@ class SliceInfoForUEConfigurationUpdate {
   bool m_AllowedNssaiOtherAccessIsSet;
   bool m_DefaultConfiguredSnssaiInd;
   bool m_DefaultConfiguredSnssaiIndIsSet;
-  std::vector<Snssai> m_RequestedNssai;
+  std::vector<oai::model::common::Snssai> m_RequestedNssai;
   bool m_RequestedNssaiIsSet;
   std::vector<MappingOfSnssai> m_MappingOfNssai;
   bool m_MappingOfNssaiIsSet;

@@ -24,14 +24,15 @@ namespace oai {
 namespace nssf_server {
 namespace api {
 
-using namespace oai::nssf_server::helpers;
+using namespace oai::model::common;
+using namespace oai::model::common::helpers;
 using namespace oai::nssf_server::model;
 // using namespace oai::nssf;
 
-extern nssf::nssf_config nssf_cfg;
+extern config::nssf::nssf_config nssf_cfg;
 
 NetworkSliceInformationDocumentApiImpl::NetworkSliceInformationDocumentApiImpl(
-    std::shared_ptr<Pistache::Rest::Router> rtr, nssf_app* nssf_app_inst,
+    std::shared_ptr<Pistache::Rest::Router> rtr, nssf::nssf_app* nssf_app_inst,
     std::string address)
     : NetworkSliceInformationDocumentApi(rtr),
       m_nssf_app(nssf_app_inst),

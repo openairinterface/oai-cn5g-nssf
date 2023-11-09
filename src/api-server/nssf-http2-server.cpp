@@ -43,6 +43,7 @@
 using namespace nghttp2::asio_http2;
 using namespace nghttp2::asio_http2::server;
 using namespace oai::nssf_server::model;
+using namespace oai::model::common;
 
 extern std::unique_ptr<oai::config::nssf::nssf_config> nssf_cfg;
 

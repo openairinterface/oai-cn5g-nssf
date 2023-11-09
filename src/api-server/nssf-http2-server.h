@@ -57,26 +57,30 @@ class nssf_http2_server {
   // NSSF NS Selection - Network Slice Information (Document)
   void get_slice_info_for_registration_handler(
       const std::string& nf_type, std::string& nf_id,
-      const SliceInfoForRegistration slice_info, const Tai& tai,
-      const PlmnId& home_plmnid, const std::string& features,
-      const response& response);
+      const SliceInfoForRegistration slice_info,
+      const oai::model::common::Tai& tai,
+      const oai::model::common::PlmnId& home_plmnid,
+      const std::string& features, const response& response);
 
   void get_slice_info_for_pdu_session_handler(
       const std::string& nf_type, std::string& nf_id,
-      const SliceInfoForPDUSession& slice_info, const Tai& tai,
-      const PlmnId& home_plmnid, const std::string& features,
-      const response& response);
+      const SliceInfoForPDUSession& slice_info,
+      const oai::model::common::Tai& tai,
+      const oai::model::common::PlmnId& home_plmnid,
+      const std::string& features, const response& response);
 
   void get_slice_info_for_ue_cu_handler(
       const std::string& nf_type, std::string& nf_id,
-      const SliceInfoForUEConfigurationUpdate& slice_info, const Tai& tai,
-      const PlmnId& home_plmnid, const std::string& features,
-      const response& response);
+      const SliceInfoForUEConfigurationUpdate& slice_info,
+      const oai::model::common::Tai& tai,
+      const oai::model::common::PlmnId& home_plmnid,
+      const std::string& features, const response& response);
 
   void get_slice_info_default_handler(
-      const std::string& nf_type, std::string& nf_id, const Tai& tai,
-      const PlmnId& home_plmnid, const std::string& features,
-      const response& response);
+      const std::string& nf_type, std::string& nf_id,
+      const oai::model::common::Tai& tai,
+      const oai::model::common::PlmnId& home_plmnid,
+      const std::string& features, const response& response);
 
   // NSSF NSSAI Availability - NF Instance ID (Document)
   void create_nssai_availability_handler(
@@ -84,7 +88,8 @@ class nssf_http2_server {
       const response& response);
 
   void update_n_ssai_availability_handler(
-      const std::string& nfId, const std::vector<PatchItem>& patchItem,
+      const std::string& nfId,
+      const std::vector<oai::model::common::PatchItem>& patchItem,
       const response& response);
 
   void remove_n_ssai_availability_handler(

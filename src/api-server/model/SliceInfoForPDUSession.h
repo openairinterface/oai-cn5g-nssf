@@ -62,8 +62,8 @@ class SliceInfoForPDUSession {
   /// <summary>
   ///
   /// </summary>
-  Snssai getSNssai() const;
-  void setSNssai(Snssai const& value);
+  oai::model::common::Snssai getSNssai() const;
+  void setSNssai(oai::model::common::Snssai const& value);
   /// <summary>
   ///
   /// </summary>
@@ -72,8 +72,8 @@ class SliceInfoForPDUSession {
   /// <summary>
   ///
   /// </summary>
-  Snssai getHomeSnssai() const;
-  void setHomeSnssai(Snssai const& value);
+  oai::model::common::Snssai getHomeSnssai() const;
+  void setHomeSnssai(oai::model::common::Snssai const& value);
   bool homeSnssaiIsSet() const;
   void unsetHomeSnssai();
 
@@ -81,11 +81,11 @@ class SliceInfoForPDUSession {
   friend void from_json(const nlohmann::json& j, SliceInfoForPDUSession& o);
 
  protected:
-  Snssai m_SNssai;
+  oai::model::common::Snssai m_SNssai;
 
   RoamingIndication m_RoamingIndication;
 
-  Snssai m_HomeSnssai;
+  oai::model::common::Snssai m_HomeSnssai;
   bool m_HomeSnssaiIsSet;
 };
 

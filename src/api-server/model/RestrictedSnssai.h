@@ -63,18 +63,18 @@ class RestrictedSnssai {
   /// <summary>
   ///
   /// </summary>
-  PlmnId getHomePlmnId() const;
-  void setHomePlmnId(PlmnId const& value);
+  oai::model::common::PlmnId getHomePlmnId() const;
+  void setHomePlmnId(oai::model::common::PlmnId const& value);
   /// <summary>
   ///
   /// </summary>
-  std::vector<ExtSnssai> getSNssaiList() const;
-  void setSNssaiList(std::vector<ExtSnssai> const& value);
+  std::vector<oai::model::common::ExtSnssai> getSNssaiList() const;
+  void setSNssaiList(std::vector<oai::model::common::ExtSnssai> const& value);
   /// <summary>
   ///
   /// </summary>
-  std::vector<PlmnId> getHomePlmnIdList() const;
-  void setHomePlmnIdList(std::vector<PlmnId> const& value);
+  std::vector<oai::model::common::PlmnId> getHomePlmnIdList() const;
+  void setHomePlmnIdList(std::vector<oai::model::common::PlmnId> const& value);
   bool homePlmnIdListIsSet() const;
   void unsetHomePlmnIdList();
   /// <summary>
@@ -89,11 +89,11 @@ class RestrictedSnssai {
   friend void from_json(const nlohmann::json& j, RestrictedSnssai& o);
 
  protected:
-  PlmnId m_HomePlmnId;
+  oai::model::common::PlmnId m_HomePlmnId;
 
-  std::vector<ExtSnssai> m_SNssaiList;
+  std::vector<oai::model::common::ExtSnssai> m_SNssaiList;
 
-  std::vector<PlmnId> m_HomePlmnIdList;
+  std::vector<oai::model::common::PlmnId> m_HomePlmnIdList;
   bool m_HomePlmnIdListIsSet;
   bool m_RoamingRestriction;
   bool m_RoamingRestrictionIsSet;

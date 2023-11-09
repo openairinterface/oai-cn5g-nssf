@@ -65,13 +65,14 @@ class AuthorizedNssaiAvailabilityData {
   /// <summary>
   ///
   /// </summary>
-  Tai getTai() const;
-  void setTai(Tai const& value);
+  oai::model::common::Tai getTai() const;
+  void setTai(oai::model::common::Tai const& value);
   /// <summary>
   ///
   /// </summary>
-  std::vector<ExtSnssai> getSupportedSnssaiList() const;
-  void setSupportedSnssaiList(std::vector<ExtSnssai> const& value);
+  std::vector<oai::model::common::ExtSnssai> getSupportedSnssaiList() const;
+  void setSupportedSnssaiList(
+      std::vector<oai::model::common::ExtSnssai> const& value);
   /// <summary>
   ///
   /// </summary>
@@ -82,15 +83,15 @@ class AuthorizedNssaiAvailabilityData {
   /// <summary>
   ///
   /// </summary>
-  std::vector<Tai> getTaiList() const;
-  void setTaiList(std::vector<Tai> const& value);
+  std::vector<oai::model::common::Tai> getTaiList() const;
+  void setTaiList(std::vector<oai::model::common::Tai> const& value);
   bool taiListIsSet() const;
   void unsetTaiList();
   /// <summary>
   ///
   /// </summary>
-  std::vector<TaiRange> getTaiRangeList() const;
-  void setTaiRangeList(std::vector<TaiRange> const& value);
+  std::vector<oai::model::nrf::TaiRange> getTaiRangeList() const;
+  void setTaiRangeList(std::vector<oai::model::nrf::TaiRange> const& value);
   bool taiRangeListIsSet() const;
   void unsetTaiRangeList();
 
@@ -100,15 +101,15 @@ class AuthorizedNssaiAvailabilityData {
       const nlohmann::json& j, AuthorizedNssaiAvailabilityData& o);
 
  protected:
-  Tai m_Tai;
+  oai::model::common::Tai m_Tai;
 
-  std::vector<ExtSnssai> m_SupportedSnssaiList;
+  std::vector<oai::model::common::ExtSnssai> m_SupportedSnssaiList;
 
   std::vector<RestrictedSnssai> m_RestrictedSnssaiList;
   bool m_RestrictedSnssaiListIsSet;
-  std::vector<Tai> m_TaiList;
+  std::vector<oai::model::common::Tai> m_TaiList;
   bool m_TaiListIsSet;
-  std::vector<TaiRange> m_TaiRangeList;
+  std::vector<oai::model::nrf::TaiRange> m_TaiRangeList;
   bool m_TaiRangeListIsSet;
 };
 

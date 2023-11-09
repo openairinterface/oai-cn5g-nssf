@@ -51,13 +51,11 @@
 
 namespace nssf {
 
-using namespace oai::nssf_server::model;
-using namespace oai::config::nssf;
-
 class nssf_slice_avail {
  private:
   static bool amf_set_present(
-      const std::string& target_amf_set, amf_info_t& amf_info);
+      const std::string& target_amf_set,
+      oai::config::nssf::amf_info_t& amf_info);
 
  public:
   explicit nssf_slice_avail(const std::string& config_file);
@@ -69,31 +67,39 @@ class nssf_slice_avail {
   // Handle NSSF NSSAI Availability - NF Instance ID (Document)
 
   bool handle_create_nssai_availability(
-      const std::string& nfId, const NssaiAvailabilityInfo& nssaiAvailInfo,
-      AuthorizedNssaiAvailabilityInfo& auth_info, int& http_code,
-      const uint8_t http_version, const ProblemDetails& problem_details);
+      const std::string& nfId,
+      const oai::nssf_server::model::NssaiAvailabilityInfo& nssaiAvailInfo,
+      oai::nssf_server::model::AuthorizedNssaiAvailabilityInfo& auth_info,
+      int& http_code, const uint8_t http_version,
+      const oai::model::common::ProblemDetails& problem_details);
 
   bool handle_update_nssai_availability(
-      const std::string& nfId, const std::vector<PatchItem>& patchItem,
+      const std::string& nfId,
+      const std::vector<oai::model::common::PatchItem>& patchItem,
       int& http_code, const uint8_t http_version,
-      const ProblemDetails& problem_details);
+      const oai::model::common::ProblemDetails& problem_details);
 
   bool handle_remove_nssai_availability(
       const std::string& nfId, int& http_code, const uint8_t http_version,
-      const ProblemDetails& problem_details);
+      const oai::model::common::ProblemDetails& problem_details);
 
   // Handle NSSF NSSAI Availability - Subscription ID (Collection/Document)
   bool handle_create_subscription_nssai_availability(
-      const NssfEventSubscriptionCreateData& subscriptionData, int& http_code,
-      const uint8_t http_version, const ProblemDetails& problem_details);
+      const oai::nssf_server::model::NssfEventSubscriptionCreateData&
+          subscriptionData,
+      int& http_code, const uint8_t http_version,
+      const oai::model::common::ProblemDetails& problem_details);
 
   bool handle_update_subscription_nssai_availability(
-      const NssfEventSubscriptionCreateData& subscriptionData, int& http_code,
-      const uint8_t http_version, const ProblemDetails& problem_details);
+      const oai::nssf_server::model::NssfEventSubscriptionCreateData&
+          subscriptionData,
+      int& http_code, const uint8_t http_version,
+      const oai::model::common::ProblemDetails& problem_details);
 
   bool handle_remove_subscription_nssai_availability(
       const std::string& subscriptionId, int& http_code,
-      const uint8_t http_version, const ProblemDetails& problem_details);
+      const uint8_t http_version,
+      const oai::model::common::ProblemDetails& problem_details);
 };
 }  // namespace nssf
 #endif /* FILE_NSSF_SLICE_AVAILABILITY_HPP_SEEN */

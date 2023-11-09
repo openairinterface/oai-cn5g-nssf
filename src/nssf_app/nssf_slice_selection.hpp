@@ -59,18 +59,21 @@ class nssf_slice_select {
       AuthorizedNetworkSliceInfo& auth_slice_info);
 
   static bool get_valid_amfset(
-      const std::vector<Snssai>& req_nssai,
+      const std::vector<oai::model::common::Snssai>& req_nssai,
       AuthorizedNetworkSliceInfo& auth_slice_info);
 
   static bool get_valid_amf(
-      const std::vector<ExtSnssai> e_snssai_list,
-      const std::vector<Snssai> r_nssai);
+      const std::vector<oai::model::common::ExtSnssai> e_snssai_list,
+      const std::vector<oai::model::common::Snssai> r_nssai);
   static void set_allowed_nssai(
-      const std::vector<Snssai> nssai,
+      const std::vector<oai::model::common::Snssai> nssai,
       AuthorizedNetworkSliceInfo& auth_slice_info);
-  static bool compare_snssai(const Snssai a, const Snssai b);
-  static bool validate_ta(const Tai tai, std::vector<Snssai> rejected_snssai);
-  static bool validate_ta(const Tai& tai);
+  static bool compare_snssai(
+      const oai::model::common::Snssai a, const oai::model::common::Snssai b);
+  static bool validate_ta(
+      const oai::model::common::Tai tai,
+      std::vector<oai::model::common::Snssai> rejected_snssai);
+  static bool validate_ta(const oai::model::common::Tai& tai);
   static bool validate_nsi(
       const SliceInfoForPDUSession& slice_info, NsiInformation& nsi_info);
 
@@ -94,9 +97,11 @@ class nssf_slice_select {
    * @return void
    */
   bool handle_slice_info_for_registration(
-      const SliceInfoForRegistration& slice_info, const Tai& tai,
-      const PlmnId& home_plmnid, const std::string& features, int& http_code,
-      const uint8_t http_version, ProblemDetails& problem_details,
+      const SliceInfoForRegistration& slice_info,
+      const oai::model::common::Tai& tai,
+      const oai::model::common::PlmnId& home_plmnid,
+      const std::string& features, int& http_code, const uint8_t http_version,
+      oai::model::common::ProblemDetails& problem_details,
       AuthorizedNetworkSliceInfo& auth_slice_info);
 
   /*
@@ -110,9 +115,11 @@ class nssf_slice_select {
    * @return void
    */
   bool handle_slice_info_for_pdu_session(
-      const SliceInfoForPDUSession& slice_info, const Tai& tai,
-      const PlmnId& home_plmnid, const std::string& features, int& http_code,
-      const uint8_t http_version, const ProblemDetails& problem_details,
+      const SliceInfoForPDUSession& slice_info,
+      const oai::model::common::Tai& tai,
+      const oai::model::common::PlmnId& home_plmnid,
+      const std::string& features, int& http_code, const uint8_t http_version,
+      const oai::model::common::ProblemDetails& problem_details,
       AuthorizedNetworkSliceInfo& auth_slice_info);
 
   /*
@@ -127,9 +134,11 @@ class nssf_slice_select {
    * @return void
    */
   bool handle_slice_info_for_ue_cu(
-      const SliceInfoForUEConfigurationUpdate& slice_info, const Tai& tai,
-      const PlmnId& home_plmnid, const std::string& features, int& http_code,
-      const uint8_t http_version, const ProblemDetails& problem_details);
+      const SliceInfoForUEConfigurationUpdate& slice_info,
+      const oai::model::common::Tai& tai,
+      const oai::model::common::PlmnId& home_plmnid,
+      const std::string& features, int& http_code, const uint8_t http_version,
+      const oai::model::common::ProblemDetails& problem_details);
 };
 }  // namespace nssf
 #endif /* FILE_NSSF_SLICE_SELECT_HPP_SEEN */

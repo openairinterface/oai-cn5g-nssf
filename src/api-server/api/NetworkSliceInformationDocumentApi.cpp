@@ -21,8 +21,9 @@ namespace oai {
 namespace nssf_server {
 namespace api {
 
-using namespace oai::nssf_server::helpers;
+using namespace oai::model::common::helpers;
 using namespace oai::nssf_server::model;
+using namespace oai::model::common;
 
 const std::string NetworkSliceInformationDocumentApi::base =
     "/nnssf-nsselection/";
@@ -101,7 +102,7 @@ void NetworkSliceInformationDocumentApi::n_s_selection_get_handler(
         sliceInfoRequestForRegistration;
     if (!sliceInfoRequestForRegistrationQuery.isEmpty()) {
       SliceInfoForRegistration valueQuery_instance;
-      if (fromStringValue(
+      if (fromStringValueHelper(
               sliceInfoRequestForRegistrationQuery.get(),
               valueQuery_instance)) {
         sliceInfoRequestForRegistration = Pistache::Some(valueQuery_instance);
@@ -112,7 +113,7 @@ void NetworkSliceInformationDocumentApi::n_s_selection_get_handler(
     Pistache::Optional<SliceInfoForPDUSession> sliceInfoRequestForPduSession;
     if (!sliceInfoRequestForPduSessionQuery.isEmpty()) {
       SliceInfoForPDUSession valueQuery_instance;
-      if (fromStringValue(
+      if (fromStringValueHelper(
               sliceInfoRequestForPduSessionQuery.get(), valueQuery_instance)) {
         sliceInfoRequestForPduSession = Pistache::Some(valueQuery_instance);
       }
@@ -123,7 +124,7 @@ void NetworkSliceInformationDocumentApi::n_s_selection_get_handler(
         sliceInfoRequestForUeCu;
     if (!sliceInfoRequestForUeCuQuery.isEmpty()) {
       SliceInfoForUEConfigurationUpdate valueQuery_instance;
-      if (fromStringValue(
+      if (fromStringValueHelper(
               sliceInfoRequestForUeCuQuery.get(), valueQuery_instance)) {
         sliceInfoRequestForUeCu = Pistache::Some(valueQuery_instance);
       }
@@ -184,6 +185,32 @@ void NetworkSliceInformationDocumentApi::
         Pistache::Http::ResponseWriter response) {
   response.send(
       Pistache::Http::Code::Not_Found, "The requested method does not exist");
+}
+
+bool fromStringValueHelper(
+    const std::string& inStr,
+    oai::nssf_server::model::SliceInfoForRegistration& value) {
+  Logger::nssf_sbi().info(
+      " Query_PARAM::SLICE_INFO_RESGISTRATION - %s", inStr.c_str());
+  nlohmann::json::parse(inStr.c_str()).get_to(value);
+  return true;
+}
+
+bool fromStringValueHelper(
+    const std::string& inStr,
+    oai::nssf_server::model::SliceInfoForPDUSession& value) {
+  Logger::nssf_sbi().info(
+      " Query_PARAM::SLICE_INFO_PDU_SESSION - %s", inStr.c_str());
+  nlohmann::json::parse(inStr.c_str()).get_to(value);
+  return true;
+}
+
+bool fromStringValueHelper(
+    const std::string& inStr,
+    oai::nssf_server::model::SliceInfoForUEConfigurationUpdate& value) {
+  Logger::nssf_sbi().info(" Query_PARAM::SLICE_INFO_UE_CU - %s", inStr.c_str());
+  nlohmann::json::parse(inStr.c_str()).get_to(value);
+  return true;
 }
 
 }  // namespace api

@@ -1,5 +1,16 @@
 # RELEASE NOTES: #
 
+## v2.0.0 -- December 2023 ##
+
+* Features
+  - Support YAML configuration file
+    * Yaml validation default value
+* Tech debt
+  - Updated common models to 3GPP TS 29.571 Release 16.13.0 and moved them to the shared common submodule
+  - Switching to clang-format-12
+  - Published image on Docker-Hub is using now Ubuntu-22 as base image
+    * Ubuntu-18 is no longer supported
+
 ## v1.5.1 -- May 2023 ##
 
 * Code Refactoring for:

@@ -157,12 +157,12 @@ pipeline {
                   if ("MERGE".equals(env.gitlabActionType)) {
                     dockerBuildOptions = ''
                   }
-                  sh "docker buildx build ${dockerBuildOptions} --target oai-nssf --tag oai-nssf:${nssf_tag} --file docker/Dockerfile.nssf.ubuntu . > archives/nssf_docker_image_build.log 2>&1"
+                  sh "docker buildx build ${dockerBuildOptions} --target oai-nssf --tag oai-nssf:${nssf_tag} --file docker/Dockerfile.nssf.ubuntu . > archives/nssf_ubuntu_image_build.log 2>&1"
                   // Putting a place holder to try out on the flattening of image.
                   // If not satisfactory, we can remove it.
                   sh "python3 ./ci-scripts/flatten_image.py --tag oai-nssf:${nssf_tag}"
                   sh "docker image prune --force"
-                  sh "docker image ls | egrep --color=never 'nssf|REPOSITORY' >> archives/nssf_docker_image_build.log"
+                  sh "docker image ls | egrep --color=never 'nssf|REPOSITORY' >> archives/nssf_ubuntu_image_build.log"
                   // Pushing to local private registry for testing purpose
                   sh "docker login -u oaicicd -p oaicicd ${PrivateRegistryURL}"
                   sh "docker image tag oai-nssf:${nssf_tag} ${PrivateRegistryURL}/oai-nssf:${nssf_tag}"
@@ -176,10 +176,10 @@ pipeline {
           }
           post {
             success {
-              sh "echo 'OAI-NSSF DOCKER IMAGE BUILD: OK' >> archives/nssf_docker_image_build.log"
+              sh "echo 'OAI-NSSF UBUNTU IMAGE BUILD: OK' >> archives/nssf_ubuntu_image_build.log"
             }
             unsuccessful {
-              sh "echo 'OAI-NSSF DOCKER IMAGE BUILD: KO' >> archives/nssf_docker_image_build.log"
+              sh "echo 'OAI-NSSF UBUNTU IMAGE BUILD: KO' >> archives/nssf_ubuntu_image_build.log"
             }
           }
         }
@@ -206,23 +206,24 @@ pipeline {
                   sh "oc start-build nssf-build-cfg  --from-file=./"
                   // need python to wait for pod nssf-build-cfg-1-build to be Completed or Error
                   // it fails if it detects error or timeout at 20 minutes
-                  sh "./ci-scripts/common/python/check_build_pod_status.py --pod-name nssf-build-cfg-1-build --log-file archives/nssf_podman_image_build.log"
+                  sh "./ci-scripts/common/python/check_build_pod_status.py --pod-name nssf-build-cfg-1-build --log-file archives/nssf_rhel_image_build.log"
+                  sh "oc describe istag oai-nssf:${nssf_tag} | grep 'Image Size:' >> archives/nssf_rhel_image_build.log"
                 }
               }
             }
           }
           post {
             success {
-              sh "echo 'OAI-NSSF PODMAN RHEL IMAGE BUILD: OK' >> archives/nssf_podman_image_build.log"
+              sh "echo 'OAI-NSSF RHEL IMAGE BUILD: OK' >> archives/nssf_rhel_image_build.log"
             }
             unsuccessful {
-              sh "echo 'OAI-NSSF PODMAN RHEL IMAGE BUILD: KO' >> archives/nssf_podman_image_build.log"
+              sh "echo 'OAI-NSSF RHEL IMAGE BUILD: KO' >> archives/nssf_rhel_image_build.log"
             }
             cleanup {
               script {
                 sh "oc delete build nssf-build-cfg-1 || true"
                 sh "oc logout || true"
-                stash allowEmpty: true, includes: 'archives/nssf_podman_image_build.log', name: 'podmanBuildLog'
+                stash allowEmpty: true, includes: 'archives/nssf_rhel_image_build.log', name: 'rhelBuildLog'
               }
             }
           }
@@ -305,7 +306,7 @@ pipeline {
       post {
         always {
           script {
-            unstash 'podmanBuildLog'
+            unstash 'rhelBuildLog'
             unstash 'cppcheckLogs'
             unstash 'formatCheckLogs'
           }

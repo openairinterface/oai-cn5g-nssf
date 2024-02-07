@@ -21,19 +21,18 @@
 #---------------------------------------------------------------------
 #
 # Dockerfile for the Open-Air-Interface NSSF service
-#   Valid for Rocky Linux 8.7+
+#  Valid for Rocky Linux 9.+ 
 #
 #---------------------------------------------------------------------
 
 #---------------------------------------------------------------------
 # BUILDER IMAGE
 #---------------------------------------------------------------------
-FROM docker.io/rockylinux:8 AS oai-nssf-builder
+FROM docker.io/rockylinux:9 AS oai-nssf-builder
 
 ENV IS_DOCKERFILE=1
 
 RUN dnf install 'dnf-command(config-manager)' -y && \
-    dnf config-manager --set-enabled powertools && \
     dnf install epel-release -y && crb enable && \
     dnf update -y && \
     # here just to display the current version
@@ -69,7 +68,7 @@ FROM mikefarah/yq:latest as yq-source
 #---------------------------------------------------------------------
 # TARGET IMAGE
 #---------------------------------------------------------------------
-FROM docker.io/rockylinux:8-minimal as oai-nssf
+FROM docker.io/rockylinux:9-minimal as oai-nssf
 ENV TZ=Europe/Paris
 
 # We install some debug tools for the moment in addition of mandatory libraries

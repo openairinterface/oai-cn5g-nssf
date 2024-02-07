@@ -203,7 +203,7 @@ pipeline {
                   sh "oc delete -f openshift/build-config.yaml || true"
                   sh "sed -i -e 's@oai-nssf:latest@oai-nssf:${nssf_tag}@g' openshift/build-config.yaml"
                   sh "oc create -f openshift/build-config.yaml"
-                  sh "oc start-build nssf-build-cfg  --from-file=./"
+                  sh 'oc start-build nssf-build-cfg  --from-dir=./ --exclude=""'
                   // need python to wait for pod nssf-build-cfg-1-build to be Completed or Error
                   // it fails if it detects error or timeout at 20 minutes
                   sh "./ci-scripts/common/python/check_build_pod_status.py --pod-name nssf-build-cfg-1-build --log-file archives/nssf_rhel_image_build.log"

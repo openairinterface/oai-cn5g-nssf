@@ -120,6 +120,7 @@ class nssf_http2_server {
   uint32_t m_port;
   http2 server;
   nssf::nssf_app* m_nssf_app;
+  bool running_server;
 };
 
 #endif

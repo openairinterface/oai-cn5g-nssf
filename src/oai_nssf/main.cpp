@@ -52,23 +52,34 @@ nssf_http2_server* nssf_api_server_2 = nullptr;
 
 //------------------------------------------------------------------------------
 void my_app_signal_handler(int s) {
-  std::cout << "Caught signal " << s << std::endl;
-  Logger::system().startup("exiting");
-  std::cout << "Freeing Allocated memory..." << std::endl;
+  // Setting log level arbitrarly to debug to show the whole
+  // shutdown procedure in the logs even in case of off-logging
+  Logger::set_level(spdlog::level::debug);
+  Logger::system().info("Exiting: caught signal %d", s);
 
+  Logger::system().debug("Shutting down HTTP servers...");
   if (nssf_api_server_1) {
     nssf_api_server_1->shutdown();
+  }
+  if (nssf_api_server_2) {
+    nssf_api_server_2->stop();
+  }
+  Logger::system().debug("Freeing Allocated memory...");
+  if (nssf_api_server_1) {
     delete nssf_api_server_1;
     nssf_api_server_1 = nullptr;
   }
-  std::cout << "NSSF API Server memory done." << std::endl;
-  if (nssf_app_inst) delete nssf_app_inst;
-  nssf_app_inst = nullptr;
-  std::cout << "NSSF APP memory done." << std::endl;
-  // if (itti_inst) delete itti_inst;
-  // itti_inst = nullptr;
-  // std::cout << "ITTI memory done." << std::endl;
-  std::cout << "Freeing Allocated memory done" << std::endl;
+  if (nssf_api_server_2) {
+    delete nssf_api_server_2;
+    nssf_api_server_2 = nullptr;
+  }
+  if (nssf_app_inst) {
+    delete nssf_app_inst;
+    nssf_app_inst = nullptr;
+  }
+  Logger::system().debug("NSSF APP memory done");
+  Logger::system().debug("Freeing allocated memory done");
+  Logger::system().info("Bye.");
   exit(0);
 }
 //------------------------------------------------------------------------------

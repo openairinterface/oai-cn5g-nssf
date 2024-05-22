@@ -51,7 +51,7 @@ extern std::unique_ptr<oai::config::nssf::nssf_config> nssf_cfg;
 void nssf_http2_server::start() {
   boost::system::error_code ec;
 
-  Logger::nssf_sbi().info("HTTP2 server started");
+  Logger::nssf_sbi().info("HTTP2 server being started");
   std::string nfId                            = {};
   std::string subscriptionID                  = {};
   NssaiAvailabilityInfo nssaiAvailabilityInfo = {};
@@ -242,9 +242,12 @@ void nssf_http2_server::start() {
     });
   });
 
+  running_server = true;
   if (server.listen_and_serve(ec, m_address, std::to_string(m_port))) {
-    std::cerr << "HTTP Server error: " << ec.message() << std::endl;
+    Logger::nssf_sbi().error("HTTP Server error: %s", ec.message());
   }
+  running_server = false;
+  Logger::nssf_sbi().info("HTTP2 server fully stopped");
 }
 
 //------------------------------------------------------------------------------
@@ -448,4 +451,9 @@ void nssf_http2_server::get_api_list(const response& response) {
 //------------------------------------------------------------------------------
 void nssf_http2_server::stop() {
   server.stop();
+  while (running_server) {
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+  }
+  Logger::nssf_sbi().info("HTTP2 server should be fully stopped");
+  std::this_thread::sleep_for(std::chrono::milliseconds(50));
 }

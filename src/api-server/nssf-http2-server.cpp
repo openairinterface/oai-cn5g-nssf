@@ -156,7 +156,7 @@ void nssf_http2_server::start() {
             Logger::nssf_sbi().warn(
                 "Can not parse the json data (error: %s)!", e.what());
             response.write_head(
-                http_status_code_e::HTTP_STATUS_CODE_400_BAD_REQUEST);
+                oai::common::sbi::http_status_code::BAD_REQUEST);
             response.end();
             return;
           }
@@ -203,7 +203,7 @@ void nssf_http2_server::start() {
             Logger::nssf_sbi().warn(
                 "Can not parse the json data (error: %s)!", e.what());
             response.write_head(
-                http_status_code_e::HTTP_STATUS_CODE_400_BAD_REQUEST);
+                oai::common::sbi::http_status_code::BAD_REQUEST);
             response.end();
             return;
           }
@@ -274,7 +274,7 @@ void nssf_http2_server::get_slice_info_for_registration_handler(
     m_nssf_app->handle_slice_info_for_registration(
         slice_info, tai, home_plmnid, features, http_code, 2, problem_details,
         auth_slice_info);
-    if (http_code == HTTP_STATUS_CODE_200_OK) {
+    if (http_code == oai::common::sbi::http_status_code::OK) {
       to_json(json_data, auth_slice_info);
 
       response.write_head(http_code, h);
@@ -290,7 +290,7 @@ void nssf_http2_server::get_slice_info_for_registration_handler(
     Logger::nssf_app().info(
         "//---------------------------------------------------------");
     Logger::nssf_app().info("");
-    http_code = HTTP_STATUS_CODE_400_BAD_REQUEST;
+    http_code = oai::common::sbi::http_status_code::BAD_REQUEST;
     response.write_head(http_code, h);
     to_json(json_data, problem_details);
     response.end();
@@ -324,7 +324,7 @@ void nssf_http2_server::get_slice_info_for_pdu_session_handler(
     m_nssf_app->handle_slice_info_for_pdu_session(
         slice_info, tai, home_plmnid, features, http_code, 2, problem_details,
         auth_slice_info);
-    if (http_code == HTTP_STATUS_CODE_200_OK) {
+    if (http_code == oai::common::sbi::http_status_code::OK) {
       to_json(json_data, auth_slice_info);
 
       response.write_head(http_code, h);
@@ -340,7 +340,7 @@ void nssf_http2_server::get_slice_info_for_pdu_session_handler(
     Logger::nssf_app().info(
         "//---------------------------------------------------------");
     Logger::nssf_app().info("");
-    http_code = HTTP_STATUS_CODE_400_BAD_REQUEST;
+    http_code = oai::common::sbi::http_status_code::BAD_REQUEST;
     response.write_head(http_code, h);
     to_json(json_data, problem_details);
     response.end();
@@ -360,7 +360,7 @@ void nssf_http2_server::get_slice_info_for_ue_cu_handler(
   Logger::nssf_sbi().error("Not supported");
   Logger::nssf_app().info(
       "//---------------------------------------------------------");
-  long http_code = HTTP_STATUS_CODE_503_SERVICE_UNAVAILABLE;
+  long http_code = oai::common::sbi::http_status_code::SERVICE_UNAVAILABLE;
   header_map h;
   response.write_head(http_code, h);
   response.end("API not implemented yet !!!");
@@ -396,10 +396,10 @@ void nssf_http2_server::create_nssai_availability_handler(
   m_nssf_app->handle_create_nssai_availability(
       nfId, nssaiAvailInfo, auth_nssai_avail_info, http_code, 2,
       problem_details);
-  if (http_code == HTTP_STATUS_CODE_204_NO_CONTENT) {
+  if (http_code == oai::common::sbi::http_status_code::NO_CONTENT) {
     response.write_head(http_code, h);
     response.end();
-  } else if (http_code == HTTP_STATUS_CODE_200_OK) {
+  } else if (http_code == oai::common::sbi::http_status_code::OK) {
     h.emplace("content-type", header_value{"application/json"});
     response.write_head(http_code, h);
     to_json(json_data, auth_nssai_avail_info);
@@ -422,11 +422,11 @@ void nssf_http2_server::get_slice_config(const response& response) {
   header_map h;
   h.emplace("content-type", header_value{content_type});
   // if (nssf_cfg.get_slice_config(json_data)) {
-  //   http_code = HTTP_STATUS_CODE_200_OK;
+  //   http_code = oai::common::sbi::http_status_code::OK;
   //   response.write_head(http_code, h);
   //   response.end(json_data.dump(4).c_str());
   // } else {
-  //   http_code = HTTP_STATUS_CODE_503_SERVICE_UNAVAILABLE;
+  //   http_code = oai::common::sbi::http_status_code::SERVICE_UNAVAILABLE;
   //   response.write_head(http_code, h);
   //   response.end();
   // }
@@ -439,11 +439,11 @@ void nssf_http2_server::get_api_list(const response& response) {
   header_map h;
   h.emplace("content-type", header_value{content_type});
   if (nssf_cfg->get_api_list(json_data)) {
-    http_code = HTTP_STATUS_CODE_200_OK;
+    http_code = oai::common::sbi::http_status_code::OK;
     response.write_head(http_code, h);
     response.end(json_data.dump(4).c_str());
   } else {
-    http_code = HTTP_STATUS_CODE_503_SERVICE_UNAVAILABLE;
+    http_code = oai::common::sbi::http_status_code::SERVICE_UNAVAILABLE;
     response.write_head(http_code, h);
     response.end();
   }

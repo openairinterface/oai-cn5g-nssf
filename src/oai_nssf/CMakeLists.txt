@@ -252,7 +252,6 @@ include_directories(${CONFIG_INCLUDE_DIRS})
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
-
 ################################################################
 # Add sub modules
 ################################################################
@@ -289,8 +288,9 @@ add_executable(nssf
   )
 
 ## Common modules
-include(${SRC_TOP_DIR}/${MOUNTED_COMMON}/logger/logger.cmake)
+include(${SRC_TOP_DIR}/${MOUNTED_COMMON}/common/common.cmake)
 include(${SRC_TOP_DIR}/${MOUNTED_COMMON}/config/config.cmake)
+include(${SRC_TOP_DIR}/${MOUNTED_COMMON}/logger/logger.cmake)
 include(${BUILD_TOP_DIR}/nssf/used_models.cmake)
 include(${SRC_TOP_DIR}/${MOUNTED_COMMON}/utils/utils.cmake)
 
@@ -303,5 +303,5 @@ ENDIF(STATIC_LINKING)
 
 
 target_link_libraries (nssf ${ASAN}  -Wl,--start-group NSSF NSSF_API ${CRYPTO_LIBRARIES} -lnghttp2_asio -lboost_system -lboost_thread -lfmt -lspdlog -lssl -lcrypto  dl -Wl,--end-group
-pthread m rt event boost_system pistache curl -lyaml-cpp )
+pthread m rt event boost_system pistache curl -lyaml-cpp)
 

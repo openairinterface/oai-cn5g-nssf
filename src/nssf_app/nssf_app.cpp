@@ -59,9 +59,9 @@ void nssf_app::handle_slice_info_for_registration(
     Logger::nssf_app().info(
         "//---------------------------------------------------------");
   } else {
-    if (http_code == HTTP_STATUS_CODE_403_FORBIDDEN) {
+    if (http_code == oai::common::sbi::http_status_code::FORBIDDEN) {
       problem_details.setTitle("UNSUPPORTED_RESOURCE");
-      problem_details.setStatus(HTTP_STATUS_CODE_403_FORBIDDEN);
+      problem_details.setStatus(oai::common::sbi::http_status_code::FORBIDDEN);
       problem_details.setDetail(
           "S-NSSAI in Requested NSSAI is not supported in PLMN");
       problem_details.setCause("SNSSAI_NOT_SUPPORTED");
@@ -85,9 +85,9 @@ void nssf_app::handle_slice_info_for_pdu_session(
     Logger::nssf_app().info(
         "//---------------------------------------------------------");
   } else {
-    if (http_code == HTTP_STATUS_CODE_403_FORBIDDEN) {
+    if (http_code == oai::common::sbi::http_status_code::FORBIDDEN) {
       problem_details.setTitle("UNSUPPORTED_RESOURCE");
-      problem_details.setStatus(HTTP_STATUS_CODE_403_FORBIDDEN);
+      problem_details.setStatus(oai::common::sbi::http_status_code::FORBIDDEN);
       problem_details.setDetail(
           "S-NSSAI in Requested NSSAI is not supported in PLMN");
       problem_details.setCause("SNSSAI_NOT_SUPPORTED");
@@ -117,9 +117,9 @@ void nssf_app::handle_create_nssai_availability(
     Logger::nssf_app().info(
         "//---------------------------------------------------------");
   } else {
-    if (http_code == HTTP_STATUS_CODE_403_FORBIDDEN) {
+    if (http_code == oai::common::sbi::http_status_code::FORBIDDEN) {
       problem_details.setTitle("UNSUPPORTED_RESOURCE");
-      problem_details.setStatus(HTTP_STATUS_CODE_403_FORBIDDEN);
+      problem_details.setStatus(oai::common::sbi::http_status_code::FORBIDDEN);
       problem_details.setDetail("NSSAI Availability");
       problem_details.setCause("SNSSAI_NOT_SUPPORTED");
       Logger::nssf_app().error("NSSAI Availability failure !!!");

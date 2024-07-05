@@ -62,7 +62,7 @@ void NFInstanceIDDocumentApiImpl::n_ssai_availability_put(
       nfId, nssaiAvailabilityInfo, auth_nssai_avail_info, http_code, 1,
       problem_details);
 
-  if (http_code != HTTP_STATUS_CODE_200_OK) {
+  if (http_code != oai::common::sbi::http_status_code::OK) {
     to_json(json_data, problem_details);
     content_type = "application/problem+json";
     // content type

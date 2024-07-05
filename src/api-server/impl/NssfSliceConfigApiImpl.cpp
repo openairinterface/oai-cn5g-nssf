@@ -39,7 +39,7 @@ void NssfSliceConfigApiImpl::nssf_slice_config_get_apis(
   nlohmann::json json_data = {};
   std::string content_type = "application/json";
   nssf_cfg.get_api_list(json_data);
-  http_code = HTTP_STATUS_CODE_200_OK;
+  http_code = oai::common::sbi::http_status_code::OK;
   response.headers().add<Pistache::Http::Header::ContentType>(
       Pistache::Http::Mime::MediaType(content_type));
   response.send(Pistache::Http::Code(http_code), json_data.dump(4).c_str());
@@ -54,13 +54,13 @@ void NssfSliceConfigApiImpl::nssf_slice_config_get(
   std::string content_type = "application/json";
 
   // if (nssf_cfg.get_slice_config(json_data)) {
-  //   http_code = HTTP_STATUS_CODE_200_OK;
+  //   http_code = oai::common::sbi::http_status_code::OK;
   //   response.headers().add<Pistache::Http::Header::ContentType>(
   //       Pistache::Http::Mime::MediaType(content_type));
   //   response.send(Pistache::Http::Code(http_code),
   //   json_data.dump(4).c_str());
   // } else {
-  http_code = HTTP_STATUS_CODE_503_SERVICE_UNAVAILABLE;
+  http_code = oai::common::sbi::http_status_code::SERVICE_UNAVAILABLE;
   response.headers().add<Pistache::Http::Header::ContentType>(
       Pistache::Http::Mime::MediaType(content_type));
   response.send(Pistache::Http::Code(http_code));

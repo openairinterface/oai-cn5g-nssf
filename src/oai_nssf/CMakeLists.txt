@@ -262,7 +262,6 @@ else(STATIC_LINKING)
     SET(BUILD_SHARED_LIBS ON)
 endif(STATIC_LINKING)
 
-ADD_SUBDIRECTORY(${CMAKE_CURRENT_SOURCE_DIR}/../../src/common/utils ${CMAKE_CURRENT_BINARY_DIR}/utils)
 ADD_SUBDIRECTORY(${CMAKE_CURRENT_SOURCE_DIR}/../../src/api-server ${CMAKE_CURRENT_BINARY_DIR}/api-server)
 
 ################################################################################
@@ -274,13 +273,15 @@ include_directories(${SRC_TOP_DIR}/nssf_app)
 include_directories(${SRC_TOP_DIR}/oai_nssf)
 include_directories(${SRC_TOP_DIR}/common)
 include_directories(${SRC_TOP_DIR}/common/msg)
-include_directories(${SRC_TOP_DIR}/common/utils)
 include_directories(${SRC_TOP_DIR}/nssf)
 include_directories(${SRC_TOP_DIR}/api-server)
 include_directories(${SRC_TOP_DIR}/api-server/api)
 include_directories(${SRC_TOP_DIR}/api-server/impl)
 include_directories(${SRC_TOP_DIR}/api-server/model)
+include_directories(${SRC_TOP_DIR}/${MOUNTED_COMMON}/common)
 include_directories(${SRC_TOP_DIR}/${MOUNTED_COMMON}/logger)
+include_directories(${SRC_TOP_DIR}/${MOUNTED_COMMON}/utils)
+include_directories(${SRC_TOP_DIR}/${MOUNTED_COMMON}/utils/bstr)
 
 add_executable(nssf
   ${SRC_TOP_DIR}/oai_nssf/main.cpp
@@ -291,6 +292,7 @@ add_executable(nssf
 include(${SRC_TOP_DIR}/${MOUNTED_COMMON}/logger/logger.cmake)
 include(${SRC_TOP_DIR}/${MOUNTED_COMMON}/config/config.cmake)
 include(${BUILD_TOP_DIR}/nssf/used_models.cmake)
+include(${SRC_TOP_DIR}/${MOUNTED_COMMON}/utils/utils.cmake)
 
 IF(STATIC_LINKING)
     SET(CMAKE_EXE_LINKER_FLAGS "-static")
@@ -300,6 +302,6 @@ IF(STATIC_LINKING)
 ENDIF(STATIC_LINKING)
 
 
-target_link_libraries (nssf ${ASAN}  -Wl,--start-group CN_UTILS NSSF NSSF_API ${CRYPTO_LIBRARIES} -lnghttp2_asio -lboost_system -lboost_thread -lfmt -lspdlog -lssl -lcrypto  dl -Wl,--end-group
+target_link_libraries (nssf ${ASAN}  -Wl,--start-group NSSF NSSF_API ${CRYPTO_LIBRARIES} -lnghttp2_asio -lboost_system -lboost_thread -lfmt -lspdlog -lssl -lcrypto  dl -Wl,--end-group
 pthread m rt event boost_system pistache curl -lyaml-cpp )
 

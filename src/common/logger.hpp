@@ -28,10 +28,11 @@ static const std::string NSSF_SBI     = "nssf_sbi";
 static const std::string NSSF_API_SVR = "nssf_api_server";
 static const std::string SYSTEM       = "system";
 
-class Logger {
+class Logger : public oai::logger::logger_common {
  public:
   static void init(
       const std::string& name, const bool log_stdout, const bool log_rot_file) {
+    oai::logger::logger_common(name, log_stdout, log_rot_file);
     oai::logger::logger_registry::register_logger(
         name, ASYNC_CMD, log_stdout, log_rot_file);
     oai::logger::logger_registry::register_logger(

@@ -43,7 +43,6 @@
 #include "SliceInfoForRegistration.h"
 #include "SliceInfoForUEConfigurationUpdate.h"
 #include "Tai.h"
-#include "common_root_types.h"
 
 namespace nssf {
 

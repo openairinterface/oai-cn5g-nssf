@@ -33,7 +33,6 @@
 #include <boost/atomic.hpp>
 
 #include "3gpp_29.500.h"
-#include "common_root_types.h"
 #include "conversions.hpp"
 #include "logger.hpp"
 #include "nssf.h"

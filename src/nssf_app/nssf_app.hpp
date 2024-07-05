@@ -30,7 +30,6 @@
 #ifndef FILE_NSSF_APP_HPP_SEEN
 #define FILE_NSSF_APP_HPP_SEEN
 
-#include "common_root_types.h"
 #include <boost/atomic.hpp>
 #include <string>
 

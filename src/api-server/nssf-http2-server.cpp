@@ -78,24 +78,24 @@ void nssf_http2_server::start() {
               Logger::nssf_sbi().debug("QueryString: %s", qs.c_str());
 
               // Parse mandatory query parametrs
-              std::string nfType = util::get_query_param(qs, NF_TYPE);
-              std::string nfId   = util::get_query_param(qs, NF_ID);
+              std::string nfType = oai::utils::get_query_param(qs, NF_TYPE);
+              std::string nfId   = oai::utils::get_query_param(qs, NF_ID);
               Logger::nssf_sbi().info(
                   " Query_PARAM::NF_TYPE - %s", nfType.c_str());
               Logger::nssf_sbi().info(" Query_PARAM::NF_ID - %s", nfId.c_str());
 
               // Parse optional query parametrs and API calbacks
               std::string slice_infoReg =
-                  util::get_query_param(qs, SLICE_INFO_REGISTRATION);
+                  oai::utils::get_query_param(qs, SLICE_INFO_REGISTRATION);
               std::string slice_infoPduSession =
-                  util::get_query_param(qs, SLICE_INFO_PDU_SESSION);
+                  oai::utils::get_query_param(qs, SLICE_INFO_PDU_SESSION);
               std::string slice_infoUeCu =
-                  util::get_query_param(qs, SLICE_INFO_UE_CU);
+                  oai::utils::get_query_param(qs, SLICE_INFO_UE_CU);
               std::string home_plmn_id =
-                  util::get_query_param(qs, HOME_PLMN_ID);
+                  oai::utils::get_query_param(qs, HOME_PLMN_ID);
               std::string supported_features =
-                  util::get_query_param(qs, SUPPORTED_FEATURES);
-              std::string tai_info = util::get_query_param(qs, TAI);
+                  oai::utils::get_query_param(qs, SUPPORTED_FEATURES);
+              std::string tai_info = oai::utils::get_query_param(qs, TAI);
 
               if (!home_plmn_id.empty()) {
                 nlohmann::json::parse(home_plmn_id.c_str()).get_to(home_plmnid);

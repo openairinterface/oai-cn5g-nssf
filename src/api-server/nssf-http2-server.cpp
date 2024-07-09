@@ -19,14 +19,6 @@
  *      contact@openairinterface.org
  */
 
-/*! \file nssf_http2-server.h
- \brief
- \author  Rohan Kharade
- \company Openairinterface Software Allianse
- \date 2021
- \email: rohan.kharade@openairinterface.org
- */
-
 #include "nssf-http2-server.h"
 
 #include <boost/algorithm/string.hpp>

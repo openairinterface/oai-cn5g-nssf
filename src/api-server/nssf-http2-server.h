@@ -19,16 +19,10 @@
  *      contact@openairinterface.org
  */
 
-/*! \file nssf_http2-server.h
- \brief
- \author  Rohan Kharade
- \company Openairinterface Software Allianse
- \date 2021
- \email: rohan.kharade@openairinterface.org
- */
-
 #ifndef FILE_NSSF_HTTP2_SERVER_SEEN
 #define FILE_NSSF_HTTP2_SERVER_SEEN
+
+#include <nghttp2/asio_http2_server.h>
 
 #include "NFInstanceIDDocumentApiImpl.h"
 #include "NSSAIAvailabilityStoreApiImpl.h"
@@ -40,7 +34,6 @@
 #include "nssf_app.hpp"
 #include "string.hpp"
 #include "uint_generator.hpp"
-#include <nghttp2/asio_http2_server.h>
 
 using namespace nghttp2::asio_http2;
 using namespace nghttp2::asio_http2::server;

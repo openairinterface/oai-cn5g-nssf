@@ -19,14 +19,6 @@
  *      contact@openairinterface.org
  */
 
-/*! \file nssf_slice_select.cpp
- \brief
- \author  Rohan Kharade
- \company Openairinterface Software Allianse
- \date Jan 2022
- \email: rohan.kharade@openairinterface.org
- */
-
 #include "nssf_slice_selection.hpp"
 
 #include <boost/uuid/random_generator.hpp>

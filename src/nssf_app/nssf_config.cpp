@@ -19,14 +19,6 @@
  *      contact@openairinterface.org
  */
 
-/*! \file nssf_http2-server.h
- \brief
- \author  Rohan Kharade
- \company Openairinterface Software Allianse
- \date 2021
- \email: rohan.kharade@openairinterface.org
- */
-
 #include "nssf_config.hpp"
 
 #include <nlohmann/json.hpp>
@@ -45,7 +37,6 @@ using namespace oai::common::sbi;
 nssf_nsi_info_t nssf_config::nssf_nsi_info;
 nssf_ta_info_t nssf_config::nssf_ta_info;
 nssf_amf_info_t nssf_config::nssf_amf_info;
-// nlohmann::json nssf_config::nssf_slice_config;
 
 nssf_config::nssf_config(
     const string& config_path, bool log_stdout, bool log_rot_file)

@@ -28,16 +28,19 @@
  */
 
 #include "nssf_config.hpp"
-#include "if.hpp"
+
 #include <nlohmann/json.hpp>
 
+#include "if.hpp"
 #include "nssf_config_types.hpp"
+#include "sbi_helper.hpp"
 
 using namespace std;
 using namespace oai::config::nssf;
 using namespace oai::config;
 using namespace oai::nssf_server::model;
 using namespace oai::model::common;
+using namespace oai::common::sbi;
 
 nssf_nsi_info_t nssf_config::nssf_nsi_info;
 nssf_ta_info_t nssf_config::nssf_ta_info;
@@ -253,8 +256,8 @@ bool nssf_config::get_api_list(nlohmann::json& api_list) {
       {"Supported APIs",
        {{"API", "Network Slice Information (Document)"},
         {"Method", "GET"},
-        {"URI Path",
-         "/nnssf-nsselection/<api_version>/network-slice-information"},
+        {"URI Path", sbi_helper::NssfNsSelectionBase + "<api_version>" +
+                         sbi_helper::NssfNsSelectionPathNetworSliceInformation},
         {"Details",
          "Retrieve the Network Slice Selection Information (PDU Session)"}}}};
   return true;

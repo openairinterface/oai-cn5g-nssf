@@ -12,8 +12,10 @@
  */
 
 #include "NetworkSliceInformationDocumentApi.h"
+
 #include "Helpers.h"
 #include "nssf_config.hpp"
+#include "sbi_helper.hpp"
 
 extern std::unique_ptr<oai::config::nssf::nssf_config> nssf_cfg;
 
@@ -24,9 +26,10 @@ namespace api {
 using namespace oai::model::common::helpers;
 using namespace oai::nssf_server::model;
 using namespace oai::model::common;
+using namespace oai::common::sbi;
 
 const std::string NetworkSliceInformationDocumentApi::base =
-    "/nnssf-nsselection/";
+    sbi_helper::NssfNsSelectionBase;
 
 NetworkSliceInformationDocumentApi::NetworkSliceInformationDocumentApi(
     const std::shared_ptr<Pistache::Rest::Router>& rtr)
@@ -42,7 +45,7 @@ void NetworkSliceInformationDocumentApi::setupRoutes() {
   Routes::Get(
       *router,
       base + nssf_cfg->local().get_sbi().get_api_version() +
-          "/network-slice-information",
+          sbi_helper::NssfNsSelectionPathNetworSliceInformation,
       Routes::bind(
           &NetworkSliceInformationDocumentApi::n_s_selection_get_handler,
           this));
@@ -96,8 +99,8 @@ void NetworkSliceInformationDocumentApi::n_s_selection_get_handler(
         nfId = Pistache::Some(valueQuery_instance);
       }
     }
-    auto sliceInfoRequestForRegistrationQuery =
-        request.query().get("slice-info-request-for-registration");
+    auto sliceInfoRequestForRegistrationQuery = request.query().get(
+        sbi_helper::NssfNsSelectionParametersSliceInfoRequestForRegistration);
     Pistache::Optional<SliceInfoForRegistration>
         sliceInfoRequestForRegistration;
     if (!sliceInfoRequestForRegistrationQuery.isEmpty()) {
@@ -200,7 +203,7 @@ bool fromStringValueHelper(
     const std::string& inStr,
     oai::nssf_server::model::SliceInfoForPDUSession& value) {
   Logger::nssf_sbi().info(
-      " Query_PARAM::SLICE_INFO_PDU_SESSION - %s", inStr.c_str());
+      " Query_PARAM slice-info-request-for-pdu-session - %s", inStr.c_str());
   nlohmann::json::parse(inStr.c_str()).get_to(value);
   return true;
 }
@@ -208,7 +211,8 @@ bool fromStringValueHelper(
 bool fromStringValueHelper(
     const std::string& inStr,
     oai::nssf_server::model::SliceInfoForUEConfigurationUpdate& value) {
-  Logger::nssf_sbi().info(" Query_PARAM::SLICE_INFO_UE_CU - %s", inStr.c_str());
+  Logger::nssf_sbi().info(
+      " Query_PARAM slice-info-request-for-registration - %s", inStr.c_str());
   nlohmann::json::parse(inStr.c_str()).get_to(value);
   return true;
 }

@@ -12,8 +12,10 @@
  */
 
 #include "NSSAIAvailabilityStoreApi.h"
+
 #include "Helpers.h"
 #include "nssf_config.hpp"
+#include "sbi_helper.hpp"
 
 extern std::unique_ptr<oai::config::nssf::nssf_config> nssf_cfg;
 
@@ -23,8 +25,10 @@ namespace api {
 
 using namespace oai::model::common::helpers;
 using namespace oai::nssf_server::model;
+using namespace oai::common::sbi;
 
-const std::string NSSAIAvailabilityStoreApi::base = "/nnssf-nssaiavailability/";
+const std::string NSSAIAvailabilityStoreApi::base =
+    sbi_helper::NssfNssaiAvailabilityBase;
 
 NSSAIAvailabilityStoreApi::NSSAIAvailabilityStoreApi(
     const std::shared_ptr<Pistache::Rest::Router>& rtr)

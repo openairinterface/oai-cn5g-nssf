@@ -28,6 +28,7 @@
  */
 
 #include "nssf-http2-server.h"
+
 #include <boost/algorithm/string.hpp>
 #include <boost/thread.hpp>
 #include <boost/thread/future.hpp>
@@ -39,11 +40,13 @@
 #include "logger.hpp"
 #include "nssf.h"
 #include "nssf_config.hpp"
+#include "sbi_helper.hpp"
 
 using namespace nghttp2::asio_http2;
 using namespace nghttp2::asio_http2::server;
 using namespace oai::nssf_server::model;
 using namespace oai::model::common;
+using namespace oai::common::sbi;
 
 extern std::unique_ptr<oai::config::nssf::nssf_config> nssf_cfg;
 
@@ -58,8 +61,9 @@ void nssf_http2_server::start() {
 
   // NSSF NS Selection - Network Slice Information (Document)
   server.handle(
-      NSSF_NSS_BASE + nssf_cfg->local().get_sbi().get_api_version() +
-          NSSF_NS_INFO_URL,
+      sbi_helper::NssfNsSelectionBase +
+          nssf_cfg->local().get_sbi().get_api_version() +
+          sbi_helper::NssfNsSelectionPathNetworSliceInformation,
       [&](const request& request, const response& response) {
         request.on_data([&](const uint8_t* data, std::size_t len) {
           try {
@@ -85,12 +89,18 @@ void nssf_http2_server::start() {
               Logger::nssf_sbi().info(" Query_PARAM::NF_ID - %s", nfId.c_str());
 
               // Parse optional query parametrs and API calbacks
-              std::string slice_infoReg =
-                  oai::utils::get_query_param(qs, SLICE_INFO_REGISTRATION);
-              std::string slice_infoPduSession =
-                  oai::utils::get_query_param(qs, SLICE_INFO_PDU_SESSION);
-              std::string slice_infoUeCu =
-                  oai::utils::get_query_param(qs, SLICE_INFO_UE_CU);
+              std::string slice_infoReg = oai::utils::get_query_param(
+                  qs,
+                  sbi_helper::
+                      NssfNsSelectionParametersSliceInfoRequestForRegistration);
+              std::string slice_infoPduSession = oai::utils::get_query_param(
+                  qs,
+                  sbi_helper::
+                      NssfNsSelectionParametersSliceInfoRequestForPduSession);
+              std::string slice_infoUeCu = oai::utils::get_query_param(
+                  qs,
+                  sbi_helper::
+                      NssfNsSelectionParametersSliceInfoRequestForRegistration);
               std::string home_plmn_id =
                   oai::utils::get_query_param(qs, HOME_PLMN_ID);
               std::string supported_features =
@@ -116,7 +126,7 @@ void nssf_http2_server::start() {
                 nlohmann::json::parse(slice_infoReg.c_str())
                     .get_to(slice_info_reg);
                 Logger::nssf_sbi().info(
-                    " Query_PARAM::SLICE_INFO_REGISTRATION - %s",
+                    " Query_PARAM slice-info-request-for-registration - %s",
                     slice_infoReg.c_str());
                 this->get_slice_info_for_registration_handler(
                     nfType, nfId, slice_info_reg, tai, home_plmnid,
@@ -127,7 +137,7 @@ void nssf_http2_server::start() {
                 nlohmann::json::parse(slice_infoPduSession.c_str())
                     .get_to(slice_info_pdu_sess);
                 Logger::nssf_sbi().info(
-                    " Query_PARAM::SLICE_INFO_PDU_SESSION - %s",
+                    " Query_PARAM slice-info-request-for-pdu-session - %s",
                     slice_infoPduSession.c_str());
                 this->get_slice_info_for_pdu_session_handler(
                     nfType, nfId, slice_info_pdu_sess, tai, home_plmnid,
@@ -138,7 +148,7 @@ void nssf_http2_server::start() {
                 nlohmann::json::parse(slice_infoUeCu.c_str())
                     .get_to(slice_info_ue_cu);
                 Logger::nssf_sbi().info(
-                    " Query_PARAM::SLICE_INFO_UE_CU - %s",
+                    " Query_PARAM slice-info-request-for-registration - %s",
                     slice_infoUeCu.c_str());
                 this->get_slice_info_for_ue_cu_handler(
                     nfType, nfId, slice_info_ue_cu, tai, home_plmnid,
@@ -165,9 +175,9 @@ void nssf_http2_server::start() {
 
   // NSSF NSSAI Availability - NF Instance ID (Document)
   server.handle(
-      NSSF_NSSAI_AVAILABILITY_BASE +
+      sbi_helper::NssfNssaiAvailabilityBase +
           nssf_cfg->local().get_sbi().get_api_version() +
-          NSSF_NSSAI_AVAILABILITY_URL,
+          sbi_helper::NssfNssaiAvailabilityPathNssaiAvailability,
       [&](const request& request, const response& response) {
         request.on_data([&](const uint8_t* data, std::size_t len) {
           std::string msg((char*) data, len);
@@ -212,9 +222,9 @@ void nssf_http2_server::start() {
 
   // NSSF NSSAI Availability - Subscription ID (Collection/Document)
   server.handle(
-      NSSF_NSSAI_AVAILABILITY_BASE +
+      sbi_helper::NssfNssaiAvailabilityBase +
           nssf_cfg->local().get_sbi().get_api_version() +
-          NSSF_NSSAI_AVAILABILITY_SUBSCRIPTION_URL,
+          sbi_helper::NssfNssaiAvailabilityPathSubscriptions,
       [&](const request& request, const response& response) {
         request.on_data([&](const uint8_t* data, std::size_t len) {
           // ToDo

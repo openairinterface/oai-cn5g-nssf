@@ -28,16 +28,18 @@
  */
 
 #include "nssf_slice_selection.hpp"
+
+#include <boost/uuid/random_generator.hpp>
+#include <boost/uuid/uuid_io.hpp>
+#include <stdexcept>
+
+#include "3gpp_23.003.h"
 #include "AccessType.h"
 #include "NetworkSliceInformationDocumentApiImpl.h"
 #include "conversions.hpp"
 #include "logger.hpp"
 #include "nssf.h"
 #include "nssf_config.hpp"
-
-#include <boost/uuid/random_generator.hpp>
-#include <boost/uuid/uuid_io.hpp>
-#include <stdexcept>
 
 using namespace nssf;
 using namespace std;

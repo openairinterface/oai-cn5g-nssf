@@ -22,10 +22,6 @@
 #ifndef FILE_NSSF_SEEN
 #define FILE_NSSF_SEEN
 
-#include <nlohmann/json.hpp>
-
-#include "3gpp_29.571.h"
-
 #define ROAMING_IND_NON_ROAMING (1)
 #define ROAMING_IND_LOCAL_BREAKOUT (2)
 #define ROAMING_IND_HOME_ROUTED_ROAMING (3)

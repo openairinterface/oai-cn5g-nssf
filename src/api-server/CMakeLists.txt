@@ -23,22 +23,21 @@ set(NSSF_API_SERVER_DIR "${SRC_TOP_DIR}/api-server")
 
 include_directories(${NSSF_API_SERVER_DIR}/api)
 include_directories(${NSSF_API_SERVER_DIR}/impl)
-include_directories(${NSSF_API_SERVER_DIR}/model)
 include_directories(${NSSF_API_SERVER_DIR}/)
 include_directories(${SRC_TOP_DIR}/nssf_app)
 include_directories(${SRC_TOP_DIR}/common)
+include_directories(${SRC_TOP_DIR}/${MOUNTED_COMMON}/config)
 include_directories(${SRC_TOP_DIR}/${MOUNTED_COMMON}/common)
 include_directories(${SRC_TOP_DIR}/${MOUNTED_COMMON}/logger)
-include(${SRC_TOP_DIR}/${MOUNTED_COMMON}/config/config.cmake)
-include(${SRC_TOP_DIR}/${MOUNTED_COMMON}/model/common_model/common_model.cmake)
-include(${SRC_TOP_DIR}/${MOUNTED_COMMON}/model/nrf/nrf_model.cmake)
+include_directories(${SRC_TOP_DIR}/${MOUNTED_COMMON}/model/nssf)
 include_directories(${SRC_TOP_DIR}/${MOUNTED_COMMON}/utils)
 include_directories(${SRC_TOP_DIR}/${MOUNTED_COMMON}/utils/bstr)
+
+include(${SRC_TOP_DIR}/${MOUNTED_COMMON}/model/nssf/nssf_model.cmake)
 
 file(GLOB NSSF_API_SERVER_src_files
     ${NSSF_API_SERVER_DIR}/nssf-api-server.cpp
     ${NSSF_API_SERVER_DIR}/nssf-http2-server.cpp
-    ${NSSF_API_SERVER_DIR}/model/*.cpp
     ${NSSF_API_SERVER_DIR}/api/*.cpp
     ${NSSF_API_SERVER_DIR}/impl/*.cpp
 )

@@ -19,13 +19,6 @@
  *      contact@openairinterface.org
  */
 
-/*! \file nssf_config.hpp
- * \brief
- * \author Lionel Gauthier
- * \company Eurecom
- * \email: lionel.gauthier@eurecom.fr
- */
-
 #pragma once
 
 #include <yaml-cpp/yaml.h>

@@ -31,7 +31,6 @@
 #include "nssf_config.hpp"
 
 using namespace nssf;
-using namespace std;
 using namespace oai::config::nssf;
 using namespace oai::model::common;
 

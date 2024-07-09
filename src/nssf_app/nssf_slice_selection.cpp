@@ -34,7 +34,6 @@
 #include "nssf_config.hpp"
 
 using namespace nssf;
-using namespace std;
 using namespace oai::model::common;
 
 extern nssf_slice_select* nssf_slice_select_inst;

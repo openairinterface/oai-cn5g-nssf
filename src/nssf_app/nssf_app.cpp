@@ -19,26 +19,18 @@
  *      contact@openairinterface.org
  */
 
-/*! \file nssf_http2-server.h
- \brief
- \author  Rohan Kharade
- \company Openairinterface Software Allianse
- \date 2021
- \email: rohan.kharade@openairinterface.org
- */
-
 #include "nssf_app.hpp"
-#include "conversions.hpp"
-#include "logger.hpp"
-#include "nssf.h"
-#include "nssf_config.hpp"
 
 #include <boost/uuid/random_generator.hpp>
 #include <boost/uuid/uuid_io.hpp>
 #include <stdexcept>
 
+#include "conversions.hpp"
+#include "logger.hpp"
+#include "nssf.h"
+#include "nssf_config.hpp"
+
 using namespace nssf;
-using namespace std;
 using namespace oai::model::common;
 
 extern nssf_app* nssf_app_inst;
@@ -59,9 +51,9 @@ void nssf_app::handle_slice_info_for_registration(
     Logger::nssf_app().info(
         "//---------------------------------------------------------");
   } else {
-    if (http_code == HTTP_STATUS_CODE_403_FORBIDDEN) {
+    if (http_code == oai::common::sbi::http_status_code::FORBIDDEN) {
       problem_details.setTitle("UNSUPPORTED_RESOURCE");
-      problem_details.setStatus(HTTP_STATUS_CODE_403_FORBIDDEN);
+      problem_details.setStatus(oai::common::sbi::http_status_code::FORBIDDEN);
       problem_details.setDetail(
           "S-NSSAI in Requested NSSAI is not supported in PLMN");
       problem_details.setCause("SNSSAI_NOT_SUPPORTED");
@@ -85,9 +77,9 @@ void nssf_app::handle_slice_info_for_pdu_session(
     Logger::nssf_app().info(
         "//---------------------------------------------------------");
   } else {
-    if (http_code == HTTP_STATUS_CODE_403_FORBIDDEN) {
+    if (http_code == oai::common::sbi::http_status_code::FORBIDDEN) {
       problem_details.setTitle("UNSUPPORTED_RESOURCE");
-      problem_details.setStatus(HTTP_STATUS_CODE_403_FORBIDDEN);
+      problem_details.setStatus(oai::common::sbi::http_status_code::FORBIDDEN);
       problem_details.setDetail(
           "S-NSSAI in Requested NSSAI is not supported in PLMN");
       problem_details.setCause("SNSSAI_NOT_SUPPORTED");
@@ -117,9 +109,9 @@ void nssf_app::handle_create_nssai_availability(
     Logger::nssf_app().info(
         "//---------------------------------------------------------");
   } else {
-    if (http_code == HTTP_STATUS_CODE_403_FORBIDDEN) {
+    if (http_code == oai::common::sbi::http_status_code::FORBIDDEN) {
       problem_details.setTitle("UNSUPPORTED_RESOURCE");
-      problem_details.setStatus(HTTP_STATUS_CODE_403_FORBIDDEN);
+      problem_details.setStatus(oai::common::sbi::http_status_code::FORBIDDEN);
       problem_details.setDetail("NSSAI Availability");
       problem_details.setCause("SNSSAI_NOT_SUPPORTED");
       Logger::nssf_app().error("NSSAI Availability failure !!!");

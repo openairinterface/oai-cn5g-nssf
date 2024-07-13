@@ -19,14 +19,6 @@
  *      contact@openairinterface.org
  */
 
-/*! \file nssf_slice_select.hpp
- \brief
- \author  Rohan Kharade
- \company Openairinterface Software Allianse
- \date Jan 2022
- \email: rohan.kharade@openairinterface.org
- */
-
 #ifndef FILE_NSSF_SLICE_SELECT_HPP_SEEN
 #define FILE_NSSF_SLICE_SELECT_HPP_SEEN
 

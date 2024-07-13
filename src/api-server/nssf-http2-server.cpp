@@ -19,15 +19,8 @@
  *      contact@openairinterface.org
  */
 
-/*! \file nssf_http2-server.h
- \brief
- \author  Rohan Kharade
- \company Openairinterface Software Allianse
- \date 2021
- \email: rohan.kharade@openairinterface.org
- */
-
 #include "nssf-http2-server.h"
+
 #include <boost/algorithm/string.hpp>
 #include <boost/thread.hpp>
 #include <boost/thread/future.hpp>
@@ -39,11 +32,13 @@
 #include "logger.hpp"
 #include "nssf.h"
 #include "nssf_config.hpp"
+#include "sbi_helper.hpp"
 
 using namespace nghttp2::asio_http2;
 using namespace nghttp2::asio_http2::server;
 using namespace oai::nssf_server::model;
 using namespace oai::model::common;
+using namespace oai::common::sbi;
 
 extern std::unique_ptr<oai::config::nssf::nssf_config> nssf_cfg;
 
@@ -58,8 +53,9 @@ void nssf_http2_server::start() {
 
   // NSSF NS Selection - Network Slice Information (Document)
   server.handle(
-      NSSF_NSS_BASE + nssf_cfg->local().get_sbi().get_api_version() +
-          NSSF_NS_INFO_URL,
+      sbi_helper::NssfNsSelectionBase +
+          nssf_cfg->local().get_sbi().get_api_version() +
+          sbi_helper::NssfNsSelectionPathNetworSliceInformation,
       [&](const request& request, const response& response) {
         request.on_data([&](const uint8_t* data, std::size_t len) {
           try {
@@ -85,12 +81,18 @@ void nssf_http2_server::start() {
               Logger::nssf_sbi().info(" Query_PARAM::NF_ID - %s", nfId.c_str());
 
               // Parse optional query parametrs and API calbacks
-              std::string slice_infoReg =
-                  oai::utils::get_query_param(qs, SLICE_INFO_REGISTRATION);
-              std::string slice_infoPduSession =
-                  oai::utils::get_query_param(qs, SLICE_INFO_PDU_SESSION);
-              std::string slice_infoUeCu =
-                  oai::utils::get_query_param(qs, SLICE_INFO_UE_CU);
+              std::string slice_infoReg = oai::utils::get_query_param(
+                  qs,
+                  sbi_helper::
+                      NssfNsSelectionParametersSliceInfoRequestForRegistration);
+              std::string slice_infoPduSession = oai::utils::get_query_param(
+                  qs,
+                  sbi_helper::
+                      NssfNsSelectionParametersSliceInfoRequestForPduSession);
+              std::string slice_infoUeCu = oai::utils::get_query_param(
+                  qs,
+                  sbi_helper::
+                      NssfNsSelectionParametersSliceInfoRequestForRegistration);
               std::string home_plmn_id =
                   oai::utils::get_query_param(qs, HOME_PLMN_ID);
               std::string supported_features =
@@ -116,7 +118,7 @@ void nssf_http2_server::start() {
                 nlohmann::json::parse(slice_infoReg.c_str())
                     .get_to(slice_info_reg);
                 Logger::nssf_sbi().info(
-                    " Query_PARAM::SLICE_INFO_REGISTRATION - %s",
+                    " Query_PARAM slice-info-request-for-registration - %s",
                     slice_infoReg.c_str());
                 this->get_slice_info_for_registration_handler(
                     nfType, nfId, slice_info_reg, tai, home_plmnid,
@@ -127,7 +129,7 @@ void nssf_http2_server::start() {
                 nlohmann::json::parse(slice_infoPduSession.c_str())
                     .get_to(slice_info_pdu_sess);
                 Logger::nssf_sbi().info(
-                    " Query_PARAM::SLICE_INFO_PDU_SESSION - %s",
+                    " Query_PARAM slice-info-request-for-pdu-session - %s",
                     slice_infoPduSession.c_str());
                 this->get_slice_info_for_pdu_session_handler(
                     nfType, nfId, slice_info_pdu_sess, tai, home_plmnid,
@@ -138,7 +140,7 @@ void nssf_http2_server::start() {
                 nlohmann::json::parse(slice_infoUeCu.c_str())
                     .get_to(slice_info_ue_cu);
                 Logger::nssf_sbi().info(
-                    " Query_PARAM::SLICE_INFO_UE_CU - %s",
+                    " Query_PARAM slice-info-request-for-registration - %s",
                     slice_infoUeCu.c_str());
                 this->get_slice_info_for_ue_cu_handler(
                     nfType, nfId, slice_info_ue_cu, tai, home_plmnid,
@@ -156,7 +158,7 @@ void nssf_http2_server::start() {
             Logger::nssf_sbi().warn(
                 "Can not parse the json data (error: %s)!", e.what());
             response.write_head(
-                http_status_code_e::HTTP_STATUS_CODE_400_BAD_REQUEST);
+                oai::common::sbi::http_status_code::BAD_REQUEST);
             response.end();
             return;
           }
@@ -165,9 +167,9 @@ void nssf_http2_server::start() {
 
   // NSSF NSSAI Availability - NF Instance ID (Document)
   server.handle(
-      NSSF_NSSAI_AVAILABILITY_BASE +
+      sbi_helper::NssfNssaiAvailabilityBase +
           nssf_cfg->local().get_sbi().get_api_version() +
-          NSSF_NSSAI_AVAILABILITY_URL,
+          sbi_helper::NssfNssaiAvailabilityPathNssaiAvailability,
       [&](const request& request, const response& response) {
         request.on_data([&](const uint8_t* data, std::size_t len) {
           std::string msg((char*) data, len);
@@ -203,7 +205,7 @@ void nssf_http2_server::start() {
             Logger::nssf_sbi().warn(
                 "Can not parse the json data (error: %s)!", e.what());
             response.write_head(
-                http_status_code_e::HTTP_STATUS_CODE_400_BAD_REQUEST);
+                oai::common::sbi::http_status_code::BAD_REQUEST);
             response.end();
             return;
           }
@@ -212,9 +214,9 @@ void nssf_http2_server::start() {
 
   // NSSF NSSAI Availability - Subscription ID (Collection/Document)
   server.handle(
-      NSSF_NSSAI_AVAILABILITY_BASE +
+      sbi_helper::NssfNssaiAvailabilityBase +
           nssf_cfg->local().get_sbi().get_api_version() +
-          NSSF_NSSAI_AVAILABILITY_SUBSCRIPTION_URL,
+          sbi_helper::NssfNssaiAvailabilityPathSubscriptions,
       [&](const request& request, const response& response) {
         request.on_data([&](const uint8_t* data, std::size_t len) {
           // ToDo
@@ -274,7 +276,7 @@ void nssf_http2_server::get_slice_info_for_registration_handler(
     m_nssf_app->handle_slice_info_for_registration(
         slice_info, tai, home_plmnid, features, http_code, 2, problem_details,
         auth_slice_info);
-    if (http_code == HTTP_STATUS_CODE_200_OK) {
+    if (http_code == oai::common::sbi::http_status_code::OK) {
       to_json(json_data, auth_slice_info);
 
       response.write_head(http_code, h);
@@ -290,7 +292,7 @@ void nssf_http2_server::get_slice_info_for_registration_handler(
     Logger::nssf_app().info(
         "//---------------------------------------------------------");
     Logger::nssf_app().info("");
-    http_code = HTTP_STATUS_CODE_400_BAD_REQUEST;
+    http_code = oai::common::sbi::http_status_code::BAD_REQUEST;
     response.write_head(http_code, h);
     to_json(json_data, problem_details);
     response.end();
@@ -324,7 +326,7 @@ void nssf_http2_server::get_slice_info_for_pdu_session_handler(
     m_nssf_app->handle_slice_info_for_pdu_session(
         slice_info, tai, home_plmnid, features, http_code, 2, problem_details,
         auth_slice_info);
-    if (http_code == HTTP_STATUS_CODE_200_OK) {
+    if (http_code == oai::common::sbi::http_status_code::OK) {
       to_json(json_data, auth_slice_info);
 
       response.write_head(http_code, h);
@@ -340,7 +342,7 @@ void nssf_http2_server::get_slice_info_for_pdu_session_handler(
     Logger::nssf_app().info(
         "//---------------------------------------------------------");
     Logger::nssf_app().info("");
-    http_code = HTTP_STATUS_CODE_400_BAD_REQUEST;
+    http_code = oai::common::sbi::http_status_code::BAD_REQUEST;
     response.write_head(http_code, h);
     to_json(json_data, problem_details);
     response.end();
@@ -360,7 +362,7 @@ void nssf_http2_server::get_slice_info_for_ue_cu_handler(
   Logger::nssf_sbi().error("Not supported");
   Logger::nssf_app().info(
       "//---------------------------------------------------------");
-  long http_code = HTTP_STATUS_CODE_503_SERVICE_UNAVAILABLE;
+  long http_code = oai::common::sbi::http_status_code::SERVICE_UNAVAILABLE;
   header_map h;
   response.write_head(http_code, h);
   response.end("API not implemented yet !!!");
@@ -396,10 +398,10 @@ void nssf_http2_server::create_nssai_availability_handler(
   m_nssf_app->handle_create_nssai_availability(
       nfId, nssaiAvailInfo, auth_nssai_avail_info, http_code, 2,
       problem_details);
-  if (http_code == HTTP_STATUS_CODE_204_NO_CONTENT) {
+  if (http_code == oai::common::sbi::http_status_code::NO_CONTENT) {
     response.write_head(http_code, h);
     response.end();
-  } else if (http_code == HTTP_STATUS_CODE_200_OK) {
+  } else if (http_code == oai::common::sbi::http_status_code::OK) {
     h.emplace("content-type", header_value{"application/json"});
     response.write_head(http_code, h);
     to_json(json_data, auth_nssai_avail_info);
@@ -422,11 +424,11 @@ void nssf_http2_server::get_slice_config(const response& response) {
   header_map h;
   h.emplace("content-type", header_value{content_type});
   // if (nssf_cfg.get_slice_config(json_data)) {
-  //   http_code = HTTP_STATUS_CODE_200_OK;
+  //   http_code = oai::common::sbi::http_status_code::OK;
   //   response.write_head(http_code, h);
   //   response.end(json_data.dump(4).c_str());
   // } else {
-  //   http_code = HTTP_STATUS_CODE_503_SERVICE_UNAVAILABLE;
+  //   http_code = oai::common::sbi::http_status_code::SERVICE_UNAVAILABLE;
   //   response.write_head(http_code, h);
   //   response.end();
   // }
@@ -439,11 +441,11 @@ void nssf_http2_server::get_api_list(const response& response) {
   header_map h;
   h.emplace("content-type", header_value{content_type});
   if (nssf_cfg->get_api_list(json_data)) {
-    http_code = HTTP_STATUS_CODE_200_OK;
+    http_code = oai::common::sbi::http_status_code::OK;
     response.write_head(http_code, h);
     response.end(json_data.dump(4).c_str());
   } else {
-    http_code = HTTP_STATUS_CODE_503_SERVICE_UNAVAILABLE;
+    http_code = oai::common::sbi::http_status_code::SERVICE_UNAVAILABLE;
     response.write_head(http_code, h);
     response.end();
   }

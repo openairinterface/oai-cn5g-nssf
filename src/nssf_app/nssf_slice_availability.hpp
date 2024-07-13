@@ -19,26 +19,13 @@
  *      contact@openairinterface.org
  */
 
-/*! \file nssf_slice_avail.hpp
- \brief
- \author  Rohan Kharade
- \company Openairinterface Software Allianse
- \date Jan 2022
- \email: rohan.kharade@openairinterface.org
- */
-
 #ifndef FILE_NSSF_SLICE_AVAILABILITY_HPP_SEEN
 #define FILE_NSSF_SLICE_AVAILABILITY_HPP_SEEN
 
 #include <boost/atomic.hpp>
-
-#include "3gpp_29.500.h"
-#include "conversions.hpp"
-#include "logger.hpp"
-#include "nssf.h"
-#include "nssf_config.hpp"
 #include <string>
 
+#include "3gpp_29.500.h"
 #include "AuthorizedNssaiAvailabilityInfo.h"
 #include "NssaiAvailabilityInfo.h"
 #include "NssfEventSubscriptionCreateData.h"
@@ -47,6 +34,10 @@
 #include "ProblemDetails.h"
 #include "SupportedNssaiAvailabilityData.h"
 #include "Tai.h"
+#include "conversions.hpp"
+#include "logger.hpp"
+#include "nssf.h"
+#include "nssf_config.hpp"
 
 namespace nssf {
 

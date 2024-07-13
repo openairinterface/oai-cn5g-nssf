@@ -19,33 +19,26 @@
  *      contact@openairinterface.org
  */
 
-/*! \file nssf_http2-server.h
- \brief
- \author  Rohan Kharade
- \company Openairinterface Software Allianse
- \date 2021
- \email: rohan.kharade@openairinterface.org
- */
-
 #include "nssf_config.hpp"
-#include "if.hpp"
+
 #include <nlohmann/json.hpp>
 
+#include "if.hpp"
 #include "nssf_config_types.hpp"
+#include "sbi_helper.hpp"
 
-using namespace std;
 using namespace oai::config::nssf;
 using namespace oai::config;
 using namespace oai::nssf_server::model;
 using namespace oai::model::common;
+using namespace oai::common::sbi;
 
 nssf_nsi_info_t nssf_config::nssf_nsi_info;
 nssf_ta_info_t nssf_config::nssf_ta_info;
 nssf_amf_info_t nssf_config::nssf_amf_info;
-// nlohmann::json nssf_config::nssf_slice_config;
 
 nssf_config::nssf_config(
-    const string& config_path, bool log_stdout, bool log_rot_file)
+    const std::string& config_path, bool log_stdout, bool log_rot_file)
     : config(config_path, NSSF_CONFIG_NAME, log_stdout, log_rot_file) {
   m_used_config_values = {
       LOG_LEVEL_CONFIG_NAME, REGISTER_NF_CONFIG_NAME, NF_LIST_CONFIG_NAME,
@@ -75,18 +68,18 @@ bool nssf_config::parse_nsi_info(const YAML::Node& conf, nssf_nsi_info_t& cfg) {
 
       // nsiInformationList
       nsi_info.nsi_info.setNrfId(
-          nsiInfo["nsiInformationList"]["nrfId"].as<string>());
+          nsiInfo["nsiInformationList"]["nrfId"].as<std::string>());
       if (nsiInfo["nsiInformationList"]["nsiId"])
         nsi_info.nsi_info.setNsiId(
-            nsiInfo["nsiInformationList"]["nsiId"].as<string>());
+            nsiInfo["nsiInformationList"]["nsiId"].as<std::string>());
       if (nsiInfo["nsiInformationList"]["nrfNfMgtUri"])
         nsi_info.nsi_info.setNrfNfMgtUri(
-            nsiInfo["nsiInformationList"]["nrfNfMgtUri"].as<string>());
+            nsiInfo["nsiInformationList"]["nrfNfMgtUri"].as<std::string>());
 
       // snssai
       nsi_info.snssai.setSst(nsiInfo["snssai"]["sst"].as<int32_t>());
       if (nsiInfo["snssai"]["sd"])
-        nsi_info.snssai.setSd(nsiInfo["snssai"]["sd"].as<string>());
+        nsi_info.snssai.setSd(nsiInfo["snssai"]["sd"].as<std::string>());
 
       std::lock_guard<std::mutex> lock(mutex);
       cfg.nsi_info_list.push_back(nsi_info);
@@ -109,10 +102,10 @@ bool nssf_config::parse_ta_info(const YAML::Node& conf, nssf_ta_info_t& cfg) {
       const YAML::Node& taInfo = *it;
 
       // Set Tai
-      plmn_id.setMcc(taInfo["tai"]["plmnId"]["mcc"].as<string>());
-      plmn_id.setMnc(taInfo["tai"]["plmnId"]["mnc"].as<string>());
+      plmn_id.setMcc(taInfo["tai"]["plmnId"]["mcc"].as<std::string>());
+      plmn_id.setMnc(taInfo["tai"]["plmnId"]["mnc"].as<std::string>());
       ta_info.tai.setPlmnId(plmn_id);
-      ta_info.tai.setTac(taInfo["tai"]["tac"].as<string>());
+      ta_info.tai.setTac(taInfo["tai"]["tac"].as<std::string>());
 
       // Set Supported Snssai List
       cfg.ta_info_list.push_back(ta_info);
@@ -135,9 +128,9 @@ bool nssf_config::parse_nssai(
     std::vector<Tai> tai_list;
 
     // Parse TAI
-    tai.setTac(conf["tai"]["tac"].as<string>());
-    plmn_id.setMcc(conf["tai"]["plmnId"]["mcc"].as<string>());
-    plmn_id.setMcc(conf["tai"]["plmnId"]["mcc"].as<string>());
+    tai.setTac(conf["tai"]["tac"].as<std::string>());
+    plmn_id.setMcc(conf["tai"]["plmnId"]["mcc"].as<std::string>());
+    plmn_id.setMcc(conf["tai"]["plmnId"]["mcc"].as<std::string>());
     tai.setPlmnId(plmn_id);
     nssai_data.setTai(tai);
 
@@ -147,7 +140,7 @@ bool nssf_config::parse_nssai(
       const YAML::Node& snssai = *it;
       ExtSnssai e_snssai;
       e_snssai.setSst(snssai["sst"].as<int32_t>());
-      if (snssai["sd"]) e_snssai.setSd(snssai["sd"].as<string>());
+      if (snssai["sd"]) e_snssai.setSd(snssai["sd"].as<std::string>());
       snssai_list.push_back(e_snssai);
     }
     nssai_data.setSupportedSnssaiList(snssai_list);
@@ -169,7 +162,8 @@ bool nssf_config::parse_amf_list(const YAML::Node& conf, amf_info_t& amf_info) {
       // ToDo:- Parse as a list
       parse_nssai(amf["supportedNssaiAvailabilityData"], nssai_data);
       nssai_data_list.push_back(nssai_data);
-      amf_info.amf_List.emplace_back(amf["nfId"].as<string>(), nssai_data_list);
+      amf_info.amf_List.emplace_back(
+          amf["nfId"].as<std::string>(), nssai_data_list);
     }
   } catch (std::exception& e) {
     Logger::nssf_app().error("Error parsing amfList");
@@ -187,9 +181,9 @@ bool nssf_config::parse_amf_info(const YAML::Node& conf, nssf_amf_info_t& cfg) {
       const YAML::Node& amfInfo = *it;
 
       // amInfoList
-      amf_info.target_amf_set  = amfInfo["targetAmfSet"].as<string>();
-      amf_info.nrf_amf_set     = amfInfo["nrfAmfSet"].as<string>();
-      amf_info.nrf_amf_set_mgt = amfInfo["nrfAmfSetNfMgtUri"].as<string>();
+      amf_info.target_amf_set  = amfInfo["targetAmfSet"].as<std::string>();
+      amf_info.nrf_amf_set     = amfInfo["nrfAmfSet"].as<std::string>();
+      amf_info.nrf_amf_set_mgt = amfInfo["nrfAmfSetNfMgtUri"].as<std::string>();
       if (!parse_amf_list(amfInfo["amfList"], amf_info)) throw std::exception();
       cfg.amf_info_list.push_back(amf_info);
     }
@@ -253,8 +247,8 @@ bool nssf_config::get_api_list(nlohmann::json& api_list) {
       {"Supported APIs",
        {{"API", "Network Slice Information (Document)"},
         {"Method", "GET"},
-        {"URI Path",
-         "/nnssf-nsselection/<api_version>/network-slice-information"},
+        {"URI Path", sbi_helper::NssfNsSelectionBase + "<api_version>" +
+                         sbi_helper::NssfNsSelectionPathNetworSliceInformation},
         {"Details",
          "Retrieve the Network Slice Selection Information (PDU Session)"}}}};
   return true;

@@ -63,7 +63,7 @@ void NetworkSliceInformationDocumentApiImpl::n_s_selection_get(
   if (!nfType.isEmpty())
     nf_type = nfType.get();
   else {
-    http_code = HTTP_STATUS_CODE_400_BAD_REQUEST;
+    http_code = oai::common::sbi::http_status_code::BAD_REQUEST;
     response.send(Pistache::Http::Code(http_code));
     Logger::nssf_sbi().error(
         "Invalid NF_Type (Valid NF_Type is AMF, NSSF, NWDAP, SMF)");
@@ -118,7 +118,7 @@ void NetworkSliceInformationDocumentApiImpl::n_s_selection_get(
         http_code, 1, problem_details, auth_slice_info);
   }
 
-  if (http_code != HTTP_STATUS_CODE_200_OK) {
+  if (http_code != oai::common::sbi::http_status_code::OK) {
     to_json(json_data, problem_details);
     content_type = "application/problem+json";
     // content type

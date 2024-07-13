@@ -19,15 +19,13 @@
  *      contact@openairinterface.org
  */
 
-/*! \file nssf_slice_select.cpp
- \brief
- \author  Rohan Kharade
- \company Openairinterface Software Allianse
- \date Jan 2022
- \email: rohan.kharade@openairinterface.org
- */
-
 #include "nssf_slice_selection.hpp"
+
+#include <boost/uuid/random_generator.hpp>
+#include <boost/uuid/uuid_io.hpp>
+#include <stdexcept>
+
+#include "3gpp_23.003.h"
 #include "AccessType.h"
 #include "NetworkSliceInformationDocumentApiImpl.h"
 #include "conversions.hpp"
@@ -35,12 +33,7 @@
 #include "nssf.h"
 #include "nssf_config.hpp"
 
-#include <boost/uuid/random_generator.hpp>
-#include <boost/uuid/uuid_io.hpp>
-#include <stdexcept>
-
 using namespace nssf;
-using namespace std;
 using namespace oai::model::common;
 
 extern nssf_slice_select* nssf_slice_select_inst;
@@ -233,7 +226,7 @@ bool nssf_slice_select::handle_slice_info_for_registration(
     // values for the S-NSSAI values in the subscribedNssai IE.
     if (slice_info.sNssaiForMappingIsSet())
       ;  // Ignore for now
-    http_code = HTTP_STATUS_CODE_503_SERVICE_UNAVAILABLE;
+    http_code = oai::common::sbi::http_status_code::SERVICE_UNAVAILABLE;
     Logger::nssf_app().warn(
         "NS Selection: EPS to 5GS Mobility Registration Procedure is not "
         "Supported yet. "
@@ -251,7 +244,7 @@ bool nssf_slice_select::handle_slice_info_for_registration(
     // corresponding HPLMN S-NSSAI, for the S-NSSAIs included in the
     // requestedNssai and allowedNssai IEs for the current and other
     // access types. It is also present in  EPS to 5GS handover procedure.
-    http_code = HTTP_STATUS_CODE_503_SERVICE_UNAVAILABLE;
+    http_code = oai::common::sbi::http_status_code::SERVICE_UNAVAILABLE;
     Logger::nssf_app().warn(
         "NS Selection: Roaming/EPS to 5GS handover procedure is not "
         "Supported yet. "
@@ -268,7 +261,7 @@ bool nssf_slice_select::handle_slice_info_for_registration(
     Logger::nssf_app().debug("NS Selection: HomePlmnId is provided !!!");
     // ToDo - Validate PlmnId from nssf config (Currently we don't support
     // Roaming scenario)
-    http_code = HTTP_STATUS_CODE_503_SERVICE_UNAVAILABLE;
+    http_code = oai::common::sbi::http_status_code::SERVICE_UNAVAILABLE;
     Logger::nssf_app().warn(
         "NS Selection: Roming is not Supported yet. "
         "HomePlmnId can not be validated !!");
@@ -294,7 +287,7 @@ bool nssf_slice_select::handle_slice_info_for_registration(
     Logger::nssf_app().debug("NS Selection: Requested S-NSSAI is provided");
     if (slice_info.subscribedNssaiIsSet()) {
       Logger::nssf_app().debug("NS Selection: Subscribed S-NSSAI is provided");
-      http_code = HTTP_STATUS_CODE_403_FORBIDDEN;
+      http_code = oai::common::sbi::http_status_code::FORBIDDEN;
 
       // Step 4.1. Validate if Requested S-NSSAI is supported in PLMN
       if (!validate_rnssai_in_plmn(slice_info, auth_slice_info))
@@ -308,7 +301,7 @@ bool nssf_slice_select::handle_slice_info_for_registration(
       if (!get_valid_amfset(slice_info.getRequestedNssai(), auth_slice_info))
         return false;
 
-      http_code = HTTP_STATUS_CODE_200_OK;
+      http_code = oai::common::sbi::http_status_code::OK;
     }
   } else {
     // ToDo: 29.531, R16.0.0.,6.1.6.2.2 Set Configured NSSAI If NSSF did not
@@ -333,7 +326,7 @@ bool nssf_slice_select::handle_slice_info_for_pdu_session(
   if (int(roam_ind_enum) != ROAMING_IND_NON_ROAMING) {
     Logger::nssf_app().warn(
         "NS Selection: Roming/Local Breakout is not Supported yet !!!");
-    http_code = HTTP_STATUS_CODE_503_SERVICE_UNAVAILABLE;
+    http_code = oai::common::sbi::http_status_code::SERVICE_UNAVAILABLE;
     Logger::nssf_app().info(
         "//---------------------------------------------------------");
     Logger::nssf_app().info("");
@@ -345,7 +338,7 @@ bool nssf_slice_select::handle_slice_info_for_pdu_session(
     Logger::nssf_app().debug("NS Selection: HomePlmnId is provided !!!");
     // ToDo - Validate PlmnId from nssf config (Currently we don't support
     // Roaming scenario)
-    http_code = HTTP_STATUS_CODE_503_SERVICE_UNAVAILABLE;
+    http_code = oai::common::sbi::http_status_code::SERVICE_UNAVAILABLE;
     Logger::nssf_app().warn(
         "NS Selection: Roming is not Supported yet. "
         "HomePlmnId can not be validated !!");
@@ -359,7 +352,7 @@ bool nssf_slice_select::handle_slice_info_for_pdu_session(
   if (!tai.getTac().empty()) {
     Logger::nssf_app().debug("NS Selection: TAI is provided");
     if (!validate_ta(tai)) {
-      http_code = HTTP_STATUS_CODE_400_BAD_REQUEST;
+      http_code = oai::common::sbi::http_status_code::BAD_REQUEST;
       return false;
     }
   }
@@ -375,10 +368,10 @@ bool nssf_slice_select::handle_slice_info_for_pdu_session(
   NsiInformation nsi_info = {};
   if (validate_nsi(slice_info, nsi_info)) {
     auth_slice_info.setNsiInformation(nsi_info);
-    http_code = HTTP_STATUS_CODE_200_OK;
+    http_code = oai::common::sbi::http_status_code::OK;
     return true;
   }
-  http_code = HTTP_STATUS_CODE_400_BAD_REQUEST;
+  http_code = oai::common::sbi::http_status_code::BAD_REQUEST;
   return false;
 }
 

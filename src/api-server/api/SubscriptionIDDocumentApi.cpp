@@ -12,8 +12,10 @@
  */
 
 #include "SubscriptionIDDocumentApi.h"
+
 #include "Helpers.h"
 #include "nssf_config.hpp"
+#include "sbi_helper.hpp"
 
 extern std::unique_ptr<oai::config::nssf::nssf_config> nssf_cfg;
 
@@ -23,8 +25,10 @@ namespace api {
 
 using namespace oai::model::common::helpers;
 using namespace oai::model::common;
+using namespace oai::common::sbi;
 
-const std::string SubscriptionIDDocumentApi::base = "/nnssf-nssaiavailability/";
+const std::string SubscriptionIDDocumentApi::base =
+    sbi_helper::NssfNssaiAvailabilityBase;
 
 SubscriptionIDDocumentApi::SubscriptionIDDocumentApi(
     const std::shared_ptr<Pistache::Rest::Router>& rtr)
@@ -40,13 +44,13 @@ void SubscriptionIDDocumentApi::setupRoutes() {
   Routes::Patch(
       *router,
       base + nssf_cfg->local().get_sbi().get_api_version() +
-          "/nssai-availability/subscriptions/:subscriptionId",
+          sbi_helper::NssfNssaiAvailabilityPathSubscriptionId,
       Routes::bind(
           &SubscriptionIDDocumentApi::
               n_ssai_availability_sub_modify_patch_handler,
           this));
   Routes::Delete(
-      *router, base + "/nssai-availability/subscriptions/:subscriptionId",
+      *router, base + sbi_helper::NssfNssaiAvailabilityPathSubscriptionId,
       Routes::bind(
           &SubscriptionIDDocumentApi::n_ssai_availability_unsubscribe_handler,
           this));

@@ -19,26 +19,18 @@
  *      contact@openairinterface.org
  */
 
-/*! \file nssf_slice_availability.cpp
- \brief
- \author  Rohan Kharade
- \company Openairinterface Software Allianse
- \date Jan 2022
- \email: rohan.kharade@openairinterface.org
- */
-
 #include "nssf_slice_availability.hpp"
-#include "conversions.hpp"
-#include "logger.hpp"
-#include "nssf.h"
-#include "nssf_config.hpp"
 
 #include <boost/uuid/random_generator.hpp>
 #include <boost/uuid/uuid_io.hpp>
 #include <stdexcept>
 
+#include "conversions.hpp"
+#include "logger.hpp"
+#include "nssf.h"
+#include "nssf_config.hpp"
+
 using namespace nssf;
-using namespace std;
 using namespace oai::config::nssf;
 using namespace oai::model::common;
 
@@ -84,7 +76,7 @@ bool nssf_slice_avail::handle_create_nssai_availability(
             amf.second.clear();
             amf.second  = nssaiAvailInfo.getSupportedNssaiAvailabilityData();
             update_done = true;
-            http_code   = HTTP_STATUS_CODE_204_NO_CONTENT;
+            http_code   = oai::common::sbi::http_status_code::NO_CONTENT;
             break;
           }
         }
@@ -92,11 +84,11 @@ bool nssf_slice_avail::handle_create_nssai_availability(
           Logger::nssf_app().info("Creating nssaiAvailInfo for new AMF");
           amf_info.amf_List.emplace_back(
               nfId.c_str(), nssaiAvailInfo.getSupportedNssaiAvailabilityData());
-          http_code = HTTP_STATUS_CODE_204_NO_CONTENT;
+          http_code = oai::common::sbi::http_status_code::NO_CONTENT;
         }
       } else {
         Logger::nssf_app().warn("target_amf_set not matched");
-        http_code = HTTP_STATUS_CODE_503_SERVICE_UNAVAILABLE;
+        http_code = oai::common::sbi::http_status_code::SERVICE_UNAVAILABLE;
         return false;
       }
     }
@@ -104,7 +96,7 @@ bool nssf_slice_avail::handle_create_nssai_availability(
     Logger::nssf_app().warn("Optional field target_amf_set not provided");
     // ToDo:- Select first target-amf_set based on tai
     // amf_info_t new_amf_info;
-    http_code = HTTP_STATUS_CODE_503_SERVICE_UNAVAILABLE;
+    http_code = oai::common::sbi::http_status_code::SERVICE_UNAVAILABLE;
     return false;
   }
 

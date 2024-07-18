@@ -34,6 +34,7 @@
 #include <thread>
 #include <unistd.h>  // get_pid(), pause()
 #include <vector>
+#include <chrono>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/split.hpp>
@@ -52,6 +53,7 @@ nssf_http2_server* nssf_api_server_2 = nullptr;
 
 //------------------------------------------------------------------------------
 void my_app_signal_handler(int s) {
+  auto shutdown_start = std::chrono::system_clock::now();
   // Setting log level arbitrarly to debug to show the whole
   // shutdown procedure in the logs even in case of off-logging
   Logger::set_level(spdlog::level::debug);
@@ -79,7 +81,9 @@ void my_app_signal_handler(int s) {
   }
   Logger::system().debug("NSSF APP memory done");
   Logger::system().debug("Freeing allocated memory done");
-  Logger::system().info("Bye.");
+  auto elapsed = std::chrono::system_clock::now() - shutdown_start;
+  auto ms_diff = std::chrono::duration_cast<std::chrono::milliseconds>(elapsed);
+  Logger::system().info("Bye. Shutdown Procedure took %d ms", ms_diff.count());
   exit(0);
 }
 //------------------------------------------------------------------------------

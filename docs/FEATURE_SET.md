@@ -35,20 +35,12 @@
 
 # 3. OAI NSSF Feature List #
 
-Based on document **3GPP TS 23.501 v16.0.0 (Section 6.2.14)**.
+Based on document **3GPP TS 23.501 v16.14.0 (Section 6.2.14)**.
 
 | **ID** | **Classification**                                                  | **Status**         | **Comments**                                |
 | ------ | ------------------------------------------------------------------- | ------------------ | ------------------------------------------- |
-| 1      | NSI Selection                                                       | :heavy_check_mark: |  Case:  PDU Session (NON-Roaming)           |
+| 1      | NSI Selection                                                       | :heavy_check_mark: |  Case:  PDU Session (Non Roaming)           |
 | 2      | Determining the Allowed NSSAI                                       | :x:                |                                             |
 | 3      | Determining the Configured NSSAI                                    | :x:                |                                             |
 | 4      | Determining the AMF Set                                             | :x:                |                                             |
 
-
-Based on document **3GPP TS 23.531 v16.0.0 (Section 5.1)**.
-
-| **ID** | **Classification**                                                  | **Status**         | **Comments**                                |
-| ------ | ------------------------------------------------------------------- | ------------------ | ------------------------------------------- |
-| 1      | NSI Selection                                                       | :heavy_check_mark: |  Case:  PDU Session (NON-Roaming)           |
-| 2      | NSSAI create/replace/update the S-NSSAI(s) per TA                   | :x:                |                                             |
-| 2      | NSSAI subscribe and unsubscribe for S-NSSAI(s) changes per TA       | :x:                |                                             |

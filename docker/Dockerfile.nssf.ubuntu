@@ -29,7 +29,7 @@
 #---------------------------------------------------------------------
 # BASE IMAGE
 #---------------------------------------------------------------------
-ARG BASE_IMAGE=ubuntu:jammy
+ARG BASE_IMAGE=ubuntu:noble
 FROM $BASE_IMAGE AS oai-nssf-base
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -96,15 +96,18 @@ RUN apt-get update && \
       openssl \
 # Ubuntu 20 --> libasan5
 # Ubuntu 22 --> libasan6
+# Ubuntu 24 --> libasan8
 #      libasan? \
 # Ubuntu 20 --> boost71
 # Ubuntu 22 --> boost74
-      libboost-thread1.7?.0 \
+# Ubuntu 24 --> boost83
+      libboost-thread1.83.0 \
       libcurl4-gnutls-dev \
       librtmp1 \
       libpsl5 \
 # Ubuntu 20 --> libyaml-cpp 0.6
 # Ubuntu 22 --> libyaml-cpp 0.7
+# Ubuntu 24 --> libyaml-cpp 0.8
       libyaml-cpp0.? \
   && rm -rf /var/lib/apt/lists/*
 

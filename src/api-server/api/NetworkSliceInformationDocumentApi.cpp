@@ -23,9 +23,8 @@ namespace oai {
 namespace nssf_server {
 namespace api {
 
-using namespace oai::model::common::helpers;
-using namespace oai::nssf_server::model;
-using namespace oai::model::common;
+using namespace oai::_3gpp::model::helpers;
+using namespace oai::_3gpp::model;
 using namespace oai::common::sbi;
 
 const std::string NetworkSliceInformationDocumentApi::base =
@@ -192,7 +191,7 @@ void NetworkSliceInformationDocumentApi::
 
 bool fromStringValueHelper(
     const std::string& inStr,
-    oai::nssf_server::model::SliceInfoForRegistration& value) {
+    oai::_3gpp::model::SliceInfoForRegistration& value) {
   Logger::nssf_sbi().info(
       " Query_PARAM::SLICE_INFO_RESGISTRATION - %s", inStr.c_str());
   nlohmann::json::parse(inStr.c_str()).get_to(value);
@@ -201,7 +200,7 @@ bool fromStringValueHelper(
 
 bool fromStringValueHelper(
     const std::string& inStr,
-    oai::nssf_server::model::SliceInfoForPDUSession& value) {
+    oai::_3gpp::model::SliceInfoForPDUSession& value) {
   Logger::nssf_sbi().info(
       " Query_PARAM slice-info-request-for-pdu-session - %s", inStr.c_str());
   nlohmann::json::parse(inStr.c_str()).get_to(value);
@@ -210,7 +209,7 @@ bool fromStringValueHelper(
 
 bool fromStringValueHelper(
     const std::string& inStr,
-    oai::nssf_server::model::SliceInfoForUEConfigurationUpdate& value) {
+    oai::_3gpp::model::SliceInfoForUEConfigurationUpdate& value) {
   Logger::nssf_sbi().info(
       " Query_PARAM slice-info-request-for-registration - %s", inStr.c_str());
   nlohmann::json::parse(inStr.c_str()).get_to(value);

@@ -38,32 +38,32 @@ class nssf_app {
 
   void handle_slice_info_for_registration(
       const SliceInfoForRegistration& slice_info,
-      const oai::model::common::Tai& tai,
-      const oai::model::common::PlmnId& home_plmnid,
+      const oai::_3gpp::model::Tai& tai,
+      const oai::_3gpp::model::PlmnId& home_plmnid,
       const std::string& features, int& http_code, const uint8_t http_version,
-      oai::model::common::ProblemDetails& problem_details,
+      oai::_3gpp::model::ProblemDetails& problem_details,
       AuthorizedNetworkSliceInfo& auth_slice_info);
 
   void handle_slice_info_for_pdu_session(
       const SliceInfoForPDUSession& slice_info,
-      const oai::model::common::Tai& tai,
-      const oai::model::common::PlmnId& home_plmnid,
+      const oai::_3gpp::model::Tai& tai,
+      const oai::_3gpp::model::PlmnId& home_plmnid,
       const std::string& features, int& http_code, const uint8_t http_version,
-      oai::model::common::ProblemDetails& problem_details,
+      oai::_3gpp::model::ProblemDetails& problem_details,
       AuthorizedNetworkSliceInfo& auth_slice_info);
 
   void handle_slice_info_for_ue_cu(
       const SliceInfoForUEConfigurationUpdate& slice_info,
-      const oai::model::common::Tai& tai,
-      const oai::model::common::PlmnId& home_plmnid,
+      const oai::_3gpp::model::Tai& tai,
+      const oai::_3gpp::model::PlmnId& home_plmnid,
       const std::string& features, int& http_code, const uint8_t http_version,
-      oai::model::common::ProblemDetails& problem_details);
+      oai::_3gpp::model::ProblemDetails& problem_details);
 
   void handle_create_nssai_availability(
       const std::string& nfId, const NssaiAvailabilityInfo& nssaiAvailInfo,
       AuthorizedNssaiAvailabilityInfo& auth_info, int& http_code,
       const uint8_t http_version,
-      oai::model::common::ProblemDetails& problem_details);
+      oai::_3gpp::model::ProblemDetails& problem_details);
 };
 }  // namespace nssf
 #endif /* FILE_NSSF_APP_HPP_SEEN */

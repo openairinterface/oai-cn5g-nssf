@@ -15,8 +15,8 @@
 namespace oai::config::nssf {
 
 typedef struct nsi_info_s {
-  oai::model::common::Snssai snssai;
-  oai::nssf_server::model::NsiInformation nsi_info;
+  oai::_3gpp::model::Snssai snssai;
+  oai::_3gpp::model::NsiInformation nsi_info;
 } nsi_info_t;
 
 typedef struct nssf_nsi_info_cfg_s {
@@ -24,8 +24,8 @@ typedef struct nssf_nsi_info_cfg_s {
 } nssf_nsi_info_t;
 
 typedef struct ta_info_s {
-  std::vector<oai::model::common::Snssai> supoorted_snssai;
-  oai::model::common::Tai tai;
+  std::vector<oai::_3gpp::model::Snssai> supoorted_snssai;
+  oai::_3gpp::model::Tai tai;
 } ta_info_t;
 
 typedef struct nssf_ta_info_cfg_s {
@@ -38,7 +38,7 @@ typedef struct amf_info_s {
   std::string nrf_amf_set_mgt;
   std::vector<std::pair<
       std::string,
-      std::vector<oai::nssf_server::model::SupportedNssaiAvailabilityData>>>
+      std::vector<oai::_3gpp::model::SupportedNssaiAvailabilityData>>>
       amf_List;
 } amf_info_t;
 
@@ -52,7 +52,7 @@ class nssf_config : public oai::config::config {
 
   static bool parse_nssai(
       const YAML::Node& conf,
-      oai::nssf_server::model::SupportedNssaiAvailabilityData& nssai_data);
+      oai::_3gpp::model::SupportedNssaiAvailabilityData& nssai_data);
 
   static bool parse_nsi_info(const YAML::Node& conf, nssf_nsi_info_t& cfg);
 

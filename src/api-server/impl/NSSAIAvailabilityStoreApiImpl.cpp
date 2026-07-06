@@ -18,8 +18,8 @@ namespace oai {
 namespace nssf_server {
 namespace api {
 
-using namespace oai::model::common::helpers;
-using namespace oai::nssf_server::model;
+using namespace oai::_3gpp::model::helpers;
+using namespace oai::_3gpp::model;
 
 NSSAIAvailabilityStoreApiImpl::NSSAIAvailabilityStoreApiImpl(
     std::shared_ptr<Pistache::Rest::Router> rtr, nssf_app* nssf_app_inst,

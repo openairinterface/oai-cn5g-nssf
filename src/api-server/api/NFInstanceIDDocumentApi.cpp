@@ -23,8 +23,8 @@ namespace oai {
 namespace nssf_server {
 namespace api {
 
-using namespace oai::model::common::helpers;
-using namespace oai::nssf_server::model;
+using namespace oai::_3gpp::model::helpers;
+using namespace oai::_3gpp::model;
 using namespace oai::common::sbi;
 
 const std::string NFInstanceIDDocumentApi::base =
@@ -118,7 +118,7 @@ void NFInstanceIDDocumentApi::n_ssai_availability_patch_handler(
     auto nfId = request.param(":nfId").as<std::string>();
 
     // Getting the body param
-    std::vector<oai::model::common::PatchItem> patchItem;
+    std::vector<oai::_3gpp::model::PatchItem> patchItem;
 
     // Getting the header params
     auto contentEncoding = request.headers().tryGetRaw("Content-Encoding");

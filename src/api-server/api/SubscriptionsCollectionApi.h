@@ -37,7 +37,7 @@ namespace oai {
 namespace nssf_server {
 namespace api {
 
-using namespace oai::nssf_server::model;
+using namespace oai::_3gpp::model;
 
 class SubscriptionsCollectionApi {
  public:
@@ -90,7 +90,7 @@ class SubscriptionsCollectionApi {
   /// <param name="contentEncoding">Content-Encoding, described in IETF RFC 7231
   /// (optional, default to &quot;&quot;)</param>
   virtual void n_ssai_availability_post(
-      const oai::nssf_server::model::NssfEventSubscriptionCreateData&
+      const oai::_3gpp::model::NssfEventSubscriptionCreateData&
           nssfEventSubscriptionCreateData,
       const Pistache::Optional<Pistache::Http::Header::Raw>& contentEncoding,
       Pistache::Http::ResponseWriter& response) = 0;

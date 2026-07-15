@@ -42,7 +42,7 @@ namespace oai {
 namespace nssf_server {
 namespace api {
 
-using namespace oai::nssf_server::model;
+using namespace oai::_3gpp::model;
 
 class NssfSliceConfigApi {
  public:

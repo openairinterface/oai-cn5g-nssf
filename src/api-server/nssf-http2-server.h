@@ -20,7 +20,7 @@
 
 using namespace nghttp2::asio_http2;
 using namespace nghttp2::asio_http2::server;
-using namespace oai::nssf_server::model;
+using namespace oai::_3gpp::model;
 
 class nssf_http2_server {
  public:
@@ -34,29 +34,29 @@ class nssf_http2_server {
   void get_slice_info_for_registration_handler(
       const std::string& nf_type, std::string& nf_id,
       const SliceInfoForRegistration slice_info,
-      const oai::model::common::Tai& tai,
-      const oai::model::common::PlmnId& home_plmnid,
-      const std::string& features, const response& response);
+      const oai::_3gpp::model::Tai& tai,
+      const oai::_3gpp::model::PlmnId& home_plmnid, const std::string& features,
+      const response& response);
 
   void get_slice_info_for_pdu_session_handler(
       const std::string& nf_type, std::string& nf_id,
       const SliceInfoForPDUSession& slice_info,
-      const oai::model::common::Tai& tai,
-      const oai::model::common::PlmnId& home_plmnid,
-      const std::string& features, const response& response);
+      const oai::_3gpp::model::Tai& tai,
+      const oai::_3gpp::model::PlmnId& home_plmnid, const std::string& features,
+      const response& response);
 
   void get_slice_info_for_ue_cu_handler(
       const std::string& nf_type, std::string& nf_id,
       const SliceInfoForUEConfigurationUpdate& slice_info,
-      const oai::model::common::Tai& tai,
-      const oai::model::common::PlmnId& home_plmnid,
-      const std::string& features, const response& response);
+      const oai::_3gpp::model::Tai& tai,
+      const oai::_3gpp::model::PlmnId& home_plmnid, const std::string& features,
+      const response& response);
 
   void get_slice_info_default_handler(
       const std::string& nf_type, std::string& nf_id,
-      const oai::model::common::Tai& tai,
-      const oai::model::common::PlmnId& home_plmnid,
-      const std::string& features, const response& response);
+      const oai::_3gpp::model::Tai& tai,
+      const oai::_3gpp::model::PlmnId& home_plmnid, const std::string& features,
+      const response& response);
 
   // NSSF NSSAI Availability - NF Instance ID (Document)
   void create_nssai_availability_handler(
@@ -65,7 +65,7 @@ class nssf_http2_server {
 
   void update_n_ssai_availability_handler(
       const std::string& nfId,
-      const std::vector<oai::model::common::PatchItem>& patchItem,
+      const std::vector<oai::_3gpp::model::PatchItem>& patchItem,
       const response& response);
 
   void remove_n_ssai_availability_handler(

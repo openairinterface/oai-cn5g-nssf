@@ -21,12 +21,10 @@
 #include <vector>
 #include "logger_base.hpp"
 
-static const std::string ASYNC_CMD    = "async_cmd";
 static const std::string ITTI         = "itti";
 static const std::string NSSF_APP     = "nssf_app";
 static const std::string NSSF_SBI     = "nssf_sbi";
 static const std::string NSSF_API_SVR = "nssf_api_server";
-static const std::string SYSTEM       = "system";
 
 class Logger : public oai::logger::logger_common {
  public:

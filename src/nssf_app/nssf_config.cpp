@@ -12,8 +12,7 @@
 
 using namespace oai::config::nssf;
 using namespace oai::config;
-using namespace oai::nssf_server::model;
-using namespace oai::model::common;
+using namespace oai::_3gpp::model;
 using namespace oai::common::sbi;
 
 nssf_nsi_info_t nssf_config::nssf_nsi_info;

@@ -24,9 +24,9 @@ namespace oai {
 namespace nssf_server {
 namespace api {
 
-using namespace oai::model::common;
-using namespace oai::model::common::helpers;
-using namespace oai::nssf_server::model;
+using namespace oai::_3gpp::model;
+using namespace oai::_3gpp::model::helpers;
+using namespace oai::_3gpp::model;
 // using namespace oai::nssf;
 
 extern config::nssf::nssf_config nssf_cfg;

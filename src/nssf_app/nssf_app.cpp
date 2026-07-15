@@ -14,7 +14,7 @@
 #include "nssf_config.hpp"
 
 using namespace nssf;
-using namespace oai::model::common;
+using namespace oai::_3gpp::model;
 
 extern nssf_app* nssf_app_inst;
 

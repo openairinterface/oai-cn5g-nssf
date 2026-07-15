@@ -41,38 +41,38 @@ class nssf_slice_avail {
 
   bool handle_create_nssai_availability(
       const std::string& nfId,
-      const oai::nssf_server::model::NssaiAvailabilityInfo& nssaiAvailInfo,
-      oai::nssf_server::model::AuthorizedNssaiAvailabilityInfo& auth_info,
+      const oai::_3gpp::model::NssaiAvailabilityInfo& nssaiAvailInfo,
+      oai::_3gpp::model::AuthorizedNssaiAvailabilityInfo& auth_info,
       int& http_code, const uint8_t http_version,
-      const oai::model::common::ProblemDetails& problem_details);
+      const oai::_3gpp::model::ProblemDetails& problem_details);
 
   bool handle_update_nssai_availability(
       const std::string& nfId,
-      const std::vector<oai::model::common::PatchItem>& patchItem,
+      const std::vector<oai::_3gpp::model::PatchItem>& patchItem,
       int& http_code, const uint8_t http_version,
-      const oai::model::common::ProblemDetails& problem_details);
+      const oai::_3gpp::model::ProblemDetails& problem_details);
 
   bool handle_remove_nssai_availability(
       const std::string& nfId, int& http_code, const uint8_t http_version,
-      const oai::model::common::ProblemDetails& problem_details);
+      const oai::_3gpp::model::ProblemDetails& problem_details);
 
   // Handle NSSF NSSAI Availability - Subscription ID (Collection/Document)
   bool handle_create_subscription_nssai_availability(
-      const oai::nssf_server::model::NssfEventSubscriptionCreateData&
+      const oai::_3gpp::model::NssfEventSubscriptionCreateData&
           subscriptionData,
       int& http_code, const uint8_t http_version,
-      const oai::model::common::ProblemDetails& problem_details);
+      const oai::_3gpp::model::ProblemDetails& problem_details);
 
   bool handle_update_subscription_nssai_availability(
-      const oai::nssf_server::model::NssfEventSubscriptionCreateData&
+      const oai::_3gpp::model::NssfEventSubscriptionCreateData&
           subscriptionData,
       int& http_code, const uint8_t http_version,
-      const oai::model::common::ProblemDetails& problem_details);
+      const oai::_3gpp::model::ProblemDetails& problem_details);
 
   bool handle_remove_subscription_nssai_availability(
       const std::string& subscriptionId, int& http_code,
       const uint8_t http_version,
-      const oai::model::common::ProblemDetails& problem_details);
+      const oai::_3gpp::model::ProblemDetails& problem_details);
 };
 }  // namespace nssf
 #endif /* FILE_NSSF_SLICE_AVAILABILITY_HPP_SEEN */

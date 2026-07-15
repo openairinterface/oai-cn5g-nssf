@@ -92,7 +92,7 @@ class SubscriptionIDDocumentApi {
   /// described in IETF RFC 7231 (optional, default to &quot;&quot;)</param>
   virtual void n_ssai_availability_sub_modify_patch(
       const std::string& subscriptionId,
-      const std::vector<oai::model::common::PatchItem>& patchItem,
+      const std::vector<oai::_3gpp::model::PatchItem>& patchItem,
       const Pistache::Optional<Pistache::Http::Header::Raw>& contentEncoding,
       Pistache::Http::ResponseWriter& response) = 0;
   /// <summary>

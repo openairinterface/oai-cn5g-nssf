@@ -55,18 +55,17 @@ class NetworkSliceInformationDocumentApiImpl
   ~NetworkSliceInformationDocumentApiImpl() {}
 
   void n_s_selection_get(
-      const Pistache::Optional<oai::model::common::NFType>& nfType,
+      const Pistache::Optional<oai::_3gpp::model::NFType>& nfType,
       const Pistache::Optional<std::string>& nfId,
-      const Pistache::Optional<
-          oai::nssf_server::model::SliceInfoForRegistration>&
+      const Pistache::Optional<oai::_3gpp::model::SliceInfoForRegistration>&
           sliceInfoRequestForRegistration,
-      const Pistache::Optional<oai::nssf_server::model::SliceInfoForPDUSession>&
+      const Pistache::Optional<oai::_3gpp::model::SliceInfoForPDUSession>&
           sliceInfoRequestForPduSession,
       const Pistache::Optional<
-          oai::nssf_server::model::SliceInfoForUEConfigurationUpdate>&
+          oai::_3gpp::model::SliceInfoForUEConfigurationUpdate>&
           sliceInfoRequestForUeCu,
-      const Pistache::Optional<oai::model::common::PlmnId>& homePlmnId,
-      const Pistache::Optional<oai::model::common::Tai>& tai,
+      const Pistache::Optional<oai::_3gpp::model::PlmnId>& homePlmnId,
+      const Pistache::Optional<oai::_3gpp::model::Tai>& tai,
       const Pistache::Optional<std::string>& supportedFeatures,
       Pistache::Http::ResponseWriter& response);
 

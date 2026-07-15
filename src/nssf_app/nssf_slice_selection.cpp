@@ -17,7 +17,7 @@
 #include "nssf_config.hpp"
 
 using namespace nssf;
-using namespace oai::model::common;
+using namespace oai::_3gpp::model;
 
 extern nssf_slice_select* nssf_slice_select_inst;
 extern std::unique_ptr<oai::config::nssf::nssf_config> nssf_cfg;

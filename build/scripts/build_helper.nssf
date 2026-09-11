@@ -3,7 +3,7 @@
 # -------------------------------------------------------------------------------
 # Install the build and runtime dependencies of the OAI NSSF: distribution
 # packages plus the libraries that are built from source.
-# Ubuntu 24.04 and the RHEL/Rocky 9 family are the supported distributions.
+# Ubuntu 24.04 and CentOS Stream 10 are the supported distributions.
 # -------------------------------------------------------------------------------
 
 # -------------------------------------------------------------------------------
@@ -94,7 +94,7 @@ check_install_nssf_deps() {
       check \
       nettle-devel \
       libcurl-devel \
-      pkgconfig \
+      pkgconf-pkg-config \
       boost-devel \
       libasan"
   else

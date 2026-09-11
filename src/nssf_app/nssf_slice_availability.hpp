@@ -33,7 +33,7 @@ class nssf_slice_avail {
  public:
   explicit nssf_slice_avail(const std::string& config_file);
   nssf_slice_avail(nssf_slice_avail const&) = delete;
-  void operator=(nssf_slice_avail const&) = delete;
+  void operator=(nssf_slice_avail const&)   = delete;
 
   virtual ~nssf_slice_avail();
 

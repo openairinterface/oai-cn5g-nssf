@@ -31,7 +31,7 @@ SubscriptionIDDocumentApiImpl::SubscriptionIDDocumentApiImpl(
 
 void SubscriptionIDDocumentApiImpl::n_ssai_availability_sub_modify_patch(
     const std::string& subscriptionId, const std::vector<PatchItem>& patchItem,
-    const Pistache::Optional<Pistache::Http::Header::Raw>& contentEncoding,
+    const std::optional<Pistache::Http::Header::Raw>& contentEncoding,
     Pistache::Http::ResponseWriter& response) {
   response.send(
       Pistache::Http::Code::Service_Unavailable, "API NOT IMPLEMENTED\n");

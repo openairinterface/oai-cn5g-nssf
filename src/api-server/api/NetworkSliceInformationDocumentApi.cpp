@@ -83,52 +83,51 @@ void NetworkSliceInformationDocumentApi::n_s_selection_get_handler(
   try {
     // Getting the query params
     auto nfTypeQuery = request.query().get("nf-type");
-    Pistache::Optional<NFType> nfType;
-    if (!nfTypeQuery.isEmpty()) {
+    std::optional<NFType> nfType;
+    if (nfTypeQuery.has_value()) {
       NFType valueQuery_instance;
-      if (fromStringValue(nfTypeQuery.get(), valueQuery_instance)) {
-        nfType = Pistache::Some(valueQuery_instance);
+      if (fromStringValue(nfTypeQuery.value(), valueQuery_instance)) {
+        nfType = valueQuery_instance;
       }
     }
     auto nfIdQuery = request.query().get("nf-id");
-    Pistache::Optional<std::string> nfId;
-    if (!nfIdQuery.isEmpty()) {
+    std::optional<std::string> nfId;
+    if (nfIdQuery.has_value()) {
       std::string valueQuery_instance;
-      if (fromStringValue(nfIdQuery.get(), valueQuery_instance)) {
-        nfId = Pistache::Some(valueQuery_instance);
+      if (fromStringValue(nfIdQuery.value(), valueQuery_instance)) {
+        nfId = valueQuery_instance;
       }
     }
     auto sliceInfoRequestForRegistrationQuery = request.query().get(
         sbi_helper::NssfNsSelectionParametersSliceInfoRequestForRegistration);
-    Pistache::Optional<SliceInfoForRegistration>
-        sliceInfoRequestForRegistration;
-    if (!sliceInfoRequestForRegistrationQuery.isEmpty()) {
+    std::optional<SliceInfoForRegistration> sliceInfoRequestForRegistration;
+    if (sliceInfoRequestForRegistrationQuery.has_value()) {
       SliceInfoForRegistration valueQuery_instance;
       if (fromStringValueHelper(
-              sliceInfoRequestForRegistrationQuery.get(),
+              sliceInfoRequestForRegistrationQuery.value(),
               valueQuery_instance)) {
-        sliceInfoRequestForRegistration = Pistache::Some(valueQuery_instance);
+        sliceInfoRequestForRegistration = valueQuery_instance;
       }
     }
     auto sliceInfoRequestForPduSessionQuery =
         request.query().get("slice-info-request-for-pdu-session");
-    Pistache::Optional<SliceInfoForPDUSession> sliceInfoRequestForPduSession;
-    if (!sliceInfoRequestForPduSessionQuery.isEmpty()) {
+    std::optional<SliceInfoForPDUSession> sliceInfoRequestForPduSession;
+    if (sliceInfoRequestForPduSessionQuery.has_value()) {
       SliceInfoForPDUSession valueQuery_instance;
       if (fromStringValueHelper(
-              sliceInfoRequestForPduSessionQuery.get(), valueQuery_instance)) {
-        sliceInfoRequestForPduSession = Pistache::Some(valueQuery_instance);
+              sliceInfoRequestForPduSessionQuery.value(),
+              valueQuery_instance)) {
+        sliceInfoRequestForPduSession = valueQuery_instance;
       }
     }
     auto sliceInfoRequestForUeCuQuery =
         request.query().get("slice-info-request-for-ue-cu");
-    Pistache::Optional<SliceInfoForUEConfigurationUpdate>
-        sliceInfoRequestForUeCu;
-    if (!sliceInfoRequestForUeCuQuery.isEmpty()) {
+    std::optional<SliceInfoForUEConfigurationUpdate> sliceInfoRequestForUeCu;
+    if (sliceInfoRequestForUeCuQuery.has_value()) {
       SliceInfoForUEConfigurationUpdate valueQuery_instance;
       if (fromStringValueHelper(
-              sliceInfoRequestForUeCuQuery.get(), valueQuery_instance)) {
-        sliceInfoRequestForUeCu = Pistache::Some(valueQuery_instance);
+              sliceInfoRequestForUeCuQuery.value(), valueQuery_instance)) {
+        sliceInfoRequestForUeCu = valueQuery_instance;
       }
       Logger::nssf_app().error("NS Selection failure !!!");
       response.send(
@@ -137,27 +136,28 @@ void NetworkSliceInformationDocumentApi::n_s_selection_get_handler(
       return;
     }
     auto homePlmnIdQuery = request.query().get("home-plmn-id");
-    Pistache::Optional<PlmnId> homePlmnId;
-    if (!homePlmnIdQuery.isEmpty()) {
+    std::optional<PlmnId> homePlmnId;
+    if (homePlmnIdQuery.has_value()) {
       PlmnId valueQuery_instance;
-      if (fromStringValue(homePlmnIdQuery.get(), valueQuery_instance)) {
-        homePlmnId = Pistache::Some(valueQuery_instance);
+      if (fromStringValue(homePlmnIdQuery.value(), valueQuery_instance)) {
+        homePlmnId = valueQuery_instance;
       }
     }
     auto taiQuery = request.query().get("tai");
-    Pistache::Optional<Tai> tai;
-    if (!taiQuery.isEmpty()) {
+    std::optional<Tai> tai;
+    if (taiQuery.has_value()) {
       Tai valueQuery_instance;
-      if (fromStringValue(taiQuery.get(), valueQuery_instance)) {
-        tai = Pistache::Some(valueQuery_instance);
+      if (fromStringValue(taiQuery.value(), valueQuery_instance)) {
+        tai = valueQuery_instance;
       }
     }
     auto supportedFeaturesQuery = request.query().get("supported-features");
-    Pistache::Optional<std::string> supportedFeatures;
-    if (!supportedFeaturesQuery.isEmpty()) {
+    std::optional<std::string> supportedFeatures;
+    if (supportedFeaturesQuery.has_value()) {
       std::string valueQuery_instance;
-      if (fromStringValue(supportedFeaturesQuery.get(), valueQuery_instance)) {
-        supportedFeatures = Pistache::Some(valueQuery_instance);
+      if (fromStringValue(
+              supportedFeaturesQuery.value(), valueQuery_instance)) {
+        supportedFeatures = valueQuery_instance;
       }
     }
 

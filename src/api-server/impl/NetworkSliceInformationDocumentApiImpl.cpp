@@ -39,29 +39,26 @@ NetworkSliceInformationDocumentApiImpl::NetworkSliceInformationDocumentApiImpl(
       m_address(address) {}
 
 void NetworkSliceInformationDocumentApiImpl::n_s_selection_get(
-    const Pistache::Optional<NFType>& nfType,
-    const Pistache::Optional<std::string>& nfId,
-    const Pistache::Optional<SliceInfoForRegistration>&
+    const std::optional<NFType>& nfType, const std::optional<std::string>& nfId,
+    const std::optional<SliceInfoForRegistration>&
         sliceInfoRequestForRegistration,
-    const Pistache::Optional<SliceInfoForPDUSession>&
-        sliceInfoRequestForPduSession,
-    const Pistache::Optional<SliceInfoForUEConfigurationUpdate>&
+    const std::optional<SliceInfoForPDUSession>& sliceInfoRequestForPduSession,
+    const std::optional<SliceInfoForUEConfigurationUpdate>&
         sliceInfoRequestForUeCu,
-    const Pistache::Optional<PlmnId>& homePlmnId,
-    const Pistache::Optional<Tai>& tai,
-    const Pistache::Optional<std::string>& supportedFeatures,
+    const std::optional<PlmnId>& homePlmnId, const std::optional<Tai>& tai,
+    const std::optional<std::string>& supportedFeatures,
     Pistache::Http::ResponseWriter& response) {
   int http_code = 0;
 
   std::string nf_id = {};
-  if (!nfId.isEmpty()) {
-    nf_id = nfId.get();
+  if (nfId.has_value()) {
+    nf_id = nfId.value();
     Logger::nssf_sbi().info(" Query_PARAM::NF_ID - %s", nf_id.c_str());
   }
 
   NFType nf_type = {};
-  if (!nfType.isEmpty())
-    nf_type = nfType.get();
+  if (nfType.has_value())
+    nf_type = nfType.value();
   else {
     http_code = oai::common::sbi::http_status_code::BAD_REQUEST;
     response.send(Pistache::Http::Code(http_code));
@@ -72,22 +69,22 @@ void NetworkSliceInformationDocumentApiImpl::n_s_selection_get(
   }
 
   Tai tai_ = {};
-  if (!tai.isEmpty()) tai_ = tai.get();
+  if (tai.has_value()) tai_ = tai.value();
 
   PlmnId homePlmnId_ = {};
-  if (!homePlmnId.isEmpty()) homePlmnId_ = homePlmnId.get();
+  if (homePlmnId.has_value()) homePlmnId_ = homePlmnId.value();
 
   SliceInfoForPDUSession sliceInfoRequestForPduSession_     = {};
   SliceInfoForRegistration sliceInfoRequestForRegistration_ = {};
-  if (!sliceInfoRequestForPduSession.isEmpty())
-    sliceInfoRequestForPduSession_ = sliceInfoRequestForPduSession.get();
+  if (sliceInfoRequestForPduSession.has_value())
+    sliceInfoRequestForPduSession_ = sliceInfoRequestForPduSession.value();
 
-  if (!sliceInfoRequestForRegistration.isEmpty())
-    sliceInfoRequestForRegistration_ = sliceInfoRequestForRegistration.get();
+  if (sliceInfoRequestForRegistration.has_value())
+    sliceInfoRequestForRegistration_ = sliceInfoRequestForRegistration.value();
 
   std::string supportedFeatures_ = {};
-  if (!supportedFeatures.isEmpty())
-    supportedFeatures_ = supportedFeatures.get();
+  if (supportedFeatures.has_value())
+    supportedFeatures_ = supportedFeatures.value();
 
   ProblemDetails problem_details = {};
   nlohmann::json json_data       = {};
@@ -95,7 +92,7 @@ void NetworkSliceInformationDocumentApiImpl::n_s_selection_get(
   std::string json_format;
   AuthorizedNetworkSliceInfo auth_slice_info;
 
-  if (!sliceInfoRequestForPduSession.isEmpty()) {
+  if (sliceInfoRequestForPduSession.has_value()) {
     Logger::nssf_sbi().info("");
     Logger::nssf_sbi().info(
         "NS Selection: Got a request with slice info for PDU Session, "
@@ -106,7 +103,7 @@ void NetworkSliceInformationDocumentApiImpl::n_s_selection_get(
         sliceInfoRequestForPduSession_, tai_, homePlmnId_, supportedFeatures_,
         http_code, 1, problem_details, auth_slice_info);
   }
-  if (!sliceInfoRequestForRegistration.isEmpty()) {
+  if (sliceInfoRequestForRegistration.has_value()) {
     Logger::nssf_sbi().info("");
     Logger::nssf_sbi().info(
         "NS Selection: Got a request with slice info for Registration, "

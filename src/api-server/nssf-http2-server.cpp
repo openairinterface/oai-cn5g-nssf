@@ -205,8 +205,8 @@ void nssf_http2_server::start() {
         });
       });
 
-  //###### NSSF Custom APIs ######
-  // Get default slice config
+  // ###### NSSF Custom APIs ######
+  //  Get default slice config
   server.handle(
       "/nnssf-slice-config",
       [&](const request& request, const response& response) {

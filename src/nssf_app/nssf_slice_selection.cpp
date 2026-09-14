@@ -197,8 +197,8 @@ bool nssf_slice_select::handle_slice_info_for_registration(
       "NS Selection: Handle case - Registration (HTTP_VERSION %d)",
       http_version);
 
-  //### Step 1. Validation for roaming/EPS to 5GS Mobility procedure from
-  // slice_info
+  // ### Step 1. Validation for roaming/EPS to 5GS Mobility procedure from
+  //  slice_info
   if (slice_info.requestMappingIsSet()) {
     Logger::nssf_app().debug("NS Selection: Request Mapping is provided");
     // ToDo: Ts 29.531, R16.0.0, Table 6.1.6.2.10-1 SliceInfoForRegistration
@@ -238,8 +238,8 @@ bool nssf_slice_select::handle_slice_info_for_registration(
     return false;
   }
 
-  //### Step 2. Validation for roaming from homeplmnid if provided
-  // Check if UE's HPlmnId is Supported while UE is Roaminng
+  // ### Step 2. Validation for roaming from homeplmnid if provided
+  //  Check if UE's HPlmnId is Supported while UE is Roaminng
   if (!home_plmnid.getMcc().empty()) {
     Logger::nssf_app().debug("NS Selection: HomePlmnId is provided !!!");
     // ToDo - Validate PlmnId from nssf config (Currently we don't support
@@ -254,8 +254,8 @@ bool nssf_slice_select::handle_slice_info_for_registration(
     return false;
   }
 
-  //### Step 3. Validation for TAI if provided
-  // Check if UE's Tai is Supported
+  // ### Step 3. Validation for TAI if provided
+  //  Check if UE's Tai is Supported
   if (!tai.getTac().empty()) {
     Logger::nssf_app().debug("NS Selection: TAI is provided");
     if (!validate_ta(tai)) {
@@ -264,8 +264,8 @@ bool nssf_slice_select::handle_slice_info_for_registration(
   }
 
   bool configure_nssai = false;
-  //### Step 4. Validation of slice_info for target AMFSet
-  // Check for Requested S-NSSAI
+  // ### Step 4. Validation of slice_info for target AMFSet
+  //  Check for Requested S-NSSAI
   if (slice_info.requestedNssaiIsSet()) {
     Logger::nssf_app().debug("NS Selection: Requested S-NSSAI is provided");
     if (slice_info.subscribedNssaiIsSet()) {

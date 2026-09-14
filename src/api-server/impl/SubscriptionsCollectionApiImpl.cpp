@@ -37,7 +37,7 @@ SubscriptionsCollectionApiImpl::SubscriptionsCollectionApiImpl(
 
 void SubscriptionsCollectionApiImpl::n_ssai_availability_post(
     const NssfEventSubscriptionCreateData& nssfEventSubscriptionCreateData,
-    const Pistache::Optional<Pistache::Http::Header::Raw>& contentEncoding,
+    const std::optional<Pistache::Http::Header::Raw>& contentEncoding,
     Pistache::Http::ResponseWriter& response) {
   response.send(
       Pistache::Http::Code::Service_Unavailable, "API NOT IMPLEMENTED\n");

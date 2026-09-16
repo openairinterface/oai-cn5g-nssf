@@ -21,7 +21,7 @@
 
 #include <pistache/http.h>
 #include <pistache/http_headers.h>
-#include <pistache/optional.h>
+#include <optional>
 #include <pistache/router.h>
 
 #include <utility>
@@ -93,7 +93,7 @@ class SubscriptionIDDocumentApi {
   virtual void n_ssai_availability_sub_modify_patch(
       const std::string& subscriptionId,
       const std::vector<oai::_3gpp::model::PatchItem>& patchItem,
-      const Pistache::Optional<Pistache::Http::Header::Raw>& contentEncoding,
+      const std::optional<Pistache::Http::Header::Raw>& contentEncoding,
       Pistache::Http::ResponseWriter& response) = 0;
   /// <summary>
   /// Deletes an already existing NSSAI availability notification subscription

@@ -27,7 +27,7 @@
 
 #include <SubscriptionsCollectionApi.h>
 
-#include <pistache/optional.h>
+#include <optional>
 
 #include "NssfEventSubscriptionCreateData.h"
 #include "NssfEventSubscriptionCreatedData.h"
@@ -57,7 +57,7 @@ class SubscriptionsCollectionApiImpl
 
   void n_ssai_availability_post(
       const NssfEventSubscriptionCreateData& nssfEventSubscriptionCreateData,
-      const Pistache::Optional<Pistache::Http::Header::Raw>& contentEncoding,
+      const std::optional<Pistache::Http::Header::Raw>& contentEncoding,
       Pistache::Http::ResponseWriter& response);
 
  private:

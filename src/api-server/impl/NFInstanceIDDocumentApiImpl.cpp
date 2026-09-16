@@ -36,16 +36,16 @@ void NFInstanceIDDocumentApiImpl::n_ssai_availability_delete(
 }
 void NFInstanceIDDocumentApiImpl::n_ssai_availability_patch(
     const std::string& nfId, const std::vector<PatchItem>& patchItem,
-    const Pistache::Optional<Pistache::Http::Header::Raw>& contentEncoding,
-    const Pistache::Optional<Pistache::Http::Header::Raw>& acceptEncoding,
+    const std::optional<Pistache::Http::Header::Raw>& contentEncoding,
+    const std::optional<Pistache::Http::Header::Raw>& acceptEncoding,
     Pistache::Http::ResponseWriter& response) {
   response.send(
       Pistache::Http::Code::Service_Unavailable, "API NOT IMPLEMENTED\n");
 }
 void NFInstanceIDDocumentApiImpl::n_ssai_availability_put(
     const std::string& nfId, const NssaiAvailabilityInfo& nssaiAvailabilityInfo,
-    const Pistache::Optional<Pistache::Http::Header::Raw>& contentEncoding,
-    const Pistache::Optional<Pistache::Http::Header::Raw>& acceptEncoding,
+    const std::optional<Pistache::Http::Header::Raw>& contentEncoding,
+    const std::optional<Pistache::Http::Header::Raw>& acceptEncoding,
     Pistache::Http::ResponseWriter& response) {
   Logger::nssf_sbi().info(
       "NSSAI Availability: Got a request to "

@@ -21,7 +21,7 @@ class nssf_app {
 
  public:
   explicit nssf_app(const std::string& config_file);
-  nssf_app(nssf_app const&) = delete;
+  nssf_app(nssf_app const&)       = delete;
   void operator=(nssf_app const&) = delete;
 
   virtual ~nssf_app();

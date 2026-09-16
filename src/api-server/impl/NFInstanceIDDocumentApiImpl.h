@@ -27,7 +27,7 @@
 
 #include <NFInstanceIDDocumentApi.h>
 
-#include <pistache/optional.h>
+#include <optional>
 
 #include "AuthorizedNssaiAvailabilityInfo.h"
 #include "NssaiAvailabilityInfo.h"
@@ -55,14 +55,14 @@ class NFInstanceIDDocumentApiImpl
   void n_ssai_availability_patch(
       const std::string& nfId,
       const std::vector<oai::_3gpp::model::PatchItem>& patchItem,
-      const Pistache::Optional<Pistache::Http::Header::Raw>& contentEncoding,
-      const Pistache::Optional<Pistache::Http::Header::Raw>& acceptEncoding,
+      const std::optional<Pistache::Http::Header::Raw>& contentEncoding,
+      const std::optional<Pistache::Http::Header::Raw>& acceptEncoding,
       Pistache::Http::ResponseWriter& response);
   void n_ssai_availability_put(
       const std::string& nfId,
       const oai::_3gpp::model::NssaiAvailabilityInfo& nssaiAvailabilityInfo,
-      const Pistache::Optional<Pistache::Http::Header::Raw>& contentEncoding,
-      const Pistache::Optional<Pistache::Http::Header::Raw>& acceptEncoding,
+      const std::optional<Pistache::Http::Header::Raw>& contentEncoding,
+      const std::optional<Pistache::Http::Header::Raw>& acceptEncoding,
       Pistache::Http::ResponseWriter& response);
 
  private:

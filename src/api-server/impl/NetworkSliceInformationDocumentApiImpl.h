@@ -27,7 +27,7 @@
 
 #include <NetworkSliceInformationDocumentApi.h>
 
-#include <pistache/optional.h>
+#include <optional>
 
 #include "AuthorizedNetworkSliceInfo.h"
 #include "NFType.h"
@@ -55,18 +55,17 @@ class NetworkSliceInformationDocumentApiImpl
   ~NetworkSliceInformationDocumentApiImpl() {}
 
   void n_s_selection_get(
-      const Pistache::Optional<oai::_3gpp::model::NFType>& nfType,
-      const Pistache::Optional<std::string>& nfId,
-      const Pistache::Optional<oai::_3gpp::model::SliceInfoForRegistration>&
+      const std::optional<oai::_3gpp::model::NFType>& nfType,
+      const std::optional<std::string>& nfId,
+      const std::optional<oai::_3gpp::model::SliceInfoForRegistration>&
           sliceInfoRequestForRegistration,
-      const Pistache::Optional<oai::_3gpp::model::SliceInfoForPDUSession>&
+      const std::optional<oai::_3gpp::model::SliceInfoForPDUSession>&
           sliceInfoRequestForPduSession,
-      const Pistache::Optional<
-          oai::_3gpp::model::SliceInfoForUEConfigurationUpdate>&
+      const std::optional<oai::_3gpp::model::SliceInfoForUEConfigurationUpdate>&
           sliceInfoRequestForUeCu,
-      const Pistache::Optional<oai::_3gpp::model::PlmnId>& homePlmnId,
-      const Pistache::Optional<oai::_3gpp::model::Tai>& tai,
-      const Pistache::Optional<std::string>& supportedFeatures,
+      const std::optional<oai::_3gpp::model::PlmnId>& homePlmnId,
+      const std::optional<oai::_3gpp::model::Tai>& tai,
+      const std::optional<std::string>& supportedFeatures,
       Pistache::Http::ResponseWriter& response);
 
  private:

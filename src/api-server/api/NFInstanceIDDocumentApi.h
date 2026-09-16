@@ -21,7 +21,7 @@
 
 #include <pistache/http.h>
 #include <pistache/http_headers.h>
-#include <pistache/optional.h>
+#include <optional>
 #include <pistache/router.h>
 
 #include <utility>
@@ -110,8 +110,8 @@ class NFInstanceIDDocumentApi {
   virtual void n_ssai_availability_patch(
       const std::string& nfId,
       const std::vector<oai::_3gpp::model::PatchItem>& patchItem,
-      const Pistache::Optional<Pistache::Http::Header::Raw>& contentEncoding,
-      const Pistache::Optional<Pistache::Http::Header::Raw>& acceptEncoding,
+      const std::optional<Pistache::Http::Header::Raw>& contentEncoding,
+      const std::optional<Pistache::Http::Header::Raw>& acceptEncoding,
       Pistache::Http::ResponseWriter& response) = 0;
   /// <summary>
   /// Updates/replaces the NSSF with the S-NSSAIs the NF service consumer (e.g
@@ -130,8 +130,8 @@ class NFInstanceIDDocumentApi {
   virtual void n_ssai_availability_put(
       const std::string& nfId,
       const oai::_3gpp::model::NssaiAvailabilityInfo& nssaiAvailabilityInfo,
-      const Pistache::Optional<Pistache::Http::Header::Raw>& contentEncoding,
-      const Pistache::Optional<Pistache::Http::Header::Raw>& acceptEncoding,
+      const std::optional<Pistache::Http::Header::Raw>& contentEncoding,
+      const std::optional<Pistache::Http::Header::Raw>& acceptEncoding,
       Pistache::Http::ResponseWriter& response) = 0;
 };
 

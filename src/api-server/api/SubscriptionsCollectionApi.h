@@ -21,7 +21,7 @@
 
 #include <pistache/http.h>
 #include <pistache/http_headers.h>
-#include <pistache/optional.h>
+#include <optional>
 #include <pistache/router.h>
 
 #include <utility>
@@ -92,7 +92,7 @@ class SubscriptionsCollectionApi {
   virtual void n_ssai_availability_post(
       const oai::_3gpp::model::NssfEventSubscriptionCreateData&
           nssfEventSubscriptionCreateData,
-      const Pistache::Optional<Pistache::Http::Header::Raw>& contentEncoding,
+      const std::optional<Pistache::Http::Header::Raw>& contentEncoding,
       Pistache::Http::ResponseWriter& response) = 0;
 };
 

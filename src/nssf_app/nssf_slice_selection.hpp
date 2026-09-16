@@ -54,7 +54,7 @@ class nssf_slice_select {
  public:
   explicit nssf_slice_select(const std::string& config_file);
   nssf_slice_select(nssf_slice_select const&) = delete;
-  void operator=(nssf_slice_select const&) = delete;
+  void operator=(nssf_slice_select const&)    = delete;
 
   virtual ~nssf_slice_select();
   //  Handle Network Slice Information (Document)

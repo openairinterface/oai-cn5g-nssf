@@ -27,7 +27,7 @@
 
 #include <SubscriptionIDDocumentApi.h>
 
-#include <pistache/optional.h>
+#include <optional>
 
 #include "NssfEventSubscriptionCreatedData.h"
 #include "PatchItem.h"
@@ -53,7 +53,7 @@ class SubscriptionIDDocumentApiImpl
   void n_ssai_availability_sub_modify_patch(
       const std::string& subscriptionId,
       const std::vector<oai::_3gpp::model::PatchItem>& patchItem,
-      const Pistache::Optional<Pistache::Http::Header::Raw>& contentEncoding,
+      const std::optional<Pistache::Http::Header::Raw>& contentEncoding,
       Pistache::Http::ResponseWriter& response);
   void n_ssai_availability_unsubscribe(
       const std::string& subscriptionId,
